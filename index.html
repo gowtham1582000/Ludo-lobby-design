@@ -285,6 +285,60 @@
       box-shadow: 0 0 10px rgba(0, 245, 255, 0.3)
     }
 
+    .map-layout-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding: 5px 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(123, 47, 255, 0.24);
+      background: linear-gradient(135deg, rgba(123, 47, 255, 0.14), rgba(0, 245, 255, 0.08));
+      color: var(--text);
+      cursor: pointer;
+      transition: .2s;
+      backdrop-filter: blur(10px);
+    }
+
+    .map-layout-trigger:hover {
+      border-color: rgba(0, 245, 255, 0.34);
+      box-shadow: 0 0 14px rgba(0, 245, 255, 0.18);
+      transform: translateY(-1px);
+    }
+
+    .map-layout-copy {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1px;
+      min-width: 0;
+    }
+
+    .map-layout-label {
+      font-family: 'Orbitron', monospace;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--cyan);
+    }
+
+    .map-layout-value {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 92px;
+    }
+
+    .map-layout-arrow {
+      font-size: 8px;
+      color: var(--purple-soft);
+      flex-shrink: 0;
+    }
+
     .coin-ico {
       font-size: 14px
     }
@@ -3322,6 +3376,13 @@
             <span class="coin-ico">💎</span>
             <span class="coin-num" style="color:var(--cyan)">480</span>
           </div>
+          <div class="map-layout-trigger" onclick="openMapPopup()" title="Choose Map Layout">
+            <div class="map-layout-copy">
+              <span class="map-layout-label">MAP LAYOUT</span>
+              <span class="map-layout-value" id="mapLayoutLabel">Classic Arena</span>
+            </div>
+            <span class="map-layout-arrow">▶</span>
+          </div>
         </div>
       </div>
 
@@ -4106,6 +4167,178 @@
       </div>
     </div>
 
+    <div class="popup-overlay" id="mapPopup" onclick="closeOnOverlay(event,'mapPopup')">
+      <div class="popup-sheet map-sheet">
+        <div class="popup-handle"></div>
+        <div class="popup-header">
+          <div>
+            <div class="popup-mode-label">MAP LAYOUT</div>
+            <div class="popup-title">Select Arena Design</div>
+            <div class="popup-sub">Choose a board style, then continue to the game board page.</div>
+          </div>
+          <div class="popup-close" onclick="closePopup('mapPopup')">✕</div>
+        </div>
+
+        <div class="map-list">
+          <div class="map-card map-selected" data-map-value="classic" data-map-label="Classic Arena" onclick="selectMapLayout(this)">
+            <div class="map-preview mp-classic">
+              <div class="map-board-mini">
+                <div class="mbz-r"></div>
+                <div class="mbz-b"></div>
+                <div class="mbz-g"></div>
+                <div class="mbz-y"></div>
+                <div class="mb-path-h"></div>
+                <div class="mb-path-v"></div>
+                <div class="mb-center"></div>
+              </div>
+              <div class="map-preview-glow mp-glow-cyan"></div>
+              <div class="map-badge-tag">DEFAULT</div>
+            </div>
+            <div class="map-info">
+              <div>
+                <div class="map-name-row">
+                  <div class="map-name">Classic Arena</div>
+                  <div class="map-check">✓</div>
+                </div>
+                <div class="map-desc">Balanced tournament layout with the standard four-corner board setup.</div>
+              </div>
+              <div class="map-tags">
+                <div class="mtag mtag-cyan">Standard</div>
+                <div class="mtag mtag-green">Clean</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="map-card" data-map-value="neon" data-map-label="Neon City" onclick="selectMapLayout(this)">
+            <div class="map-preview mp-neon">
+              <div class="map-board-mini mb-neon">
+                <div class="mbz-r"></div>
+                <div class="mbz-b"></div>
+                <div class="mbz-g"></div>
+                <div class="mbz-y"></div>
+                <div class="mb-path-h"></div>
+                <div class="mb-path-v"></div>
+                <div class="mb-center"></div>
+              </div>
+              <div class="neon-sparks"></div>
+              <div class="map-preview-glow mp-glow-purple"></div>
+              <div class="map-badge-tag tag-hot">HOT</div>
+            </div>
+            <div class="map-info">
+              <div>
+                <div class="map-name-row">
+                  <div class="map-name">Neon City</div>
+                  <div class="map-check"></div>
+                </div>
+                <div class="map-desc">Futuristic board art with glowing lanes and high-contrast corners.</div>
+              </div>
+              <div class="map-tags">
+                <div class="mtag mtag-purple">Cyber</div>
+                <div class="mtag mtag-cyan">Glow FX</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="map-card" data-map-value="volcano" data-map-label="Volcano Pit" onclick="selectMapLayout(this)">
+            <div class="map-preview mp-volcano">
+              <div class="map-board-mini mb-volcano">
+                <div class="mbz-r"></div>
+                <div class="mbz-b"></div>
+                <div class="mbz-g"></div>
+                <div class="mbz-y"></div>
+                <div class="mb-path-h"></div>
+                <div class="mb-path-v"></div>
+                <div class="mb-center"></div>
+              </div>
+              <div class="lava-pulse"></div>
+              <div class="map-preview-glow mp-glow-orange"></div>
+              <div class="map-badge-tag tag-new">NEW</div>
+            </div>
+            <div class="map-info">
+              <div>
+                <div class="map-name-row">
+                  <div class="map-name">Volcano Pit</div>
+                  <div class="map-check"></div>
+                </div>
+                <div class="map-desc">Molten orange palette with an aggressive, high-energy arena skin.</div>
+              </div>
+              <div class="map-tags">
+                <div class="mtag mtag-orange">Lava</div>
+                <div class="mtag mtag-red">Hot Zone</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="map-card" data-map-value="ice" data-map-label="Ice Kingdom" onclick="selectMapLayout(this)">
+            <div class="map-preview mp-ice">
+              <div class="map-board-mini mb-ice">
+                <div class="mbz-r"></div>
+                <div class="mbz-b"></div>
+                <div class="mbz-g"></div>
+                <div class="mbz-y"></div>
+                <div class="mb-path-h"></div>
+                <div class="mb-path-v"></div>
+                <div class="mb-center"></div>
+              </div>
+              <div class="ice-shimmer"></div>
+              <div class="map-preview-glow mp-glow-ice"></div>
+              <div class="map-badge-tag">FROST</div>
+            </div>
+            <div class="map-info">
+              <div>
+                <div class="map-name-row">
+                  <div class="map-name">Ice Kingdom</div>
+                  <div class="map-check"></div>
+                </div>
+                <div class="map-desc">Cool crystal styling with icy tones and a polished board finish.</div>
+              </div>
+              <div class="map-tags">
+                <div class="mtag mtag-cyan">Frozen</div>
+                <div class="mtag mtag-green">Bright</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="map-card" data-map-value="temple" data-map-label="Ancient Temple" onclick="selectMapLayout(this)">
+            <div class="map-preview mp-temple">
+              <div class="map-board-mini mb-temple">
+                <div class="mbz-r"></div>
+                <div class="mbz-b"></div>
+                <div class="mbz-g"></div>
+                <div class="mbz-y"></div>
+                <div class="mb-path-h"></div>
+                <div class="mb-path-v"></div>
+                <div class="mb-center"></div>
+              </div>
+              <div class="map-preview-glow mp-glow-gold"></div>
+              <div class="map-badge-tag">EPIC</div>
+            </div>
+            <div class="map-info">
+              <div>
+                <div class="map-name-row">
+                  <div class="map-name">Ancient Temple</div>
+                  <div class="map-check"></div>
+                </div>
+                <div class="map-desc">Golden stone styling for a ceremonial board presentation.</div>
+              </div>
+              <div class="map-tags">
+                <div class="mtag mtag-gold">Temple</div>
+                <div class="mtag mtag-orange">Relic</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="map-cta">
+          <div class="map-selected-info">
+            <div class="msi-dot"></div>
+            <span id="mapSelectedInfo">Selected: Classic Arena</span>
+          </div>
+          <button class="play-now-btn" onclick="enterSelectedMap()">PLAY NOW</button>
+        </div>
+      </div>
+    </div>
+
     <!-- BOTTOM NAV -->
     <div class="bottom-nav">
       <div class="nav-items">
@@ -4312,6 +4545,10 @@
     const modePopupEl = document.getElementById('modePopup');
     const popupLbl = document.getElementById('popupLbl');
     const modeLabels = { online: 'PLAY ONLINE', friends: 'WITH FRIENDS', computer: 'VS COMPUTER' };
+    const mapPopupEl = document.getElementById('mapPopup');
+    const mapLayoutLabelEl = document.getElementById('mapLayoutLabel');
+    const mapSelectedInfoEl = document.getElementById('mapSelectedInfo');
+    let selectedMapLayout = { value: 'classic', label: 'Classic Arena' };
 
     function openPopup(m) {
       popupLbl.textContent = modeLabels[m] || 'SELECT MODE';
@@ -4322,6 +4559,33 @@
     }
     function closeOnOverlay(e, id) {
       if (e.target === document.getElementById(id)) closePopup(id);
+    }
+    function openMapPopup() {
+      mapPopupEl.classList.add('open');
+    }
+    function selectMapLayout(card) {
+      const cards = mapPopupEl.querySelectorAll('.map-card');
+      cards.forEach(item => {
+        item.classList.remove('map-selected');
+        const check = item.querySelector('.map-check');
+        if (check) check.textContent = '';
+      });
+
+      card.classList.add('map-selected');
+      const selectedCheck = card.querySelector('.map-check');
+      if (selectedCheck) selectedCheck.textContent = '✓';
+
+      selectedMapLayout = {
+        value: card.dataset.mapValue || 'classic',
+        label: card.dataset.mapLabel || 'Classic Arena'
+      };
+
+      mapLayoutLabelEl.textContent = selectedMapLayout.label;
+      mapSelectedInfoEl.textContent = `Selected: ${selectedMapLayout.label}`;
+    }
+    function enterSelectedMap() {
+      localStorage.setItem('ludoSelectedMapLayout', JSON.stringify(selectedMapLayout));
+      window.location.href = `ludo_board.html?layout=${encodeURIComponent(selectedMapLayout.value)}`;
     }
     function joinMode(code, name) {
       // Show "Finding Match" briefly then close
