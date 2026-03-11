@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Four Player Ludo Board</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;900&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #050e1f;
+    }
+
+    body {
+      background: radial-gradient(ellipse at center, #0f3460 0%, #0a1628 70%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 390px;
+      height: 844px;
+      overflow: hidden;
+      font-family: 'Fredoka One', cursive;
+      margin: 0 auto;
+    }
+
+    /*
+    STEP = 37px (block=34, gap=3)
+    
+    Rectangle: 25 cols × 13 rows
+      rect_left = 89, rect_top = 180
+      center col 12 → center_x = 89 + 12*37 = 89+444 = 533
+
+    TOP T-ARM (y = 180 - 37 = 143):
+      Center junction x = 533, y = 143
+      P1 arm: 6 blocks LEFT of junction
+        x = 533-37=496, 459, 422, 385, 348, 311  (6 blocks)
+        P1 circle at x = 311-37-30 = 244 (circle width=60, so left=244)
+      P2 arm: 6 blocks RIGHT of junction
+        x = 533+37=570, 607, 644, 681, 718, 755  (6 blocks)
+        P2 circle at x = 755+37 = 792
+
+    BOTTOM T-ARM (y = 180 + 12*37 + 37 = 180+444+37 = 661):
+      Same: P3 left 6, P4 right 6
+
+    After rotate(90deg): 1000px wide becomes height, 700px tall becomes width
+    To fit 390x844:
+      scale for width:  390 / 700 = 0.557
+      scale for height: 844 / 1000 = 0.844
+      Use min: 0.557, but let's use 0.46 to add breathing room
+  */
+
+    .wrap {
+      position: relative;
+      width: 1000px;
+      height: 700px;
+      left: 29px;
+      transform: rotate(90deg) scale(0.46);
+      transform-origin: center center;
+      flex-shrink: 0;
+    }
+
+    .inner-bg {
+      position: absolute;
+      left: 126px;
+      top: 217px;
+      width: 850px;
+      height: 404px;
+      background: #1e3278;
+      border-radius: 4px;
+      z-index: 1;
+    }
+
+    .bl {
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      border-radius: 5px;
+      background: linear-gradient(145deg, #f5e6c8, #e8d5a8);
+      border: 2px solid #c4a96a;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 2px 4px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 900;
+      color: #444;
+      transition: transform 0.1s;
+    }
+
+    .bl:hover {
+      transform: scale(1.1);
+      z-index: 20;
+    }
+
+    .arm-p1 {
+      background: linear-gradient(145deg, #ff7070, #e63946);
+      border-color: #a01020;
+      box-shadow: 0 0 7px #e6394655;
+      color: white;
+    }
+
+    .arm-p2 {
+      background: linear-gradient(145deg, #60e880, #2dc653);
+      border-color: #1a7a30;
+      box-shadow: 0 0 7px #2dc65355;
+      color: white;
+    }
+
+    .arm-p3 {
+      background: linear-gradient(145deg, #ffe570, #f4c430);
+      border-color: #c89010;
+      box-shadow: 0 0 7px #f4c43055;
+      color: #3a2a00;
+    }
+
+    .arm-p4 {
+      background: linear-gradient(145deg, #70b0ff, #3a86ff);
+      border-color: #1050b8;
+      box-shadow: 0 0 7px #3a86ff55;
+      color: white;
+    }
+
+    .safe {
+      background: linear-gradient(145deg, #ff6eb0, #e0206e);
+      border-color: #a0005a;
+      box-shadow: 0 0 6px #e0206e55;
+    }
+
+    .s {
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(145deg, #eaeaea, #ababab);
+      border: 2px solid #888;
+      border-radius: 5px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 2px 4px rgba(0, 0, 0, 0.3);
+      z-index: 6;
+    }
+
+    .home {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.62rem;
+      font-weight: 900;
+      font-family: 'Nunito', sans-serif;
+      color: white;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      z-index: 8;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .home .ico {
+      font-size: 1.3rem;
+      line-height: 1.1;
+    }
+
+    .h-red {
+      background: radial-gradient(circle, #ff6060, #e63946, #a01020);
+      box-shadow: 0 0 16px #e6394699;
+    }
+
+    .h-green {
+      background: radial-gradient(circle, #60e880, #2dc653, #1a7a30);
+      box-shadow: 0 0 16px #2dc65399;
+    }
+
+    .h-yellow {
+      background: radial-gradient(circle, #ffe570, #f4c430, #c89010);
+      box-shadow: 0 0 16px #f4c43099;
+      color: #3a2a00;
+    }
+
+    .h-blue {
+      background: radial-gradient(circle, #70b0ff, #3a86ff, #1050b8);
+      box-shadow: 0 0 16px #3a86ff99;
+    }
+
+    .barrel {
+      position: absolute;
+      border-radius: 14px;
+      display: flex;
+      overflow: hidden;
+      border: 3px solid rgba(0, 0, 0, 0.3);
+      z-index: 5;
+    }
+
+    .barrel.glow {
+      box-shadow: 0 0 22px 7px rgba(255, 215, 0, 0.6), 0 0 48px 14px rgba(255, 215, 0, 0.22);
+    }
+
+    .barrel.dim {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      filter: brightness(0.88);
+    }
+
+    .bh {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .bh:first-child {
+      border-right: 2px solid rgba(0, 0, 0, 0.2);
+    }
+
+    .bh-red {
+      background: linear-gradient(160deg, #ff6060, #e63946, #a01020);
+    }
+
+    .bh-green {
+      background: linear-gradient(160deg, #50e870, #2dc653, #1a7a30);
+    }
+
+    .bh-yellow {
+      background: linear-gradient(160deg, #ffe566, #f4c430, #c89010);
+    }
+
+    .bh-blue {
+      background: linear-gradient(160deg, #60a8ff, #3a86ff, #1050b8);
+    }
+
+    .dots {
+      display: grid;
+      grid-template-columns: repeat(2, 10px);
+      grid-template-rows: repeat(2, 10px);
+      gap: 4px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.52);
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6);
+    }
+
+    .bh-yellow .dot {
+      background: rgba(80, 50, 0, 0.42);
+    }
+
+    .blbl {
+      font-size: 0.5rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.95);
+      text-transform: uppercase;
+    }
+
+    .bh-yellow .blbl {
+      color: #3a2a00;
+    }
+
+    .gi {
+      position: absolute;
+      font-size: 0.85rem;
+      color: rgba(100, 230, 160, 0.95);
+      text-shadow: 0 0 8px rgba(80, 255, 140, 0.7);
+      z-index: 10;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <div class="inner-bg"></div>
+    <div id="rect-blocks"></div>
+
+    <!--
+    TOP T-ARM  (arm_y=143, center_x=533, rect_top=180)
+
+    P1 arm: 6 RED blocks LEFT of center
+      x = 496, 459, 422, 385, 348, 311   (6 blocks)
+    P1 home circle: left = 311-37-13 = 261, top = 126
+
+    Center junction (silver): x=533, y=143
+    Silver stem down: x=533, y=180 (rect row 0)
+
+    P2 arm: 6 GREEN blocks RIGHT of center
+      x = 570, 607, 644, 681, 718, 755   (6 blocks)
+    P2 home circle: left = 755+37-10 = 782, top = 126
+  -->
+
+    <!-- P1 HOME -->
+    <div class="home h-red" style="left:238px; top:46px;">
+      <div class="ico">♟</div>
+      <div>P1</div>
+    </div>
+    <!-- P1 ARM: 6 red blocks -->
+    <div class="bl arm-p1" style="left:311px; top:63px;"></div>
+    <div class="bl arm-p1" style="left:348px; top:63px;"></div>
+    <div class="bl arm-p1" style="left:385px; top:63px;"></div>
+    <div class="bl arm-p1" style="left:422px; top:63px;"></div>
+    <div class="bl arm-p1" style="left:459px; top:63px;"></div>
+    <div class="bl arm-p1" style="left:496px; top:63px;"></div>
+
+    <!-- CENTER JUNCTION (silver) -->
+    <div class="s" style="left:533px; top:63px;"></div>
+    <div class="gi" style="left:536px; top:66px;">🧍</div>
+
+    <!-- P2 ARM: 6 green blocks -->
+    <div class="bl arm-p2" style="left:570px; top:63px;"></div>
+    <div class="bl arm-p2" style="left:607px; top:63px;"></div>
+    <div class="bl arm-p2" style="left:644px; top:63px;"></div>
+    <div class="bl arm-p2" style="left:681px; top:63px;"></div>
+    <div class="bl arm-p2" style="left:718px; top:63px;"></div>
+    <div class="bl arm-p2" style="left:755px; top:63px;"></div>
+    <!-- P2 HOME -->
+    <div class="home h-green" style="left:802px; top:46px;">
+      <div class="ico">♟</div>
+      <div>P2</div>
+    </div>
+
+    <!-- SILVER STEM into rect (bridge gap) -->
+    <div class="s" style="left:533px; top:97px;"></div>
+    <div class="s" style="left:533px; top:134px;"></div>
+    <div class="s" style="left:533px; top:157px;"></div>
+    <div class="s" style="left:533px; top:180px;"></div>
+
+    <!-- ── U-CONNECTOR INSIDE ── -->
+    <div class="s" style="left:533px; top:217px;"></div>
+    <div class="s" style="left:422px; top:254px;"></div>
+    <div class="s" style="left:459px; top:254px;"></div>
+    <div class="s" style="left:496px; top:254px;"></div>
+    <div class="s" style="left:533px; top:254px;"></div>
+    <div class="s" style="left:570px; top:254px;"></div>
+    <div class="s" style="left:607px; top:254px;"></div>
+    <div class="s" style="left:644px; top:254px;"></div>
+    <div class="s" style="left:422px; top:291px;"></div>
+    <div class="s" style="left:644px; top:291px;"></div>
+
+    <!-- TOP BARREL -->
+    <div class="barrel dim" style="left:348px; top:328px; width:370px; height:56px;">
+      <div class="bh bh-red">
+        <div class="dots">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+        <div class="blbl">P1 · Red</div>
+      </div>
+      <div class="bh bh-green">
+        <div class="dots">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+        <div class="blbl">P2 · Green</div>
+      </div>
+    </div>
+
+    <!-- BOTTOM BARREL -->
+    <div class="barrel glow" style="left:348px; top:458px; width:370px; height:56px;">
+      <div class="bh bh-yellow">
+        <div class="dots">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+        <div class="blbl" style="color:#3a2a00;">P3 · Yellow</div>
+      </div>
+      <div class="bh bh-blue">
+        <div class="dots">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+        <div class="blbl">P4 · Blue</div>
+      </div>
+    </div>
+
+    <!-- ── BOTTOM U-CONNECTOR ── -->
+    <div class="s" style="left:422px; top:517px;"></div>
+    <div class="s" style="left:644px; top:517px;"></div>
+    <div class="s" style="left:422px; top:554px;"></div>
+    <div class="s" style="left:459px; top:554px;"></div>
+    <div class="s" style="left:496px; top:554px;"></div>
+    <div class="s" style="left:533px; top:554px;"></div>
+    <div class="s" style="left:570px; top:554px;"></div>
+    <div class="s" style="left:607px; top:554px;"></div>
+    <div class="s" style="left:644px; top:554px;"></div>
+    <div class="s" style="left:533px; top:591px;"></div>
+
+    <!-- SILVER STEM out of rect bottom (bridge gap) -->
+    <div class="s" style="left:533px; top:624px;"></div>
+    <div class="s" style="left:533px; top:647px;"></div>
+    <div class="s" style="left:533px; top:684px;"></div>
+
+    <!--
+    BOTTOM T-ARM (arm_y = 661)
+    P3: 6 YELLOW blocks LEFT, P4: 6 BLUE blocks RIGHT
+  -->
+    <!-- P3 HOME -->
+    <div class="home h-yellow" style="left:238px; top:704px;">
+      <div class="ico">♟</div>
+      <div>P3</div>
+    </div>
+    <!-- P3 ARM: 6 yellow blocks -->
+    <div class="bl arm-p3" style="left:311px; top:721px;"></div>
+    <div class="bl arm-p3" style="left:348px; top:721px;"></div>
+    <div class="bl arm-p3" style="left:385px; top:721px;"></div>
+    <div class="bl arm-p3" style="left:422px; top:721px;"></div>
+    <div class="bl arm-p3" style="left:459px; top:721px;"></div>
+    <div class="bl arm-p3" style="left:496px; top:721px;"></div>
+
+    <!-- CENTER JUNCTION BOTTOM (silver) -->
+    <div class="s" style="left:533px; top:721px;"></div>
+    <div class="gi" style="left:536px; top:724px;">🧍</div>
+
+    <!-- P4 ARM: 6 blue blocks -->
+    <div class="bl arm-p4" style="left:570px; top:721px;"></div>
+    <div class="bl arm-p4" style="left:607px; top:721px;"></div>
+    <div class="bl arm-p4" style="left:644px; top:721px;"></div>
+    <div class="bl arm-p4" style="left:681px; top:721px;"></div>
+    <div class="bl arm-p4" style="left:718px; top:721px;"></div>
+    <div class="bl arm-p4" style="left:755px; top:721px;"></div>
+    <!-- P4 HOME -->
+    <div class="home h-blue" style="left:802px; top:704px;">
+      <div class="ico">♟</div>
+      <div>P4</div>
+    </div>
+
+  </div>
+
+  <script>
+    const STEP = 37, RECT_LEFT = 89, RECT_TOP = 180, COLS = 25, ROWS = 13;
+    const pinkSafe = new Set(['0-6', '0-18', '12-6', '12-18', '3-0', '9-0', '3-24', '9-24']);
+    const rectEl = document.getElementById('rect-blocks');
+
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const isBorder = r === 0 || r === ROWS - 1 || c === 0 || c === COLS - 1;
+        if (!isBorder) continue;
+        if ((r === 0 || r === 12) && c === 12) continue; // silver handles center
+        const div = document.createElement('div');
+        div.className = 'bl' + (pinkSafe.has(`${r}-${c}`) ? ' safe' : '');
+        div.style.left = (RECT_LEFT + c * STEP) + 'px';
+        div.style.top = (RECT_TOP + r * STEP) + 'px';
+        rectEl.appendChild(div);
+      }
+    }
+  </script>
+</body>
+
+</html>
