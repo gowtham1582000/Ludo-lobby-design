@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Daya Pass Arena - Items</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="items.css">
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="bg-system">
+      <div class="bg-gradient"></div>
+      <div class="bg-grid"></div>
+      <div class="bg-scan"></div>
+    </div>
+
+    <main class="sheet" aria-label="Items and Inventory">
+      <header class="topbar">
+        <a class="close-btn" href="index.html" aria-label="Back to home" title="Home">&times;</a>
+        <div class="top-title">
+          <div class="eyebrow">COLLECTION</div>
+          <div class="title">ITEMS</div>
+          <div class="sub">Owned skins and loadout</div>
+        </div>
+        <a class="icon-btn" href="shop.html" aria-label="Open shop" title="Shop">SHOP</a>
+      </header>
+
+      <section class="loadout" aria-label="Current loadout">
+        <div class="load-card">
+          <div class="load-label">EQUIPPED DICE</div>
+          <div class="load-preview" id="eqDicePrev"></div>
+          <div class="load-name" id="eqDiceName">None</div>
+        </div>
+        <div class="load-card">
+          <div class="load-label">EQUIPPED PAWNS</div>
+          <div class="load-preview" id="eqPawnPrev"></div>
+          <div class="load-name" id="eqPawnName">None</div>
+        </div>
+        <button class="load-btn" id="copyLoadout" type="button">COPY LOADOUT</button>
+      </section>
+
+      <section class="controls" aria-label="Filters and search">
+        <div class="chips" role="tablist" aria-label="Filters">
+          <button class="chip active" type="button" data-filter="all" role="tab">All</button>
+          <button class="chip" type="button" data-filter="dice" role="tab">Dice</button>
+          <button class="chip" type="button" data-filter="pawn" role="tab">Pawns</button>
+          <button class="chip" type="button" data-filter="other" role="tab">Other</button>
+          <button class="chip chip-star" type="button" data-filter="fav" role="tab" title="Favorites">Star</button>
+        </div>
+
+        <div class="searchbar">
+          <div class="search-wrap">
+            <svg class="search-ico" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M16.2 16.2 21 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <input id="invSearch" class="search" type="search" placeholder="Search items..." autocomplete="off">
+          </div>
+          <div class="sort" role="tablist" aria-label="Sort">
+            <button class="sort-chip active" type="button" data-sort="recent" role="tab">Recent</button>
+            <button class="sort-chip" type="button" data-sort="az" role="tab">A-Z</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="content" aria-label="Owned items list">
+        <div class="empty" id="invEmpty" hidden>
+          <div class="empty-title">No owned items yet</div>
+          <div class="empty-sub">Purchase dice and pawn skins in the Shop to see them here.</div>
+          <a class="empty-btn" href="shop.html">OPEN SHOP</a>
+        </div>
+
+        <div class="grid" id="invGrid"></div>
+      </section>
+    </main>
+
+    <div class="toast" id="invToast" aria-live="polite"></div>
+  </div>
+
+  <script src="items.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Daya Pass Arena - Friends</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="friends.css">
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="bg-system">
+      <div class="bg-gradient"></div>
+      <div class="bg-grid"></div>
+      <div class="bg-scan"></div>
+    </div>
+
+    <main class="friends-shell">
+      <header class="friends-header">
+        <a class="close-btn" href="index.html" aria-label="Back to home" title="Home">✕</a>
+
+        <div class="title-block">
+          <div class="eyebrow">SOCIAL</div>
+          <div class="title">FRIENDS</div>
+          <div class="sub">Add, search, and match-up instantly</div>
+        </div>
+
+        <button class="icon-btn" id="friendsRefresh" type="button" aria-label="Refresh online status" title="Refresh">⟳</button>
+      </header>
+
+      <section class="stats-row" aria-label="Friend stats">
+        <div class="stat-pill">
+          <span class="stat-ico">👥</span>
+          <span class="stat-txt"><span id="friendsTotal">0</span> total</span>
+        </div>
+        <div class="stat-pill stat-online">
+          <span class="stat-ico">🟢</span>
+          <span class="stat-txt"><span id="friendsOnline">0</span> online</span>
+        </div>
+      </section>
+
+      <section class="add-card" aria-label="Send friend request">
+        <div class="add-title">Send Friend Request</div>
+        <div class="add-row">
+          <input id="addFriendInput" class="field" type="text" placeholder="Enter name or tag (ex: Akash#1024)" autocomplete="off" maxlength="28">
+          <button id="addFriendBtn" class="btn btn-primary" type="button">SEND</button>
+        </div>
+        <div class="add-hint">Requests can only be sent to players with an in-game account.</div>
+      </section>
+
+      <section class="toolbar" aria-label="Search">
+        <div class="search-wrap">
+          <span class="search-ico">🔎</span>
+          <input id="friendSearch" class="search" type="search" placeholder="Search players or friends..." autocomplete="off">
+        </div>
+      </section>
+
+      <section class="chip-row" aria-label="Views and filters">
+        <div class="views" role="tablist" aria-label="Views">
+          <button class="view-chip active" type="button" data-view="friends" role="tab">Friends</button>
+          <button class="view-chip" type="button" data-view="requests" role="tab">
+            Requests <span class="chip-badge" id="reqBadge" hidden></span>
+          </button>
+        </div>
+        <div class="filters" id="friendsFilters" role="tablist" aria-label="Friend filters">
+          <button class="filter-chip active" type="button" data-filter="all" role="tab">All</button>
+          <button class="filter-chip" type="button" data-filter="online" role="tab">Online</button>
+        </div>
+      </section>
+
+      <section class="panel hidden" id="playerResultsWrap" aria-label="Player search results">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Players</div>
+            <div class="panel-sub" id="playerResultsSub">Type to find players with accounts</div>
+          </div>
+        </div>
+        <div class="mini-list" id="playerResults"></div>
+      </section>
+
+      <section class="list-wrap hidden" id="requestsWrap" aria-label="Friend requests">
+        <div id="requestsList" class="friends-list"></div>
+      </section>
+
+      <section class="list-wrap" id="friendsWrap" aria-label="Friend list">
+        <div id="friendsList" class="friends-list"></div>
+      </section>
+    </main>
+
+    <div class="toast" id="friendsToast" aria-live="polite"></div>
+  </div>
+
+  <script src="friends.js"></script>
+</body>
+</html>
