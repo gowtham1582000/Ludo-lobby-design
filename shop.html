@@ -1,0 +1,489 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Daya Pass Arena - Shop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shop.css">
+</head>
+<body>
+
+  <!-- PAGE WRAPPER (matches existing game viewport) -->
+  <div class="page-wrapper">
+
+    <!-- Background FX -->
+    <div class="bg-system">
+      <div class="bg-gradient"></div>
+      <div class="bg-grid"></div>
+      <div class="bg-scan"></div>
+    </div>
+
+    <main class="shop-page">
+      <div class="popup-sheet shop-page-sheet" id="shopSheet">
+
+        <!-- Ambient orbs -->
+        <div class="popup-ambient" aria-hidden="true">
+          <span class="popup-orb orb-gold"  style="width:80px;height:80px;right:-10px;top:20px;"></span>
+          <span class="popup-orb orb-cyan"  style="width:44px;height:44px;left:20px;top:60px;"></span>
+          <span class="popup-orb orb-purple" style="width:34px;height:34px;left:40%;bottom:120px;"></span>
+        </div>
+
+        <!-- ── HEADER ── -->
+        <div class="shop-header">
+          <div class="shop-title-block">
+            <div class="shop-eyebrow">DAYA PASS</div>
+            <div class="shop-title">ARENA SHOP</div>
+          </div>
+          <div class="shop-header-right">
+            <div class="shop-wallet">
+              <div class="wallet-row">
+                <span class="wallet-icon">🪙</span>
+                <span class="wallet-num gold-num" id="shopCoins">24,850</span>
+              </div>
+              <div class="wallet-row">
+                <span class="wallet-icon">💎</span>
+                <span class="wallet-num gem-num" id="shopGems">480</span>
+              </div>
+            </div>
+            <a class="popup-close" href="index.html" aria-label="Close shop and go home" title="Home">✕</a>
+          </div>
+        </div>
+
+        <!-- ── TAB BAR ── -->
+        <div class="shop-tabs" role="tablist">
+          <button class="stab stab-active" data-tab="dice"     role="tab">🎲 Dice</button>
+          <button class="stab"             data-tab="tokens"   role="tab">⚪ Pawns</button>
+          <button class="stab"             data-tab="powerups" role="tab">⚡ Power-Ups</button>
+          <button class="stab"             data-tab="bundles"  role="tab">🎁 Bundles</button>
+        </div>
+
+        <!-- ══════════════════════
+             TAB: DICE SKINS
+        ══════════════════════ -->
+        <div class="shop-panel" id="tab-dice" role="tabpanel">
+          <div class="shop-section-label">PREMIUM DICE SKINS</div>
+          <div class="dice-grid">
+
+            <div class="dice-item owned" data-item="Classic Dice" data-price="0" data-currency="free">
+              <div class="dice-preview dp-classic">
+                <div class="dice-cube" data-face="6" aria-hidden="true">
+                  <span class="pip tl"></span><span class="pip tr"></span><span class="pip ml"></span><span class="pip mm"></span><span class="pip mr"></span><span class="pip bl"></span><span class="pip br"></span>
+                </div>
+              </div>
+              <div class="dice-name">Classic</div>
+              <div class="dice-sub">Standard white cube</div>
+              <div class="item-cta owned-tag">✓ OWNED</div>
+            </div>
+
+            <div class="dice-item buyable" data-item="Neon Surge Dice" data-price="120" data-currency="gem">
+              <span class="item-badge badge-popular">POPULAR</span>
+              <div class="dice-preview dp-neon">
+                <div class="dice-cube" data-face="5" aria-hidden="true">
+                  <span class="pip tl"></span><span class="pip tr"></span><span class="pip ml"></span><span class="pip mm"></span><span class="pip mr"></span><span class="pip bl"></span><span class="pip br"></span>
+                </div>
+              </div>
+              <div class="dice-name">Neon Surge</div>
+              <div class="dice-sub">Electric cyan glow</div>
+              <div class="item-cta gem-price"><span>💎</span> 120</div>
+            </div>
+
+            <div class="dice-item buyable" data-item="Inferno Dice" data-price="200" data-currency="gem">
+              <span class="item-badge badge-hot">🔥 HOT</span>
+              <div class="dice-preview dp-fire">
+                <div class="dice-cube" data-face="3" aria-hidden="true">
+                  <span class="pip tl"></span><span class="pip tr"></span><span class="pip ml"></span><span class="pip mm"></span><span class="pip mr"></span><span class="pip bl"></span><span class="pip br"></span>
+                </div>
+              </div>
+              <div class="dice-name">Inferno</div>
+              <div class="dice-sub">Volcanic lava skin</div>
+              <div class="item-cta gem-price"><span>💎</span> 200</div>
+            </div>
+
+            <div class="dice-item buyable" data-item="Crystal Frost Dice" data-price="180" data-currency="gem">
+              <div class="dice-preview dp-ice">
+                <div class="dice-cube" data-face="4" aria-hidden="true">
+                  <span class="pip tl"></span><span class="pip tr"></span><span class="pip ml"></span><span class="pip mm"></span><span class="pip mr"></span><span class="pip bl"></span><span class="pip br"></span>
+                </div>
+              </div>
+              <div class="dice-name">Crystal Frost</div>
+              <div class="dice-sub">Ice kingdom edition</div>
+              <div class="item-cta gem-price"><span>💎</span> 180</div>
+            </div>
+
+            <div class="dice-item buyable" data-item="Royal Gold Dice" data-price="350" data-currency="gem">
+              <span class="item-badge badge-epic">👑 EPIC</span>
+              <div class="dice-preview dp-gold">
+                <div class="dice-cube" data-face="2" aria-hidden="true">
+                  <span class="pip tl"></span><span class="pip tr"></span><span class="pip ml"></span><span class="pip mm"></span><span class="pip mr"></span><span class="pip bl"></span><span class="pip br"></span>
+                </div>
+              </div>
+              <div class="dice-name">Royal Gold</div>
+              <div class="dice-sub">Legendary status</div>
+              <div class="item-cta gem-price"><span>💎</span> 350</div>
+            </div>
+
+            <div class="dice-item buyable" data-item="Cosmic Void Dice" data-price="500" data-currency="gem">
+              <span class="item-badge badge-rare">✨ RARE</span>
+              <div class="dice-preview dp-cosmic">
+                <div class="dice-cube" data-face="1" aria-hidden="true">
+                  <span class="pip tl"></span><span class="pip tr"></span><span class="pip ml"></span><span class="pip mm"></span><span class="pip mr"></span><span class="pip bl"></span><span class="pip br"></span>
+                </div>
+              </div>
+              <div class="dice-name">Cosmic Void</div>
+              <div class="dice-sub">Galaxy shimmer skin</div>
+              <div class="item-cta gem-price"><span>💎</span> 500</div>
+            </div>
+
+            <div class="dice-item buyable" data-item="Emerald Pulse Dice" data-price="240" data-currency="gem">
+              <span class="item-badge badge-popular">NEW</span>
+              <div class="dice-preview dp-emerald">
+                <div class="dice-cube" data-face="6" aria-hidden="true">
+                  <span class="pip tl"></span><span class="pip tr"></span><span class="pip ml"></span><span class="pip mm"></span><span class="pip mr"></span><span class="pip bl"></span><span class="pip br"></span>
+                </div>
+              </div>
+              <div class="dice-name">Emerald Pulse</div>
+              <div class="dice-sub">Green neon energy</div>
+              <div class="item-cta gem-price"><span>💎</span> 240</div>
+            </div>
+
+            <div class="dice-item buyable" data-item="Shadow Hex Dice" data-price="1800" data-currency="coin">
+              <span class="item-badge badge-hot">VOID</span>
+              <div class="dice-preview dp-shadow">
+                <div class="dice-cube" data-face="5" aria-hidden="true">
+                  <span class="pip tl"></span><span class="pip tr"></span><span class="pip ml"></span><span class="pip mm"></span><span class="pip mr"></span><span class="pip bl"></span><span class="pip br"></span>
+                </div>
+              </div>
+              <div class="dice-name">Shadow Hex</div>
+              <div class="dice-sub">Dark glitch aura</div>
+              <div class="item-cta coin-price"><span>🪙</span> 1,800</div>
+            </div>
+
+            <div class="dice-item buyable" data-item="Sakura Bloom Dice" data-price="210" data-currency="gem">
+              <span class="item-badge badge-rare">🌸 RARE</span>
+              <div class="dice-preview dp-sakura">
+                <div class="dice-cube" data-face="2" aria-hidden="true">
+                  <span class="pip tl"></span><span class="pip tr"></span><span class="pip ml"></span><span class="pip mm"></span><span class="pip mr"></span><span class="pip bl"></span><span class="pip br"></span>
+                </div>
+              </div>
+              <div class="dice-name">Sakura Bloom</div>
+              <div class="dice-sub">Pink petal shimmer</div>
+              <div class="item-cta gem-price"><span>💎</span> 210</div>
+            </div>
+
+            <div class="dice-item buyable" data-item="Sunrise Ember Dice" data-price="1400" data-currency="coin">
+              <div class="dice-preview dp-sunrise">
+                <div class="dice-cube" data-face="4" aria-hidden="true">
+                  <span class="pip tl"></span><span class="pip tr"></span><span class="pip ml"></span><span class="pip mm"></span><span class="pip mr"></span><span class="pip bl"></span><span class="pip br"></span>
+                </div>
+              </div>
+              <div class="dice-name">Sunrise Ember</div>
+              <div class="dice-sub">Warm aurora glow</div>
+              <div class="item-cta coin-price"><span>🪙</span> 1,400</div>
+            </div>
+
+            <div class="dice-item buyable" data-item="Chrome Core Dice" data-price="300" data-currency="gem">
+              <span class="item-badge badge-epic">⚙️ EPIC</span>
+              <div class="dice-preview dp-neon">
+                <div class="dice-cube" data-face="3" aria-hidden="true">
+                  <span class="pip tl"></span><span class="pip tr"></span><span class="pip ml"></span><span class="pip mm"></span><span class="pip mr"></span><span class="pip bl"></span><span class="pip br"></span>
+                </div>
+              </div>
+              <div class="dice-name">Chrome Core</div>
+              <div class="dice-sub">Cyber steel finish</div>
+              <div class="item-cta gem-price"><span>💎</span> 300</div>
+            </div>
+
+            <div class="dice-item buyable" data-item="Arctic Prism Dice" data-price="1600" data-currency="coin">
+              <span class="item-badge badge-popular">SALE</span>
+              <div class="dice-preview dp-ice">
+                <div class="dice-cube" data-face="1" aria-hidden="true">
+                  <span class="pip tl"></span><span class="pip tr"></span><span class="pip ml"></span><span class="pip mm"></span><span class="pip mr"></span><span class="pip bl"></span><span class="pip br"></span>
+                </div>
+              </div>
+              <div class="dice-name">Arctic Prism</div>
+              <div class="dice-sub">Crystal blue shine</div>
+              <div class="item-cta coin-price"><span>🪙</span> 1,600</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ══════════════════════
+             TAB: TOKENS
+        ══════════════════════ -->
+        <div class="shop-panel hidden" id="tab-tokens" role="tabpanel">
+          <div class="shop-section-label">TOKEN COSMETICS</div>
+          <div class="token-grid">
+
+            <div class="token-card owned" data-item="Classic Rounds" data-price="0" data-currency="free">
+              <div class="token-preview" aria-hidden="true"></div>
+              <div class="token-name">Classic Rounds</div>
+              <div class="token-sub">Standard disc tokens</div>
+              <div class="item-cta owned-tag">✓ OWNED</div>
+            </div>
+
+            <div class="token-card buyable" data-item="Skull Tokens" data-price="1500" data-currency="coin">
+              <span class="item-badge badge-hot">💀 DARK</span>
+              <div class="token-preview" aria-hidden="true">💀</div>
+              <div class="token-name">Skull Set</div>
+              <div class="token-sub">Gothic dark style</div>
+              <div class="item-cta coin-price"><span>🪙</span> 1,500</div>
+            </div>
+
+            <div class="token-card buyable" data-item="Crown Tokens" data-price="250" data-currency="gem">
+              <span class="item-badge badge-epic">👑 ROYAL</span>
+              <div class="token-preview" aria-hidden="true">👑</div>
+              <div class="token-name">Crown Set</div>
+              <div class="token-sub">For champions only</div>
+              <div class="item-cta gem-price"><span>💎</span> 250</div>
+            </div>
+
+            <div class="token-card buyable" data-item="Dragon Tokens" data-price="400" data-currency="gem">
+              <span class="item-badge badge-epic">🐉 EPIC</span>
+              <div class="token-preview" aria-hidden="true"></div>
+              <div class="token-name">Dragon Set</div>
+              <div class="token-sub">Mythic fire beasts</div>
+              <div class="item-cta gem-price"><span>💎</span> 400</div>
+            </div>
+
+            <div class="token-card buyable" data-item="Eagle Sentinels" data-price="420" data-currency="gem">
+              <span class="item-badge badge-epic">EAGLE</span>
+              <div class="token-preview" aria-hidden="true"></div>
+              <div class="token-name">Eagle Sentinels</div>
+              <div class="token-sub">Sky guardian crest</div>
+              <div class="item-cta gem-price"><span>💎</span> 420</div>
+            </div>
+
+            <div class="token-card buyable" data-item="Gem Crystals" data-price="2000" data-currency="coin">
+              <div class="token-preview" aria-hidden="true"></div>
+              <div class="token-name">Gem Crystals</div>
+              <div class="token-sub">Shimmering facets</div>
+              <div class="item-cta coin-price"><span>🪙</span> 2,000</div>
+            </div>
+
+            <div class="token-card buyable" data-item="Robot Bots" data-price="300" data-currency="gem">
+              <span class="item-badge badge-popular">🤖 TECH</span>
+              <div class="token-preview" aria-hidden="true">🤖</div>
+              <div class="token-name">Robot Bots</div>
+              <div class="token-sub">Cyber mechanical set</div>
+              <div class="item-cta gem-price"><span>💎</span> 300</div>
+            </div>
+
+            <div class="token-card buyable" data-item="Neon Rims" data-price="1800" data-currency="coin">
+              <span class="item-badge badge-popular">GLOW</span>
+              <div class="token-preview" aria-hidden="true"></div>
+              <div class="token-name">Neon Rims</div>
+              <div class="token-sub">Bright edge lighting</div>
+              <div class="item-cta coin-price"><span>🪙</span> 1,800</div>
+            </div>
+
+            <div class="token-card buyable" data-item="Samurai Masks" data-price="380" data-currency="gem">
+              <span class="item-badge badge-epic">🗡️ EPIC</span>
+              <div class="token-preview" aria-hidden="true">🗡️</div>
+              <div class="token-name">Samurai Masks</div>
+              <div class="token-sub">Warrior spirit set</div>
+              <div class="item-cta gem-price"><span>💎</span> 380</div>
+            </div>
+
+            <div class="token-card buyable" data-item="Pixel Hearts" data-price="1200" data-currency="coin">
+              <div class="token-preview" aria-hidden="true"></div>
+              <div class="token-name">Pixel Hearts</div>
+              <div class="token-sub">Retro arcade vibe</div>
+              <div class="item-cta coin-price"><span>🪙</span> 1,200</div>
+            </div>
+
+            <div class="token-card buyable" data-item="Star Comets" data-price="320" data-currency="gem">
+              <span class="item-badge badge-rare">🌠 RARE</span>
+              <div class="token-preview" aria-hidden="true"></div>
+              <div class="token-name">Star Comets</div>
+              <div class="token-sub">Streaking light trails</div>
+              <div class="item-cta gem-price"><span>💎</span> 320</div>
+            </div>
+
+            <div class="token-card buyable" data-item="Phantom Flames" data-price="450" data-currency="gem">
+              <span class="item-badge badge-hot">🔥 HOT</span>
+              <div class="token-preview" aria-hidden="true">🔥</div>
+              <div class="token-name">Phantom Flames</div>
+              <div class="token-sub">Haunted ember trails</div>
+              <div class="item-cta gem-price"><span>💎</span> 450</div>
+            </div>
+
+            <div class="token-card buyable" data-item="Jungle Leaves" data-price="950" data-currency="coin">
+              <div class="token-preview" aria-hidden="true"></div>
+              <div class="token-name">Jungle Leaves</div>
+              <div class="token-sub">Fresh wild camo</div>
+              <div class="item-cta coin-price"><span>🪙</span> 950</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ══════════════════════
+             TAB: POWER-UPS
+        ══════════════════════ -->
+        <div class="shop-panel hidden" id="tab-powerups" role="tabpanel">
+          <div class="shop-section-label">BATTLE POWER-UPS</div>
+          <div class="powerup-list">
+
+            <div class="pu-card buyable" data-item="Extra Roll ×5" data-price="500" data-currency="coin">
+              <div class="pu-icon">🎲</div>
+              <div class="pu-info">
+                <div class="pu-name">Extra Roll <span class="pu-qty">×5</span></div>
+                <div class="pu-desc">Roll the dice a bonus time this turn</div>
+                <div class="pu-tags">
+                  <span class="mtag mtag-cyan">Single Use</span>
+                  <span class="mtag mtag-green">Instant</span>
+                </div>
+              </div>
+              <div class="pu-price coin-price"><span>🪙</span> 500</div>
+            </div>
+
+            <div class="pu-card buyable" data-item="Shield Block ×3" data-price="800" data-currency="coin">
+              <div class="pu-icon">🛡️</div>
+              <div class="pu-info">
+                <div class="pu-name">Shield Block <span class="pu-qty">×3</span></div>
+                <div class="pu-desc">Protect one token from being captured</div>
+                <div class="pu-tags">
+                  <span class="mtag mtag-cyan">Defensive</span>
+                  <span class="mtag mtag-purple">Active</span>
+                </div>
+              </div>
+              <div class="pu-price coin-price"><span>🪙</span> 800</div>
+            </div>
+
+            <div class="pu-card buyable" data-item="Teleport Token ×2" data-price="150" data-currency="gem">
+              <div class="pu-icon">✨</div>
+              <div class="pu-info">
+                <div class="pu-name">Teleport <span class="pu-qty">×2</span></div>
+                <div class="pu-desc">Move any token to nearest safe star</div>
+                <div class="pu-tags">
+                  <span class="mtag mtag-orange">Aggressive</span>
+                  <span class="mtag mtag-red">Risk</span>
+                </div>
+              </div>
+              <div class="pu-price gem-price"><span>💎</span> 150</div>
+            </div>
+
+            <div class="pu-card buyable" data-item="Double XP ×1" data-price="200" data-currency="gem">
+              <div class="pu-icon">⚡</div>
+              <div class="pu-info">
+                <div class="pu-name">Double XP <span class="pu-qty">×1</span></div>
+                <div class="pu-desc">2× XP for entire match duration</div>
+                <div class="pu-tags">
+                  <span class="mtag mtag-gold">XP Boost</span>
+                  <span class="mtag mtag-green">1 Match</span>
+                </div>
+              </div>
+              <div class="pu-price gem-price"><span>💎</span> 200</div>
+            </div>
+
+            <div class="pu-card buyable" data-item="Freeze Opponent ×2" data-price="100" data-currency="gem">
+              <div class="pu-icon">❄️</div>
+              <div class="pu-info">
+                <div class="pu-name">Freeze <span class="pu-qty">×2</span></div>
+                <div class="pu-desc">Skip an opponent's next turn</div>
+                <div class="pu-tags">
+                  <span class="mtag mtag-cyan">Control</span>
+                  <span class="mtag mtag-purple">Rare</span>
+                </div>
+              </div>
+              <div class="pu-price gem-price"><span>💎</span> 100</div>
+            </div>
+
+            <div class="pu-card buyable" data-item="Lucky Six ×5" data-price="1200" data-currency="coin">
+              <div class="pu-icon">🍀</div>
+              <div class="pu-info">
+                <div class="pu-name">Lucky Six <span class="pu-qty">×5</span></div>
+                <div class="pu-desc">Forces dice to land on 6</div>
+                <div class="pu-tags">
+                  <span class="mtag mtag-gold">Guaranteed</span>
+                  <span class="mtag mtag-red">OP</span>
+                </div>
+              </div>
+              <div class="pu-price coin-price"><span>🪙</span> 1,200</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ══════════════════════
+             TAB: BUNDLES
+        ══════════════════════ -->
+        <div class="shop-panel hidden" id="tab-bundles" role="tabpanel">
+          <div class="shop-section-label">VALUE BUNDLES</div>
+          <div class="bundle-list">
+
+            <div class="bundle-card bc-starter buyable" data-item="Starter Pack" data-price="999" data-currency="coin">
+              <div class="bundle-glow"></div>
+              <div class="bundle-header">
+                <div class="bundle-icon">🎒</div>
+                <div class="bundle-meta">
+                  <div class="bundle-name">Starter Pack</div>
+                  <div class="bundle-save">SAVE 40%</div>
+                </div>
+                <div class="bundle-price coin-price-lg">🪙 999</div>
+              </div>
+              <div class="bundle-contents">
+                <span class="bc-item">Neon Dice Skin</span>
+                <span class="bc-item">Extra Roll ×10</span>
+                <span class="bc-item">Shield ×5</span>
+                <span class="bc-item">💎 50 Gems</span>
+              </div>
+              <div class="bundle-cta bc-cta-default">GET PACK ▶</div>
+            </div>
+
+            <div class="bundle-card bc-champion buyable" data-item="Champion Bundle" data-price="449" data-currency="gem">
+              <div class="bundle-glow"></div>
+              <div class="bundle-badge-top">👑 BEST VALUE</div>
+              <div class="bundle-header">
+                <div class="bundle-icon">⚔️</div>
+                <div class="bundle-meta">
+                  <div class="bundle-name">Champion Bundle</div>
+                  <div class="bundle-save">SAVE 65%</div>
+                </div>
+                <div class="bundle-price gem-price-lg">💎 449</div>
+              </div>
+              <div class="bundle-contents">
+                <span class="bc-item">Royal Gold Dice</span>
+                <span class="bc-item">Crown Token Set</span>
+                <span class="bc-item">Double XP ×3</span>
+                <span class="bc-item">Lucky Six ×5</span>
+                <span class="bc-item">Freeze ×5</span>
+              </div>
+              <div class="bundle-cta bc-cta-champion">GET PACK ▶</div>
+            </div>
+
+            <div class="bundle-card bc-gems buyable" data-item="Gem Refill 500" data-price="4.99" data-currency="usd">
+              <div class="bundle-glow"></div>
+              <div class="bundle-header">
+                <div class="bundle-icon">💎</div>
+                <div class="bundle-meta">
+                  <div class="bundle-name">Gem Refill</div>
+                  <div class="bundle-save">+100 BONUS</div>
+                </div>
+                <div class="bundle-price usd-price-lg">$4.99</div>
+              </div>
+              <div class="bundle-contents">
+                <span class="bc-item">💎 500 Gems</span>
+                <span class="bc-item">+100 Bonus Gems</span>
+                <span class="bc-item">One-time offer</span>
+              </div>
+              <div class="bundle-cta bc-cta-gems">BUY NOW ▶</div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- /shopSheet -->
+    </main><!-- /shop-page -->
+
+    <!-- TOAST NOTIFICATION -->
+    <div class="shop-toast" id="shopToast"></div>
+
+  </div><!-- /page-wrapper -->
+
+  <script src="shop.js"></script>
+</body>
+</html>
+

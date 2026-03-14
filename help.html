@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Daya Pass Arena - Help</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="help.css">
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="bg-system">
+      <div class="bg-gradient"></div>
+      <div class="bg-grid"></div>
+      <div class="bg-scan"></div>
+    </div>
+
+    <main class="sheet" aria-label="Help">
+      <header class="topbar">
+        <a class="close-btn" href="index.html" aria-label="Back to home" title="Home">&times;</a>
+        <div class="top-title">
+          <div class="eyebrow">SUPPORT</div>
+          <div class="title">HELP CENTER</div>
+          <div class="sub">Rules, controls, friends, and fixes</div>
+        </div>
+        <button class="icon-btn" id="expandToggle" type="button" aria-label="Expand or collapse all" title="Expand/Collapse all">ALL</button>
+      </header>
+
+      <section class="quick" aria-label="Quick links">
+        <button class="pill" type="button" data-jump="howto">HOW TO PLAY</button>
+        <button class="pill" type="button" data-jump="friends">FRIENDS</button>
+        <button class="pill" type="button" data-jump="shop">SHOP</button>
+        <button class="pill" type="button" data-jump="trouble">TROUBLESHOOT</button>
+      </section>
+
+      <section class="searchbar" aria-label="Search help">
+        <div class="search-wrap">
+          <svg class="search-ico" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M16.2 16.2 21 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <input id="helpSearch" class="search" type="search" placeholder="Search help (ex: dice, online, match-up, coins)..." autocomplete="off">
+        </div>
+        <button class="mini-btn" id="clearSearch" type="button" aria-label="Clear search" title="Clear">CLEAR</button>
+      </section>
+
+      <section class="content" aria-label="Help content">
+        <div class="empty" id="noResults" hidden>
+          <div class="empty-title">No results</div>
+          <div class="empty-sub">Try a different keyword.</div>
+        </div>
+
+        <div class="hsection" id="howto" data-section>
+          <div class="hhead">
+            <div class="hlabel">GAMEPLAY</div>
+            <div class="hname">How To Play</div>
+          </div>
+
+          <div class="acc" data-acc>
+            <div class="acc-item" data-item>
+              <button class="acc-head" type="button" aria-expanded="false">
+                <span class="acc-title">Objective</span>
+                <span class="acc-meta">Win the race</span>
+              </button>
+              <div class="acc-body">
+                <p>Move all four pawns from your home to the finish before your opponents do.</p>
+                <ul>
+                  <li>Roll to leave home, then advance along your track.</li>
+                  <li>Block, chase, and time your moves to stay safe and finish fast.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="acc-item" data-item>
+              <button class="acc-head" type="button" aria-expanded="false">
+                <span class="acc-title">Turns And Dice</span>
+                <span class="acc-meta">Roll then move</span>
+              </button>
+              <div class="acc-body">
+                <p>On your turn, roll the dice and move one pawn by the rolled value.</p>
+                <ul>
+                  <li>If you have multiple valid moves, choose the pawn strategically.</li>
+                  <li>Some modes grant extra turns on special rolls.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="acc-item" data-item>
+              <button class="acc-head" type="button" aria-expanded="false">
+                <span class="acc-title">Captures And Safe Tiles</span>
+                <span class="acc-meta">Risk vs safety</span>
+              </button>
+              <div class="acc-body">
+                <p>Landing on an opponent may capture them and send their pawn back home (mode dependent).</p>
+                <ul>
+                  <li>Safe tiles protect your pawn from capture.</li>
+                  <li>Try to keep at least one pawn in a safe position as a fallback.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hsection" id="friends" data-section>
+          <div class="hhead">
+            <div class="hlabel">SOCIAL</div>
+            <div class="hname">Friends And Match-Up</div>
+          </div>
+
+          <div class="acc" data-acc>
+            <div class="acc-item" data-item>
+              <button class="acc-head" type="button" aria-expanded="false">
+                <span class="acc-title">Add Friends</span>
+                <span class="acc-meta">Requests only</span>
+              </button>
+              <div class="acc-body">
+                <p>Open the Friends page and send a friend request using a player name or tag.</p>
+                <ul>
+                  <li>Requests can only be sent to players who have an in-game account.</li>
+                  <li>Incoming requests show up under Requests where you can Accept or Reject.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="acc-item" data-item>
+              <button class="acc-head" type="button" aria-expanded="false">
+                <span class="acc-title">Who Is Online</span>
+                <span class="acc-meta">Online list</span>
+              </button>
+              <div class="acc-body">
+                <p>Use the Online filter to see friends who are currently available.</p>
+                <ul>
+                  <li>If a friend is online, you can start a match-up directly from their card.</li>
+                  <li>If they are offline, you can still send messages or invite later (UI ready for expansion).</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="acc-item" data-item>
+              <button class="acc-head" type="button" aria-expanded="false">
+                <span class="acc-title">Search Players</span>
+                <span class="acc-meta">Find accounts</span>
+              </button>
+              <div class="acc-body">
+                <p>Type into the search bar to find players. If the player exists, you can send a request.</p>
+                <ul>
+                  <li>No account found means the request option stays disabled.</li>
+                  <li>Use exact tags for best results (example: Name#1024).</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hsection" id="shop" data-section>
+          <div class="hhead">
+            <div class="hlabel">STORE</div>
+            <div class="hname">Shop, Dice, And Pawns</div>
+          </div>
+
+          <div class="acc" data-acc>
+            <div class="acc-item" data-item>
+              <button class="acc-head" type="button" aria-expanded="false">
+                <span class="acc-title">Buy Skins</span>
+                <span class="acc-meta">Dice and pawns</span>
+              </button>
+              <div class="acc-body">
+                <p>Use the Shop tabs to browse dice and pawn collections, then purchase a design.</p>
+                <ul>
+                  <li>Owned items stay marked as owned.</li>
+                  <li>Your selection can be applied in your loadout (UI ready for expansion).</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="acc-item" data-item>
+              <button class="acc-head" type="button" aria-expanded="false">
+                <span class="acc-title">Coins And Rewards</span>
+                <span class="acc-meta">Earn and spend</span>
+              </button>
+              <div class="acc-body">
+                <p>Coins are earned through play and rewards, then spent on cosmetics.</p>
+                <ul>
+                  <li>Limited deals may appear as notifications.</li>
+                  <li>Cosmetics do not affect gameplay outcomes.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hsection" id="trouble" data-section>
+          <div class="hhead">
+            <div class="hlabel">SUPPORT</div>
+            <div class="hname">Troubleshooting</div>
+          </div>
+
+          <div class="acc" data-acc>
+            <div class="acc-item" data-item>
+              <button class="acc-head" type="button" aria-expanded="false">
+                <span class="acc-title">I Cannot Send A Friend Request</span>
+                <span class="acc-meta">Account check</span>
+              </button>
+              <div class="acc-body">
+                <p>Friend requests are only available for players that exist in the game directory.</p>
+                <ul>
+                  <li>Double-check spelling and tag format.</li>
+                  <li>If the player is not found, ask them to create an account first.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="acc-item" data-item>
+              <button class="acc-head" type="button" aria-expanded="false">
+                <span class="acc-title">Notifications Badge Does Not Show</span>
+                <span class="acc-meta">Unread count</span>
+              </button>
+              <div class="acc-body">
+                <p>The notification pip appears when you have unread notifications.</p>
+                <ul>
+                  <li>Open Notifications and mark items as read.</li>
+                  <li>If needed, clear all to reset the inbox.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="acc-item" data-item>
+              <button class="acc-head" type="button" aria-expanded="false">
+                <span class="acc-title">Reset Local Data</span>
+                <span class="acc-meta">LocalStorage</span>
+              </button>
+              <div class="acc-body">
+                <p>This UI stores demo data locally in your browser.</p>
+                <ul>
+                  <li>Clearing site data will reset friends, requests, shop ownership, and notifications.</li>
+                  <li>Use this if you want a fresh demo state.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="helpToast" aria-live="polite"></div>
+  </div>
+
+  <script src="help.js"></script>
+</body>
+</html>
+

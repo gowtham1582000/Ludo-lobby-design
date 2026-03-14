@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Daya Pass Arena - Notifications</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="notifications.css">
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="bg-system">
+      <div class="bg-gradient"></div>
+      <div class="bg-grid"></div>
+      <div class="bg-scan"></div>
+    </div>
+
+    <main class="sheet" aria-label="Notifications">
+      <header class="topbar">
+        <a class="close-btn" href="index.html" aria-label="Back to home" title="Home">&times;</a>
+        <div class="top-title">
+          <div class="eyebrow">INBOX</div>
+          <div class="title">NOTIFICATIONS</div>
+        </div>
+        <button class="icon-btn" id="notifClear" type="button" title="Clear all" aria-label="Clear all">CLR</button>
+      </header>
+
+      <section class="controls" aria-label="Filters and actions">
+        <div class="tabs" role="tablist">
+          <button class="tab active" type="button" data-tab="all" role="tab">All</button>
+          <button class="tab" type="button" data-tab="unread" role="tab">Unread <span class="badge" id="unreadBadge" hidden></span></button>
+        </div>
+        <button class="btn" id="markAllRead" type="button">MARK ALL READ</button>
+      </section>
+
+      <section class="list-wrap" aria-label="Notification list">
+        <div id="notifList" class="notif-list"></div>
+      </section>
+    </main>
+
+    <div class="toast" id="notifToast" aria-live="polite"></div>
+  </div>
+
+  <script src="notifications.js"></script>
+</body>
+</html>
