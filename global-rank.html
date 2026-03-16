@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Daya Pass Arena - Rankings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="global-rank.css">
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="bg-system" aria-hidden="true">
+      <div class="bg-gradient"></div>
+      <div class="bg-grid"></div>
+      <div class="bg-scan"></div>
+      <div class="orb orb-gold"></div>
+      <div class="orb orb-cyan"></div>
+      <div class="orb orb-purple"></div>
+    </div>
+
+    <main class="sheet" aria-label="Leaderboard">
+      <header class="topbar">
+        <a class="back-btn" href="index.html" aria-label="Back to home">&larr;</a>
+        <div class="top-title">
+          <div class="eyebrow">LEADERBOARD</div>
+          <div class="title">TROPHY RANKINGS</div>
+          <div class="sub">Track your place globally or within your selected region.</div>
+        </div>
+      </header>
+
+      <section class="summary-card">
+        <div class="summary-rank" id="leaderboardPrimaryRank">#--</div>
+        <div class="summary-meta" id="leaderboardMeta">1,240 trophies | India region</div>
+      </section>
+
+      <section class="controls-card">
+        <div class="tabs" role="tablist" aria-label="Ranking scope">
+          <button class="tab-btn active" type="button" data-scope="global" role="tab" aria-selected="true">Global</button>
+          <button class="tab-btn" type="button" data-scope="regional" role="tab" aria-selected="false">Regional</button>
+        </div>
+      </section>
+
+      <section class="list-card">
+        <div class="section-row">
+          <div class="section-label" id="leaderboardListTitle">Global Top Players</div>
+          <div class="section-copy" id="leaderboardListMeta">India region selected</div>
+        </div>
+        <div class="leaderboard-list" id="leaderboardList"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="global-rank.js"></script>
+</body>
+</html>

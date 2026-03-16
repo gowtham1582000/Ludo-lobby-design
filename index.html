@@ -880,6 +880,89 @@
       margin-top: 2px
     }
 
+    .stat-sub {
+      font-size: 8px;
+      color: rgba(255, 255, 255, 0.72);
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      margin-top: 3px;
+      min-height: 10px
+    }
+
+    .rank-card-trigger {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .rank-card-trigger::after {
+      content: 'Tap for details';
+      display: block;
+      font-size: 7px;
+      letter-spacing: 0.8px;
+      color: rgba(0, 245, 255, 0.72);
+      font-weight: 700;
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+
+    .rank-card-trigger .stat-val {
+      cursor: pointer;
+    }
+
+    .stat-sub-link {
+      cursor: pointer;
+      transition: color .2s, text-shadow .2s;
+    }
+
+    .stat-sub-link:hover {
+      color: var(--cyan);
+      text-shadow: 0 0 10px rgba(0, 245, 255, 0.25);
+    }
+
+    .stat-card-accent {
+      position: relative;
+      overflow: hidden;
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    .stat-card-accent::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 10px;
+      right: 10px;
+      height: 2px;
+      border-radius: 999px;
+      opacity: 0.95;
+    }
+
+    .stat-card-accent .stat-icon {
+      margin-bottom: 4px;
+    }
+
+    .stat-card-accent .stat-sub {
+      min-height: 10px;
+    }
+
+    .winrate-card::before {
+      background: linear-gradient(90deg, rgba(0, 245, 255, 0.05), rgba(0, 245, 255, 0.95), rgba(0, 245, 255, 0.08));
+      box-shadow: 0 0 12px rgba(0, 245, 255, 0.24);
+    }
+
+    .winrate-card .stat-icon {
+      text-shadow: 0 0 14px rgba(0, 245, 255, 0.22);
+    }
+
+    .streak-card::before {
+      background: linear-gradient(90deg, rgba(255, 107, 0, 0.05), rgba(255, 149, 0, 0.95), rgba(255, 107, 0, 0.08));
+      box-shadow: 0 0 12px rgba(255, 149, 0, 0.24);
+    }
+
+    .streak-card .stat-icon {
+      text-shadow: 0 0 14px rgba(255, 149, 0, 0.22);
+    }
+
     /* PLAY BUTTONS */
     .play-section {
       flex-shrink: 0;
@@ -1378,6 +1461,79 @@
       background: rgba(255, 45, 85, 0.15);
       border-color: rgba(255, 45, 85, 0.3);
       color: var(--red-hot)
+    }
+
+    .rank-info-sheet {
+      max-width: 372px;
+    }
+
+    .rank-current-card {
+      border-radius: 20px;
+      padding: 14px 14px 12px;
+      margin-bottom: 14px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(123, 47, 255, 0.12));
+      border: 1px solid rgba(168, 85, 247, 0.26);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .rank-current-label {
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 6px;
+    }
+
+    .rank-current-value {
+      font-family: 'Orbitron', monospace;
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--text);
+    }
+
+    .rank-current-meta {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .rank-breakdown {
+      display: grid;
+      gap: 10px;
+    }
+
+    .rank-breakdown-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 12px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .rank-breakdown-row.active {
+      background: linear-gradient(145deg, rgba(0, 245, 255, 0.1), rgba(123, 47, 255, 0.14));
+      border-color: rgba(0, 245, 255, 0.24);
+      box-shadow: 0 0 20px rgba(0, 245, 255, 0.08);
+    }
+
+    .rank-breakdown-name {
+      font-family: 'Orbitron', monospace;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .rank-breakdown-range {
+      font-size: 10px;
+      color: var(--muted);
+      text-align: right;
+      line-height: 1.4;
     }
 
     .popup-overlay.open .popup-close {
@@ -4021,25 +4177,29 @@
       </div>
       <div>
         <div class="stats-row">
-          <div class="stat-card">
+          <div class="stat-card stat-card-accent winrate-card">
             <div class="stat-icon">🏆</div>
-            <div class="stat-val" style="color:var(--gold)">1,240</div>
+            <div class="stat-val" id="trophyCount" style="color:var(--gold)">1,240</div>
             <div class="stat-lbl">Trophies</div>
+            <div class="stat-sub" id="globalTrophyRank">Global #--</div>
           </div>
-          <div class="stat-card">
+          <div class="stat-card" id="winRateCard">
             <div class="stat-icon">📈</div>
-            <div class="stat-val" style="color:var(--cyan)">83%</div>
+            <div class="stat-val" id="winRateValue" style="color:var(--cyan)">83%</div>
             <div class="stat-lbl">Win Rate</div>
+            <div class="stat-sub" id="winRateSub">Last 10 matches</div>
           </div>
-          <div class="stat-card">
+          <div class="stat-card stat-card-accent streak-card" id="streakCard">
             <div class="stat-icon">🔥</div>
-            <div class="stat-val" style="color:var(--orange)">14</div>
+            <div class="stat-val" id="streakValue" style="color:var(--orange)">14</div>
             <div class="stat-lbl">Streak</div>
+            <div class="stat-sub" id="streakSub">Wins in a row</div>
           </div>
           <div class="stat-card">
             <div class="stat-icon">⭐</div>
-            <div class="stat-val" style="color:var(--purple-soft)">S+</div>
+            <div class="stat-val" id="trophyRankTier" style="color:var(--purple-soft)">Gold</div>
             <div class="stat-lbl">Rank</div>
+            <div class="stat-sub" id="trophyRankRange">800 - 1,499 trophies</div>
           </div>
         </div>
 
@@ -4354,10 +4514,10 @@
           <div class="nav-icon-wrap">👥<span class="notif-badge" id="friendsReqBadge" style="display:none"></span></div>
           <div class="nav-label">Friends</div>
         </a>
-        <div class="nav-item">
+        <a class="nav-item" id="rankNavItem" href="global-rank.html" aria-label="Rank">
           <div class="nav-icon-wrap">🏆<span class="notif-badge">3</span></div>
           <div class="nav-label">Rank</div>
-        </div>
+        </a>
         <div class="nav-play nav-item nav-active" onclick="openPopup('online')">
           <div class="play-orb">⚔️</div>
           <div class="play-label">BATTLE</div>
@@ -4722,6 +4882,9 @@
     })();
 
   </script>
+  <script src="stats-data.js"></script>
+  <script src="stats-pages.js"></script>
+  <script src="rank.js"></script>
 </body>
 
 </html>

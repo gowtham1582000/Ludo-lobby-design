@@ -413,6 +413,21 @@
 
         <div class="setting-row block">
           <div class="setting-copy">
+            <div class="setting-label">Select Region</div>
+            <div class="setting-desc">Choose the region used for your regional trophy rankings.</div>
+            <select class="setting-select" id="regionSelect" onchange="selectSettingsRegion(this.value)" aria-label="Select region">
+              <option value="India">India</option>
+              <option value="United States">United States</option>
+              <option value="Brazil">Brazil</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="Japan">Japan</option>
+              <option value="Indonesia">Indonesia</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="setting-row block">
+          <div class="setting-copy">
             <div class="setting-label">Privacy</div>
             <div class="setting-desc">Choose who can see your profile and match activity.</div>
           </div>
@@ -456,6 +471,7 @@
   <script>
     const saveSettingsBtn = document.getElementById('saveSettingsBtn');
     const languageSelectEl = document.getElementById('languageSelect');
+    const regionSelectEl = document.getElementById('regionSelect');
     const languageLabels = {
       english: 'English',
       hindi: 'Hindi',
@@ -474,7 +490,8 @@
       sfx: true,
       vibration: true,
       language: 'english',
-      privacy: 'friends'
+      privacy: 'friends',
+      region: 'India'
     };
 
     let settingsState = { ...settingsDefaults };
@@ -493,6 +510,10 @@
 
       if (languageSelectEl) {
         languageSelectEl.value = settingsState.language;
+      }
+
+      if (regionSelectEl) {
+        regionSelectEl.value = settingsState.region;
       }
 
       const privacyChipMap = {
@@ -522,6 +543,11 @@
       renderSettingsUI();
     }
 
+    function selectSettingsRegion(region) {
+      settingsState.region = region;
+      renderSettingsUI();
+    }
+
     function openTutorialSettings() {
       const originalText = saveSettingsBtn.textContent;
       saveSettingsBtn.textContent = 'TUTORIAL OPENED';
@@ -537,6 +563,7 @@
 
     function saveSettings() {
       localStorage.setItem('ludoArenaSettings', JSON.stringify(settingsState));
+      localStorage.setItem('ludo_rank_region_v1', settingsState.region);
       const originalText = saveSettingsBtn.textContent;
       saveSettingsBtn.textContent = 'SAVED';
       setTimeout(() => {
@@ -549,6 +576,10 @@
         const raw = localStorage.getItem('ludoArenaSettings');
         if (raw) {
           settingsState = { ...settingsDefaults, ...JSON.parse(raw) };
+        }
+        const savedRegion = localStorage.getItem('ludo_rank_region_v1');
+        if (savedRegion) {
+          settingsState.region = savedRegion;
         }
       } catch (error) {
         settingsState = { ...settingsDefaults };
