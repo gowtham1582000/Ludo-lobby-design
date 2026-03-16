@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Daya Pass Arena - Streak Details</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="streak-details.css">
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="bg-system" aria-hidden="true">
+      <div class="bg-gradient"></div>
+      <div class="bg-grid"></div>
+      <div class="bg-scan"></div>
+    </div>
+
+    <main class="sheet" aria-label="Streak details">
+      <header class="topbar">
+        <a class="back-btn" href="index.html" aria-label="Back to home">&larr;</a>
+        <div>
+          <div class="eyebrow">MOMENTUM</div>
+          <div class="title">STREAK DETAILS</div>
+          <div class="sub">Your active streak and recent run breakdown.</div>
+        </div>
+      </header>
+
+      <section class="hero-card">
+        <div class="hero-chip">Current Streak</div>
+        <div class="hero-value" id="streakCurrentValue">14</div>
+        <div class="hero-meta" id="streakSummary">14 wins in a row from your most recent matches</div>
+      </section>
+
+      <section class="stats-grid">
+        <article class="mini-stat">
+          <div class="mini-label">Longest Win Streak</div>
+          <div class="mini-value" id="streakLongest">14</div>
+        </article>
+        <article class="mini-stat">
+          <div class="mini-label">Recent Result</div>
+          <div class="mini-value" id="streakRecent">Win</div>
+        </article>
+      </section>
+
+      <section class="list-card">
+        <div class="section-label">Streak Runs</div>
+        <div class="run-list" id="streakRunList"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="stats-data.js"></script>
+  <script src="streak-details.js"></script>
+</body>
+</html>
