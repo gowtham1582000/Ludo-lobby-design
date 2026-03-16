@@ -59,6 +59,7 @@
   hydrateFromStorage();
   updateWallet();
   upgradeTokenPreviews();
+  upgradeTokenPriceIcons();
 
   /* ═══════════════════════════════
      TOAST NOTIFICATION
@@ -300,6 +301,50 @@
       '</defs></svg>',
     ].join('');
     document.body.insertAdjacentHTML('afterbegin', defs);
+  }
+
+  function injectUiIconDefs() {
+    if (document.getElementById('uiIconsV1')) return;
+    const s = [
+      '<svg id="uiIconsV1" width="0" height="0" style="position:absolute;left:-9999px;top:-9999px" aria-hidden="true" focusable="false">',
+      '<defs>',
+      // Coin (simple embossed disc)
+      '<symbol id="ico-coin" viewBox="0 0 24 24">',
+      '<circle cx="12" cy="12" r="8.6" fill="#FFD700" opacity="0.95"/>',
+      '<circle cx="12" cy="12" r="7.4" fill="#FFC400" opacity="0.95"/>',
+      '<path d="M8.7 10.2c2.9-2.8 6.7-2.8 8.6-.9" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.6" stroke-linecap="round"/>',
+      '<path d="M9.2 14.4c2.7 1.9 5.8 1.8 7.5.2" fill="none" stroke="rgba(0,0,0,0.25)" stroke-width="1.6" stroke-linecap="round"/>',
+      '</symbol>',
+      // Gem (diamond)
+      '<symbol id="ico-gem" viewBox="0 0 24 24">',
+      '<path d="M7.5 8.3 12 4.6l4.5 3.7 2.2 3.2L12 20.2 5.3 11.5z" fill="#00F5FF" opacity="0.95"/>',
+      '<path d="M7.5 8.3h9" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="1.4" stroke-linecap="round"/>',
+      '<path d="M12 4.6 9.6 11.5 12 20.2l2.4-8.7z" fill="rgba(255,255,255,0.12)"/>',
+      '</symbol>',
+      '</defs></svg>',
+    ].join('');
+    document.body.insertAdjacentHTML('afterbegin', s);
+  }
+
+  function upgradeTokenPriceIcons() {
+    injectUiIconDefs();
+    const tab = document.getElementById('tab-tokens');
+    if (!tab) return;
+
+    tab.querySelectorAll('.item-cta').forEach(function (cta) {
+      // Replace emoji spans with SVG icons for consistent rendering.
+      if (cta.classList.contains('coin-price')) {
+        replaceCtaIcon(cta, 'ico-coin');
+      } else if (cta.classList.contains('gem-price')) {
+        replaceCtaIcon(cta, 'ico-gem');
+      }
+    });
+  }
+
+  function replaceCtaIcon(cta, symbolId) {
+    const span = cta.querySelector('span');
+    if (!span) return;
+    span.innerHTML = '<svg class="cta-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#' + symbolId + '" xlink:href="#' + symbolId + '"></use></svg>';
   }
 
   function pawnBody() {

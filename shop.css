@@ -636,6 +636,13 @@ html, body {
   justify-content: center;
 }
 
+.item-cta .cta-ico {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  flex: 0 0 auto;
+}
+
 .gem-price  { background: rgba(0,245,255,0.1);  color: var(--cyan);      border: 1px solid rgba(0,245,255,0.28); }
 .coin-price { background: rgba(255,215,0,0.1);  color: var(--gold);      border: 1px solid rgba(255,215,0,0.28); }
 .usd-price  { background: rgba(0,255,135,0.1);  color: var(--green-neon);border: 1px solid rgba(0,255,135,0.28); }
