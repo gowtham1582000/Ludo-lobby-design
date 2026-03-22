@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Daya Pass Arena - Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --c-bg: #080c14;
+      --c-panel: #0d1220;
+      --c-surface: #111928;
+      --c-border: rgba(255, 255, 255, 0.08);
+      --c-border2: rgba(255, 255, 255, 0.14);
+      --c-green: #00e5a0;
+      --c-green2: #00ff66;
+      --c-gold: #ffb800;
+      --c-blue: #3b82f6;
+      --c-rose: #f43f5e;
+      --c-text: #e8f0ff;
+      --c-soft: rgba(232, 240, 255, 0.7);
+      --c-muted: rgba(232, 240, 255, 0.42);
+      --r2: 12px;
+      --r3: 18px;
+      --fast: .14s ease;
+      --med: .24s ease;
+      --slow: .45s ease;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      background: #04060c;
+      font-family: 'Rajdhani', sans-serif;
+      color: var(--c-text);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow-x: hidden;
+    }
+    .phone {
+      position: relative;
+      width: 390px;
+      height: 690px;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 1px rgba(0, 229, 160, 0.08), 0 40px 120px rgba(0, 0, 0, 0.9);
+      background: linear-gradient(180deg, rgba(6, 9, 18, 0.96), rgba(10, 15, 24, 0.98));
+    }
+    .bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 18% 16%, rgba(0, 229, 160, 0.14), transparent 28%),
+        radial-gradient(circle at 82% 18%, rgba(255, 184, 0, 0.12), transparent 24%),
+        radial-gradient(circle at 50% 72%, rgba(59, 130, 246, 0.12), transparent 34%),
+        linear-gradient(145deg, #091221 0%, #0c1728 38%, #060b14 100%);
+    }
+    .bg::before {
+      content: "";
+      position: absolute;
+      inset: -18%;
+      background:
+        repeating-linear-gradient(60deg, rgba(0, 229, 160, 0.08) 0 1px, transparent 1px 24px),
+        repeating-linear-gradient(-60deg, rgba(59, 130, 246, 0.06) 0 1px, transparent 1px 24px);
+      transform: perspective(900px) rotateX(62deg) translateY(150px) scale(1.2);
+      opacity: 0.75;
+    }
+    .bg::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(4, 6, 12, 0.1), rgba(4, 6, 12, 0.65)),
+        radial-gradient(circle at 50% 16%, rgba(255, 255, 255, 0.08), transparent 26%);
+    }
+    .shell {
+      position: relative;
+      z-index: 1;
+      height: 690px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      padding-bottom: 86px;
+    }
+    .shell::-webkit-scrollbar { display: none; }
+    .hdr {
+      position: sticky;
+      top: 0;
+      z-index: 8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 14px 12px;
+      background: linear-gradient(180deg, rgba(8, 12, 20, 0.96), rgba(8, 12, 20, 0.74));
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+    }
+    .hdr-side, .hdr-tools, .hdr-copy, .section-title, .hero-badges, .subline, .name-line, .bar-copy, .match-main, .friend-main {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hdr-copy, .bar-stack, .identity, .performance, .stack, .control-list { flex-direction: column; align-items: stretch; }
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--c-muted);
+    }
+    .hdr-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      line-height: 0.9;
+      letter-spacing: 1.3px;
+    }
+    .icon-btn, .chip-btn, .mini-btn, .btn, .badge, .nav-btn, .action-tile {
+      border: 1px solid var(--c-border2);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--c-text);
+      cursor: pointer;
+      transition: transform var(--fast), border-color var(--fast), background var(--fast), box-shadow var(--fast);
+      font: inherit;
+    }
+    .icon-btn, .control-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+    .chip-btn {
+      height: 40px;
+      padding: 0 14px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+    }
+    .icon-btn:hover, .chip-btn:hover, .btn:hover, .mini-btn:hover, .nav-btn:hover, .badge:hover, .action-tile:hover, .panel:hover, .match-card:hover, .friend-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0, 229, 160, 0.45);
+      box-shadow: 0 12px 30px rgba(0, 229, 160, 0.12);
+    }
+    .ico {
+      width: 16px;
+      height: 16px;
+      position: relative;
+      display: inline-block;
+      flex: 0 0 auto;
+      color: currentColor;
+    }
+    .ico::before, .ico::after { content: ""; position: absolute; }
+    .ico.back::before { width: 10px; height: 10px; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); left: 4px; top: 3px; }
+    .ico.spark::before { inset: 1px 5px; background: currentColor; clip-path: polygon(55% 0, 100% 0, 55% 50%, 100% 50%, 20% 100%, 42% 56%, 0 56%); }
+    .ico.pulse::before { inset: 2px; border: 2px solid currentColor; border-radius: 50%; }
+    .ico.card::before { inset: 2px 1px; border: 2px solid currentColor; border-radius: 4px; }
+    .ico.crown::before { inset: 3px 1px 2px; background: currentColor; clip-path: polygon(0 100%, 10% 35%, 28% 62%, 50% 10%, 72% 62%, 90% 35%, 100% 100%); border-radius: 3px; }
+    .ico.grid::before { inset: 2px; border: 2px solid currentColor; border-radius: 4px; }
+    .ico.grid::after { inset: 2px; background: linear-gradient(currentColor, currentColor) 50% 0 / 2px 100% no-repeat, linear-gradient(currentColor, currentColor) 0 50% / 100% 2px no-repeat; }
+    .ico.bars::before { inset: 2px; background: linear-gradient(currentColor, currentColor) 0 100% / 3px 8px no-repeat, linear-gradient(currentColor, currentColor) 6px 100% / 3px 12px no-repeat, linear-gradient(currentColor, currentColor) 12px 100% / 3px 6px no-repeat; }
+    .ico.people::before { inset: 3px 0 0; background: radial-gradient(circle at 4px 3px, currentColor 0 2px, transparent 2.2px), radial-gradient(circle at 12px 3px, currentColor 0 2px, transparent 2.2px), radial-gradient(circle at 8px 11px, currentColor 0 4px, transparent 4.2px); }
+    .ico.shop::before { inset: 2px 1px; border: 2px solid currentColor; border-radius: 4px 4px 6px 6px; clip-path: polygon(0 35%, 100% 35%, 100% 100%, 0 100%); }
+    .ico.edit::before { width: 11px; height: 3px; background: currentColor; transform: rotate(-38deg); left: 2px; top: 9px; border-radius: 2px; }
+    .ico.edit::after { width: 4px; height: 4px; border-top: 2px solid currentColor; border-right: 2px solid currentColor; left: 10px; top: 4px; }
+    .ico.add::before, .ico.add::after { background: currentColor; border-radius: 2px; }
+    .ico.add::before { width: 12px; height: 2px; left: 2px; top: 7px; }
+    .ico.add::after { width: 2px; height: 12px; left: 7px; top: 2px; }
+    .ico.link::before, .ico.link::after { width: 8px; height: 5px; border: 2px solid currentColor; border-radius: 999px; top: 5px; }
+    .ico.link::before { left: 0; border-right: 0; }
+    .ico.link::after { right: 0; border-left: 0; }
+    .section { padding: 0 14px; margin-top: 14px; }
+    .hero-card, .panel, .match-card, .friend-card, .control-item {
+      border: 1px solid var(--c-border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)), rgba(13, 18, 32, 0.88);
+    }
+    .hero-card {
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    }
+    .hero-top {
+      position: relative;
+      min-height: 232px;
+      padding: 18px 18px 16px;
+      background:
+        radial-gradient(circle at 78% 18%, rgba(255, 184, 0, 0.18), transparent 20%),
+        radial-gradient(circle at 22% 20%, rgba(0, 229, 160, 0.2), transparent 28%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent);
+    }
+    .hero-meta, .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .tag-pill, .tiny-pill, .result-pill, .season-pill {
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+    .tag-pill {
+      height: 32px;
+      padding: 0 12px;
+      gap: 7px;
+      border: 1px solid var(--c-border2);
+      background: rgba(255, 255, 255, 0.05);
+      text-transform: uppercase;
+    }
+    .tag-pill.live { color: var(--c-green); }
+    .tag-pill.rank { color: var(--c-gold); }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 10px currentColor;
+    }
+    .hero-main {
+      display: grid;
+      grid-template-columns: 104px 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .avatar-shell {
+      position: relative;
+      width: 104px;
+      height: 124px;
+    }
+    .avatar-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 28px;
+      padding: 2px;
+      background: linear-gradient(145deg, rgba(0,229,160,0.8), rgba(59,130,246,0.65), rgba(255,184,0,0.55));
+      animation: rotateRing 8s linear infinite;
+    }
+    .avatar-ring::before {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      border-radius: 26px;
+      background: rgba(7, 11, 20, 0.92);
+    }
+    @keyframes rotateRing { to { transform: rotate(360deg); } }
+    .avatar {
+      position: absolute;
+      inset: 2px;
+      z-index: 1;
+      width: calc(100% - 4px);
+      height: calc(100% - 4px);
+      border: 0;
+      border-radius: 26px;
+      background: radial-gradient(circle at 30% 26%, rgba(255,255,255,0.16), transparent 24%), linear-gradient(160deg, #153047, #0c1728 58%, #08101a);
+      color: var(--c-text);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 30px;
+      letter-spacing: 1.5px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform var(--med), box-shadow var(--med);
+    }
+    .avatar:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 18px 36px rgba(0, 229, 160, 0.16); }
+    .avatar-overlay {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      height: 28px;
+      border-radius: 999px;
+      background: rgba(4, 6, 12, 0.72);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .avatar-status {
+      position: absolute;
+      right: -4px;
+      top: -4px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 3px solid #0c1220;
+      background: var(--c-green);
+      box-shadow: 0 0 18px rgba(0,229,160,0.8);
+      z-index: 2;
+      transition: background var(--fast), box-shadow var(--fast);
+    }
+    .avatar-status.off { background: var(--c-rose); box-shadow: 0 0 18px rgba(244,63,94,0.8); }
+    .identity { gap: 10px; min-width: 0; }
+    .name-line { flex-wrap: wrap; }
+    .name {
+      font-size: 26px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      min-width: 0;
+    }
+    .editable {
+      outline: none;
+      border-bottom: 1px dashed rgba(255,255,255,0.16);
+      padding-bottom: 4px;
+    }
+    .editable:focus { border-color: var(--c-green); box-shadow: 0 8px 18px rgba(0,229,160,0.12); }
+    .subline {
+      flex-wrap: wrap;
+      color: var(--c-soft);
+      font-size: 13px;
+    }
+    .tiny-pill {
+      min-width: 28px;
+      height: 24px;
+      padding: 0 8px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--c-muted);
+    }
+    .hero-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .action-tile {
+      border-radius: 18px;
+      padding: 12px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .action-tile strong {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+    }
+    .action-tile span:last-child {
+      color: var(--c-muted);
+      font-size: 11px;
+      line-height: 1.15;
+    }
+    .hero-bottom {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 0 18px 18px;
+    }
+    .bar-stack { gap: 8px; }
+    .bar-copy {
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      font-size: 12px;
+    }
+    .bar-label { color: var(--c-soft); font-weight: 700; }
+    .bar-meta { color: var(--c-muted); }
+    .bar {
+      position: relative;
+      height: 12px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .bar-fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--c-green), var(--c-blue) 68%, var(--c-gold));
+      box-shadow: 0 0 16px rgba(0,229,160,0.5);
+      transition: width var(--slow);
+    }
+    .season-pill {
+      min-width: 92px;
+      height: 46px;
+      padding: 0 14px;
+      flex-direction: column;
+      border-radius: 16px;
+      border: 1px solid rgba(255,184,0,0.22);
+      background: linear-gradient(180deg, rgba(255,184,0,0.14), rgba(255,184,0,0.05));
+      color: var(--c-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-size: 11px;
+    }
+    .season-pill b { font-size: 16px; line-height: 1; margin-top: 2px; }
+    .grid-two {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .panel {
+      position: relative;
+      padding: 14px;
+      border-radius: 22px;
+    }
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.9px;
+      text-transform: uppercase;
+      color: var(--c-soft);
+    }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .stat-box {
+      border-radius: 18px;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: radial-gradient(circle at 85% 20%, rgba(255,255,255,0.09), transparent 24%), linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    }
+    button.stat-box {
+      color: var(--c-text);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: transform var(--fast), border-color var(--fast), box-shadow var(--fast);
+    }
+    button.stat-box:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0,229,160,0.42);
+      box-shadow: 0 12px 28px rgba(0,229,160,0.12);
+    }
+    .stat-box b { display: block; font-size: 22px; line-height: 1; margin-bottom: 6px; }
+    .stat-box span {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--c-muted);
+    }
+    .performance { gap: 10px; }
+    .meter {
+      display: grid;
+      grid-template-columns: 74px 1fr 32px;
+      gap: 10px;
+      align-items: center;
+    }
+    .meter label {
+      color: var(--c-soft);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .meter-track { height: 8px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; }
+    .meter-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, rgba(0,229,160,0.65), rgba(59,130,246,0.85)); }
+    .meter em { font-style: normal; color: var(--c-muted); font-size: 12px; text-align: right; }
+    .badge-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .badge {
+      min-height: 78px;
+      padding: 10px 8px;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .badge-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, rgba(0,229,160,0.18), rgba(59,130,246,0.1));
+      border: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+    }
+    .badge-icon::before { content: ""; width: 16px; height: 16px; background: currentColor; clip-path: polygon(50% 0, 62% 38%, 100% 38%, 70% 60%, 80% 100%, 50% 76%, 20% 100%, 30% 60%, 0 38%, 38% 38%); }
+    .badge:nth-child(2) .badge-icon::before { clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+    .badge:nth-child(3) .badge-icon::before { clip-path: polygon(50% 0, 90% 24%, 90% 78%, 50% 100%, 10% 78%, 10% 24%); }
+    .badge:nth-child(4) .badge-icon::before { clip-path: polygon(46% 0, 64% 0, 56% 34%, 84% 34%, 40% 100%, 48% 58%, 22% 58%); }
+    .badge:nth-child(5) .badge-icon::before { clip-path: polygon(12% 20%, 88% 20%, 88% 80%, 12% 80%); }
+    .badge:nth-child(6) .badge-icon::before { clip-path: polygon(50% 0, 90% 52%, 50% 100%, 10% 52%); }
+    .badge:nth-child(7) .badge-icon::before { clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%, 20% 50%, 50% 20%, 80% 50%, 50% 80%); }
+    .badge:nth-child(8) .badge-icon::before { clip-path: polygon(0 100%, 15% 35%, 30% 56%, 50% 0, 70% 56%, 85% 35%, 100% 100%); }
+    .badge strong {
+      font-size: 11px;
+      text-align: center;
+      line-height: 1.05;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--c-soft);
+    }
+    .stack, .control-list { gap: 10px; }
+    .match-card, .friend-card {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px;
+      border-radius: 18px;
+    }
+    .match-mark, .friend-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      background: linear-gradient(145deg, rgba(0,229,160,0.16), rgba(59,130,246,0.08));
+      border: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+    }
+    .match-mark::before, .friend-mark::before { content: ""; width: 16px; height: 16px; background: currentColor; }
+    .match-mark.win::before { clip-path: polygon(50% 0, 62% 38%, 100% 38%, 70% 60%, 80% 100%, 50% 76%, 20% 100%, 30% 60%, 0 38%, 38% 38%); }
+    .match-mark.loss::before { clip-path: polygon(18% 0, 100% 82%, 82% 100%, 0 18%); }
+    .match-mark.flawless::before { clip-path: polygon(50% 0, 86% 22%, 86% 78%, 50% 100%, 14% 78%, 14% 22%); }
+    .friend-mark::before { clip-path: polygon(50% 0, 86% 26%, 86% 74%, 50% 100%, 14% 74%, 14% 26%); }
+    .match-copy, .friend-copy { min-width: 0; }
+    .match-copy strong, .friend-copy strong {
+      display: block;
+      font-size: 15px;
+      line-height: 1.05;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .match-copy span, .friend-copy span {
+      display: block;
+      margin-top: 4px;
+      color: var(--c-muted);
+      font-size: 12px;
+    }
+    .result-pill {
+      min-width: 72px;
+      height: 34px;
+      padding: 0 12px;
+      border: 1px solid currentColor;
+      background: rgba(255,255,255,0.02);
+    }
+    .mini-btn {
+      height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+    .friend-mark.online { color: var(--c-green); box-shadow: 0 0 18px rgba(0,229,160,0.16); }
+    .friend-mark.offline { color: var(--c-muted); }
+    .control-item {
+      display: grid;
+      grid-template-columns: 38px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px;
+      border-radius: 18px;
+    }
+    .control-icon {
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      color: var(--c-soft);
+    }
+    .control-copy strong { display: block; font-size: 14px; }
+    .control-copy span { display: block; margin-top: 2px; font-size: 12px; color: var(--c-muted); }
+    .toggle {
+      width: 54px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.06);
+      position: relative;
+      cursor: pointer;
+      transition: background var(--fast), border-color var(--fast);
+    }
+    .toggle::before {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.28);
+      transition: transform var(--fast), background var(--fast);
+    }
+    .toggle.on { background: rgba(0,229,160,0.18); border-color: rgba(0,229,160,0.45); }
+    .toggle.on::before { transform: translateX(24px); background: var(--c-green); }
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .btn {
+      height: 44px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(0,229,160,0.16), rgba(59,130,246,0.12));
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+    .btn.ghost { background: rgba(255,255,255,0.04); }
+    .save-note {
+      margin-top: 10px;
+      color: var(--c-muted);
+      font-size: 12px;
+      min-height: 16px;
+    }
+    .footer-nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 6;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 10px 12px 12px;
+      background: linear-gradient(180deg, rgba(8,12,20,0.2), rgba(8,12,20,0.96));
+      border-top: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(12px);
+    }
+    .nav-btn {
+      min-height: 56px;
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .nav-btn.act {
+      color: var(--c-green);
+      border-color: rgba(0,229,160,0.35);
+      background: linear-gradient(180deg, rgba(0,229,160,0.12), rgba(255,255,255,0.03));
+    }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%) translateY(24px);
+      min-width: 180px;
+      max-width: 280px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(7,10,18,0.92);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--c-text);
+      font-size: 13px;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--med), transform var(--med);
+      z-index: 20;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    @media (max-width: 390px) {
+      .hero-actions { grid-template-columns: 1fr; }
+      .hero-bottom { grid-template-columns: 1fr; }
+      .bar-copy, .section-head { flex-wrap: wrap; }
+      .season-pill { width: 100%; min-width: 0; height: 52px; }
+      .badge-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="bg"></div>
+    <div class="shell">
+      <div class="hdr">
+        <div class="hdr-side">
+          <button class="icon-btn" onclick="window.location.href='index.html'" aria-label="Back to lobby"><span class="ico back"></span></button>
+          <div class="hdr-copy">
+            <div class="eyebrow">Arena Identity</div>
+            <div class="hdr-title">Profile</div>
+          </div>
+        </div>
+        <div class="hdr-tools">
+          <div class="tag-pill live" id="statusChip"><span class="pulse-dot"></span><span>Online</span></div>
+          <button class="icon-btn" onclick="toggleTheme()" aria-label="Switch highlight"><span class="ico spark"></span></button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="hero-card">
+          <div class="hero-top">
+            <div class="hero-meta">
+              <div class="hero-badges">
+                <div class="tag-pill rank"><span class="ico crown"></span><span>Mythic II</span></div>
+                <div class="tag-pill"><span class="ico card"></span><span>ID 4821</span></div>
+              </div>
+              <button class="chip-btn" onclick="shareProfile()"><span class="ico link"></span><span>Share</span></button>
+            </div>
+            <div class="hero-main">
+              <div class="avatar-shell">
+                <div class="avatar-ring"></div>
+                <button class="avatar" id="avatar">
+                  <span id="avatarInitials">DP</span>
+                  <div class="avatar-overlay"><span class="ico edit"></span><span>Edit</span></div>
+                </button>
+                <span class="avatar-status" id="statusDot"></span>
+                <input type="file" accept="image/*" id="avatarInput" style="display:none;">
+              </div>
+              <div class="identity">
+                <div class="name-line">
+                  <div class="name editable" id="playerName" contenteditable="true">Daya Player</div>
+                  <button class="icon-btn" onclick="focusName()" aria-label="Edit player name"><span class="ico edit"></span></button>
+                </div>
+                <div class="subline">
+                  <span id="playerTag">@daya#4821</span>
+                  <span class="tiny-pill">India</span>
+                  <span class="tiny-pill">Elite Queue</span>
+                </div>
+                <div class="subline">
+                  <span>Season tactician</span>
+                  <span>Top 6% ladder</span>
+                </div>
+              </div>
+            </div>
+            <div class="hero-actions">
+              <button class="action-tile" onclick="toggleStatus()"><span class="ico pulse"></span><strong>Status</strong><span>Switch presence live</span></button>
+              <button class="action-tile" onclick="addXP()"><span class="ico add"></span><strong>Boost XP</strong><span>Simulate rank gain</span></button>
+              <button class="action-tile" onclick="shuffleMatches()"><span class="ico grid"></span><strong>Refresh</strong><span>Load fresh battle log</span></button>
+            </div>
+          </div>
+          <div class="hero-bottom">
+            <div class="bar-stack">
+              <div class="bar-copy">
+                <div class="bar-label" id="xpLabel">Level 42 - 12,450 / 15,000 XP</div>
+                <div class="bar-meta" id="xpPercent">83%</div>
+              </div>
+              <div class="bar"><div class="bar-fill" id="xpBar" style="width:83%;"></div></div>
+            </div>
+            <div class="season-pill">Season<b>18d</b></div>
+          </div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="grid-two">
+          <div class="panel">
+            <div class="section-head">
+              <div class="section-title"><span class="ico bars"></span><span>Core Stats</span></div>
+              <span class="tiny-pill">Live</span>
+            </div>
+            <div class="stat-grid">
+              <button class="stat-box" onclick="window.location.href='win-rate.html'"><b id="winRate">58%</b><span>Win Rate</span></button>
+              <div class="stat-box"><b id="mvps">124</b><span>MVP Wins</span></div>
+              <button class="stat-box" onclick="window.location.href='streak.html'"><b id="streak">6</b><span>Current Streak</span></button>
+              <button class="stat-box" onclick="window.location.href='s-plus-rank.html'"><b>S+</b><span>Rank Status</span></button>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="section-head">
+              <div class="section-title"><span class="ico pulse"></span><span>Performance</span></div>
+              <span class="tiny-pill">Peak</span>
+            </div>
+            <div class="performance">
+              <div class="meter"><label>Attack</label><div class="meter-track"><div class="meter-fill" style="width:82%;"></div></div><em>82</em></div>
+              <div class="meter"><label>Control</label><div class="meter-track"><div class="meter-fill" style="width:76%;"></div></div><em>76</em></div>
+              <div class="meter"><label>Support</label><div class="meter-track"><div class="meter-fill" style="width:69%;"></div></div><em>69</em></div>
+              <div class="meter"><label>Speed</label><div class="meter-track"><div class="meter-fill" style="width:88%;"></div></div><em>88</em></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="panel">
+          <div class="section-head">
+            <div class="section-title"><span class="ico crown"></span><span>Badges</span></div>
+            <span class="tiny-pill">8/12</span>
+          </div>
+          <div class="badge-grid" id="badgeGrid">
+            <button class="badge" data-label="Sharpshooter"><span class="badge-icon" style="color:#00e5a0;"></span><strong>Sharpshooter</strong></button>
+            <button class="badge" data-label="Strategist"><span class="badge-icon" style="color:#3b82f6;"></span><strong>Strategist</strong></button>
+            <button class="badge" data-label="Guardian"><span class="badge-icon" style="color:#ffb800;"></span><strong>Guardian</strong></button>
+            <button class="badge" data-label="Speed Core"><span class="badge-icon" style="color:#f43f5e;"></span><strong>Speed Core</strong></button>
+            <button class="badge" data-label="Collector"><span class="badge-icon" style="color:#8b5cf6;"></span><strong>Collector</strong></button>
+            <button class="badge" data-label="Night Ops"><span class="badge-icon" style="color:#22d3ee;"></span><strong>Night Ops</strong></button>
+            <button class="badge" data-label="Untouchable"><span class="badge-icon" style="color:#fb7185;"></span><strong>Untouchable</strong></button>
+            <button class="badge" data-label="Top Ladder"><span class="badge-icon" style="color:#facc15;"></span><strong>Top Ladder</strong></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="panel">
+          <div class="section-head">
+            <div class="section-title"><span class="ico grid"></span><span>Recent Matches</span></div>
+            <button class="mini-btn" onclick="shuffleMatches()">Refresh Log</button>
+          </div>
+          <div class="stack" id="matchList"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="grid-two">
+          <div class="panel">
+            <div class="section-head">
+              <div class="section-title"><span class="ico people"></span><span>Squad</span></div>
+              <span class="tiny-pill">4 Online</span>
+            </div>
+            <div class="stack" id="friendList"></div>
+          </div>
+          <div class="panel">
+            <div class="section-head">
+              <div class="section-title"><span class="ico card"></span><span>Controls</span></div>
+              <span class="tiny-pill">Sync</span>
+            </div>
+            <div class="control-list">
+              <div class="control-item">
+                <div class="control-icon"><span class="ico pulse"></span></div>
+                <div class="control-copy"><strong>Notifications</strong><span>Invites, drops, season alerts</span></div>
+                <button class="toggle on" data-label="Notifications"></button>
+              </div>
+              <div class="control-item">
+                <div class="control-icon"><span class="ico spark"></span></div>
+                <div class="control-copy"><strong>Haptics</strong><span>Feedback on moves and wins</span></div>
+                <button class="toggle on" data-label="Haptics"></button>
+              </div>
+              <div class="control-item">
+                <div class="control-icon"><span class="ico people"></span></div>
+                <div class="control-copy"><strong>Ghost Mode</strong><span>Hide activity for one hour</span></div>
+                <button class="toggle" data-label="Ghost mode"></button>
+              </div>
+            </div>
+            <div class="button-row">
+              <button class="btn" onclick="saveProfile()">Save Changes</button>
+              <button class="btn ghost" onclick="resetProfile()">Reset</button>
+            </div>
+            <div class="save-note" id="saveNote">Changes are local to this demo.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-nav">
+      <button class="nav-btn" onclick="window.location.href='index.html'"><span class="ico grid"></span><span>Lobby</span></button>
+      <button class="nav-btn act"><span class="ico card"></span><span>Profile</span></button>
+      <button class="nav-btn" onclick="window.location.href='friends.html'"><span class="ico people"></span><span>Friends</span></button>
+      <button class="nav-btn" onclick="window.location.href='shop.html'"><span class="ico shop"></span><span>Shop</span></button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const statusChip = document.getElementById('statusChip');
+    const statusDot = document.getElementById('statusDot');
+    const avatar = document.getElementById('avatar');
+    const avatarInput = document.getElementById('avatarInput');
+    const avatarInitials = document.getElementById('avatarInitials');
+    const playerName = document.getElementById('playerName');
+    const xpBar = document.getElementById('xpBar');
+    const xpLabel = document.getElementById('xpLabel');
+    const xpPercent = document.getElementById('xpPercent');
+    const saveNote = document.getElementById('saveNote');
+    const toast = document.getElementById('toast');
+    const root = document.documentElement;
+
+    let xp = 12450;
+    let xpGoal = 15000;
+    let level = 42;
+    let online = true;
+    let toastTimer = null;
+
+    const defaultState = { name: 'Daya Player', xp: 12450, xpGoal: 15000, level: 42, online: true };
+
+    avatar.addEventListener('click', () => avatarInput.click());
+    avatarInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        avatar.style.backgroundImage = "linear-gradient(180deg, rgba(0,0,0,0.05), rgba(0,0,0,0.18)), url('" + ev.target.result + "')";
+        avatar.style.backgroundSize = 'cover';
+        avatar.style.backgroundPosition = 'center';
+        avatarInitials.style.display = 'none';
+        showToast('Avatar updated.');
+      };
+      reader.readAsDataURL(file);
+    });
+    playerName.addEventListener('input', () => {
+      const parts = playerName.textContent.trim().split(/\s+/).filter(Boolean).slice(0, 2);
+      avatarInitials.textContent = parts.map((part) => part[0]).join('').toUpperCase() || 'DP';
+    });
+    document.querySelectorAll('.toggle').forEach((toggle) => {
+      toggle.addEventListener('click', () => {
+        toggle.classList.toggle('on');
+        showToast(toggle.dataset.label + (toggle.classList.contains('on') ? ' enabled.' : ' disabled.'));
+      });
+    });
+    document.querySelectorAll('.badge').forEach((badge) => {
+      badge.addEventListener('click', () => {
+        const label = badge.dataset.label;
+        badge.style.transform = 'translateY(-4px) scale(1.03)';
+        setTimeout(() => { badge.style.transform = ''; }, 180);
+        showToast(label + ' badge highlighted.');
+      });
+    });
+    function focusName() {
+      playerName.focus();
+      document.getSelection().selectAllChildren(playerName);
+    }
+    function updateXP() {
+      const percent = Math.max(0, Math.min(100, Math.round((xp / xpGoal) * 100)));
+      xpBar.style.width = percent + '%';
+      xpLabel.textContent = 'Level ' + level + ' - ' + xp.toLocaleString() + ' / ' + xpGoal.toLocaleString() + ' XP';
+      xpPercent.textContent = percent + '%';
+    }
+    function updateStatusUI() {
+      statusDot.classList.toggle('off', !online);
+      statusChip.classList.toggle('live', online);
+      statusChip.innerHTML = '<span class="pulse-dot"></span><span>' + (online ? 'Online' : 'Offline') + '</span>';
+      statusChip.style.color = online ? 'var(--c-green)' : 'var(--c-rose)';
+    }
+    function toggleStatus() {
+      online = !online;
+      updateStatusUI();
+      showToast('Status set to ' + (online ? 'online.' : 'offline.'));
+    }
+    function addXP() {
+      xp += Math.round(Math.random() * 900 + 240);
+      if (xp >= xpGoal) {
+        level += 1;
+        xp = xp - xpGoal;
+        xpGoal += 5000;
+        showToast('Level up! Now level ' + level + '.');
+      } else showToast('XP boosted.');
+      updateXP();
+    }
+    function shareProfile() {
+      const text = 'Check out my Daya Pass Arena profile.';
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => showToast('Profile link copied.')).catch(() => showToast('Share text ready.'));
+      } else showToast('Share text ready.');
+    }
+    function saveProfile() { saveNote.textContent = 'Profile settings saved locally.'; showToast('Profile saved.'); }
+    function resetProfile() {
+      playerName.textContent = defaultState.name;
+      avatarInitials.textContent = 'DP';
+      avatarInitials.style.display = '';
+      avatar.style.backgroundImage = '';
+      xp = defaultState.xp; xpGoal = defaultState.xpGoal; level = defaultState.level; online = defaultState.online;
+      updateXP(); updateStatusUI(); renderMatches(); renderFriends();
+      saveNote.textContent = 'Profile reset to default state.';
+      showToast('Profile reset.');
+    }
+    function shuffleMatches() { renderMatches(); showToast('Battle log refreshed.'); }
+    function renderMatches() {
+      const list = document.getElementById('matchList');
+      const pool = [
+        { title: 'Arena Rush', meta: 'MVP  9 / 2 / 6', result: '+24 RP', tone: '#00e5a0', cls: 'win' },
+        { title: 'Temple Clash', meta: 'Loss  3 / 5 / 2', result: '-12 RP', tone: '#f43f5e', cls: 'loss' },
+        { title: 'Sky Grid', meta: 'Flawless  10 / 0 / 7', result: '+32 RP', tone: '#ffb800', cls: 'flawless' },
+        { title: 'Night Sprint', meta: 'Win  7 / 1 / 4', result: '+16 RP', tone: '#3b82f6', cls: 'win' },
+        { title: 'Echo Valley', meta: 'Support  4 / 3 / 9', result: '+8 RP', tone: '#22d3ee', cls: 'win' }
+      ].sort(() => Math.random() - 0.5);
+      list.innerHTML = '';
+      pool.slice(0, 4).forEach((match) => {
+        const card = document.createElement('div');
+        card.className = 'match-card';
+        card.innerHTML =
+          '<div class="match-main">' +
+            '<div class="match-mark ' + match.cls + '" style="color:' + match.tone + ';"></div>' +
+            '<div class="match-copy"><strong>' + match.title + '</strong><span>' + match.meta + '</span></div>' +
+          '</div>' +
+          '<div class="result-pill" style="color:' + match.tone + ';">' + match.result + '</div>';
+        list.appendChild(card);
+      });
+    }
+    function renderFriends() {
+      const list = document.getElementById('friendList');
+      const friends = [
+        { name: 'NovaFox', tag: 'Duo queue ready', online: true },
+        { name: 'Zenith', tag: 'Last seen 12m ago', online: false },
+        { name: 'Kairo', tag: 'In custom room', online: true },
+        { name: 'Miko', tag: 'Looking for squad', online: true }
+      ];
+      list.innerHTML = '';
+      friends.forEach((friend) => {
+        const card = document.createElement('div');
+        card.className = 'friend-card';
+        card.innerHTML =
+          '<div class="friend-main">' +
+            '<div class="friend-mark ' + (friend.online ? 'online' : 'offline') + '"></div>' +
+            '<div class="friend-copy"><strong>' + friend.name + '</strong><span>' + friend.tag + '</span></div>' +
+          '</div>' +
+          '<button class="mini-btn">' + (friend.online ? 'Invite' : 'Ping') + '</button>';
+        card.querySelector('button').addEventListener('click', () => showToast(friend.name + (friend.online ? ' invited.' : ' pinged.')));
+        list.appendChild(card);
+      });
+    }
+    function toggleTheme() {
+      const current = getComputedStyle(root).getPropertyValue('--c-green').trim().toLowerCase();
+      const alt = current === '#00e5a0';
+      root.style.setProperty('--c-green', alt ? '#22d3ee' : '#00e5a0');
+      root.style.setProperty('--c-green2', alt ? '#7dd3fc' : '#00ff66');
+      root.style.setProperty('--c-blue', alt ? '#8b5cf6' : '#3b82f6');
+      updateStatusUI();
+      updateXP();
+      showToast('Highlight palette switched.');
+    }
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+    }
+    updateXP();
+    updateStatusUI();
+    renderMatches();
+    renderFriends();
+  </script>
+</body>
+</html>

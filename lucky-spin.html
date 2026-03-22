@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Daya Pass Arena - Lucky Spin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root { --green:#00e5a0; --blue:#3b82f6; --pink:#ff4d94; --gold:#ffb800; --text:#e8f0ff; --soft:rgba(232,240,255,.72); --muted:rgba(232,240,255,.42); --border:rgba(255,255,255,.09); --border2:rgba(255,255,255,.14); --fast:.15s ease; --med:.25s ease; }
+    * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+    html,body { width:100%; min-height:100vh; background:#04060c; color:var(--text); font-family:'Rajdhani',sans-serif; display:flex; justify-content:center; }
+    .phone { position:relative; width:390px; height:690px; overflow:hidden; background:linear-gradient(180deg, rgba(6,9,18,.96), rgba(10,15,24,.98)); box-shadow:0 0 0 1px rgba(255,77,148,.08), 0 40px 120px rgba(0,0,0,.9); }
+    .bg { position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at 18% 14%, rgba(255,77,148,.15), transparent 24%), radial-gradient(circle at 82% 18%, rgba(59,130,246,.14), transparent 24%), linear-gradient(145deg, #140b1e 0%, #10182a 40%, #060b14 100%); }
+    .shell { position:relative; z-index:1; height:690px; overflow-y:auto; padding:0 14px 104px; scrollbar-width:none; }
+    .shell::-webkit-scrollbar { display:none; }
+    .hdr,.hdr-side,.hdr-copy,.section-title { display:flex; align-items:center; gap:10px; }
+    .hdr { position:sticky; top:0; z-index:5; justify-content:space-between; margin:0 -14px; padding:14px; background:linear-gradient(180deg, rgba(8,12,20,.96), rgba(8,12,20,.72)); border-bottom:1px solid rgba(255,255,255,.05); backdrop-filter:blur(12px); }
+    .hdr-copy { flex-direction:column; align-items:flex-start; gap:2px; }
+    .eyebrow { font-size:11px; letter-spacing:1.8px; text-transform:uppercase; color:var(--muted); }
+    .hdr-title { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1.3px; line-height:.9; }
+    .icon-btn,.mini-btn,.spin-btn,.reward,.nav-btn { border:1px solid var(--border2); background:rgba(255,255,255,.05); color:var(--text); font:inherit; cursor:pointer; transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast), background var(--fast); }
+    .icon-btn:hover,.mini-btn:hover,.spin-btn:hover,.reward:hover,.nav-btn:hover,.panel:hover { transform:translateY(-2px); border-color:rgba(255,77,148,.3); box-shadow:0 12px 28px rgba(255,77,148,.12); }
+    .icon-btn { width:40px; height:40px; border-radius:14px; display:grid; place-items:center; }
+    .mini-btn,.spin-btn { border-radius:999px; font-weight:700; }
+    .mini-btn { height:38px; padding:0 14px; color:var(--pink); }
+    .spin-btn { height:44px; padding:0 20px; color:var(--pink); }
+    .ico { width:16px; height:16px; position:relative; display:inline-block; color:currentColor; }
+    .ico::before,.ico::after { content:""; position:absolute; }
+    .ico.back::before { width:10px; height:10px; border-left:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg); left:4px; top:3px; }
+    .section { margin-top:14px; }
+    .panel { border:1px solid var(--border); border-radius:24px; padding:14px; background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)), rgba(13,18,32,.9); transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast); }
+    .hero h2 { font-family:'Bebas Neue',sans-serif; font-size:31px; line-height:.9; letter-spacing:1.2px; }
+    .hero p { margin-top:6px; color:var(--soft); font-size:13px; line-height:1.3; }
+    .wheel-wrap { display:grid; place-items:center; margin-top:16px; }
+    .wheel { width:210px; height:210px; border-radius:50%; background:conic-gradient(var(--gold) 0 60deg, var(--pink) 60deg 120deg, var(--blue) 120deg 180deg, var(--green) 180deg 240deg, #ff8c42 240deg 300deg, #9b5cff 300deg 360deg); border:8px solid rgba(255,255,255,.08); box-shadow:0 0 24px rgba(255,77,148,.18); display:grid; place-items:center; transition:transform 2.4s cubic-bezier(.2,.9,.2,1); }
+    .wheel-core { width:82px; height:82px; border-radius:50%; display:grid; place-items:center; background:rgba(7,10,18,.92); border:1px solid rgba(255,255,255,.08); font-family:'Orbitron',sans-serif; font-size:15px; }
+    .section-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
+    .section-title { font-family:'Orbitron',sans-serif; font-size:13px; letter-spacing:.9px; text-transform:uppercase; color:var(--soft); }
+    .rewards { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+    .reward { border-radius:18px; padding:12px; text-align:left; }
+    .reward strong { display:block; font-size:16px; }
+    .reward span { display:block; margin-top:5px; color:var(--muted); font-size:12px; line-height:1.2; }
+    .footer-nav { position:absolute; left:0; right:0; bottom:0; z-index:8; display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:10px 12px 12px; background:linear-gradient(180deg, rgba(8,12,20,.2), rgba(8,12,20,.96)); border-top:1px solid rgba(255,255,255,.06); backdrop-filter:blur(12px); }
+    .nav-btn { min-height:56px; border-radius:18px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
+    .nav-btn.act { color:var(--pink); border-color:rgba(255,77,148,.3); background:linear-gradient(180deg, rgba(255,77,148,.14), rgba(255,255,255,.03)); }
+    .toast { position:fixed; left:50%; bottom:20px; transform:translateX(-50%) translateY(24px); min-width:180px; max-width:280px; padding:10px 14px; border-radius:14px; background:rgba(7,10,18,.92); border:1px solid rgba(255,255,255,.08); font-size:13px; text-align:center; opacity:0; pointer-events:none; transition:opacity var(--med), transform var(--med); z-index:20; }
+    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="bg"></div>
+    <div class="shell">
+      <div class="hdr">
+        <div class="hdr-side"><button class="icon-btn" onclick="window.location.href='index.html'"><span class="ico back"></span></button><div class="hdr-copy"><div class="eyebrow">Bonus Drop</div><div class="hdr-title">Lucky Spin</div></div></div>
+        <button class="mini-btn" onclick="showToast('Spin rewards refreshed.')">Refresh</button>
+      </div>
+      <div class="section">
+        <div class="panel hero">
+          <h2>One Free Spin Is Ready</h2>
+          <p>Hit the wheel for coins, cosmetics, bonus trophies, or a rare arena reward.</p>
+          <div class="wheel-wrap"><div class="wheel" id="wheel"><div class="wheel-core">SPIN</div></div></div>
+          <div style="display:flex;justify-content:center;margin-top:16px;"><button class="spin-btn" onclick="spinWheel()">Spin Now</button></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="panel">
+          <div class="section-head"><div class="section-title">Possible Rewards</div><button class="mini-btn" onclick="showToast('Reward pool previewed.')">Preview</button></div>
+          <div class="rewards">
+            <button class="reward"><strong>1,200 Coins</strong><span>Fastest common drop</span></button>
+            <button class="reward"><strong>40 Gems</strong><span>Premium stash</span></button>
+            <button class="reward"><strong>Epic Trail</strong><span>Visual board flair</span></button>
+            <button class="reward"><strong>+80 Trophies</strong><span>Rank push boost</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-nav">
+      <button class="nav-btn" onclick="window.location.href='index.html'">Home</button>
+      <button class="nav-btn" onclick="window.location.href='tournament.html'">Tournament</button>
+      <button class="nav-btn" onclick="window.location.href='daily-reward.html'">Rewards</button>
+      <button class="nav-btn act">Spin</button>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+    let toastTimer = null;
+    let rotation = 0;
+    const toast = document.getElementById('toast');
+    const wheel = document.getElementById('wheel');
+    const prizes = ['1,200 Coins', '40 Gems', 'Epic Trail', '+80 Trophies', 'Avatar Frame', 'Rank Shield'];
+    function showToast(message){ toast.textContent = message; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 1800); }
+    function spinWheel(){
+      rotation += 1080 + Math.floor(Math.random() * 360);
+      wheel.style.transform = 'rotate(' + rotation + 'deg)';
+      const prize = prizes[Math.floor(Math.random() * prizes.length)];
+      setTimeout(() => showToast('You won ' + prize + '!'), 2100);
+    }
+  </script>
+</body>
+</html>

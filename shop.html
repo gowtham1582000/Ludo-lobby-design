@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Daya Pass Arena – Shop</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shop.css">
+</head>
+<body>
+
+<div class="phone">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="back-btn">← BACK</button>
+      <div class="logo">DAYA <span>PASS</span></div>
+      <div class="shop-badge">SHOP</div>
+    </div>
+    <div class="currencies">
+      <div class="currency-pill coins">
+        <span class="icon">🟡</span>
+        <span class="val" id="coin-count">24,850</span>
+        <button class="add-btn" onclick="openBuy('coins')">+</button>
+      </div>
+      <div class="currency-pill diamonds">
+        <span class="icon">💎</span>
+        <span class="val" id="diamond-count">480</span>
+        <button class="add-btn" onclick="openBuy('diamonds')">+</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- SCROLL AREA -->
+  <div class="scroll-area">
+    <div class="shell">
+
+      <!-- TABS -->
+      <div class="tabs">
+        <div class="tab active" data-tab="dice" onclick="switchTab('dice')">
+          <span class="tab-icon">🎲</span> DICE
+        </div>
+        <div class="tab" data-tab="pawns" onclick="switchTab('pawns')">
+          <span class="tab-icon">♟️</span> PAWNS
+        </div>
+        <div class="tab" data-tab="powers" onclick="switchTab('powers')">
+          <span class="tab-icon">⚡</span> POWERS
+        </div>
+        <div class="tab" data-tab="currency" onclick="switchTab('currency')">
+          <span class="tab-icon">💰</span> CURRENCY
+        </div>
+      </div>
+
+      <!-- ═══ DICE ═══ -->
+      <div class="section-page active" id="tab-dice">
+        <div class="section-head">
+          <div class="section-title"><span>◈</span> DICE SKINS</div>
+          <div class="filter-row">
+            <div class="filter-chip active" onclick="setFilter(this)">All</div>
+            <div class="filter-chip" onclick="setFilter(this)">Coins</div>
+            <div class="filter-chip" onclick="setFilter(this)">Gems</div>
+          </div>
+        </div>
+        <div class="grid" id="grid-dice"></div>
+      </div>
+
+      <!-- ═══ PAWNS ═══ -->
+      <div class="section-page" id="tab-pawns">
+        <div class="section-head">
+          <div class="section-title"><span>◈</span> PAWN SKINS</div>
+          <div class="filter-row">
+            <div class="filter-chip active" onclick="setFilter(this)">All</div>
+            <div class="filter-chip" onclick="setFilter(this)">Coins</div>
+            <div class="filter-chip" onclick="setFilter(this)">Gems</div>
+          </div>
+        </div>
+        <div class="grid" id="grid-pawns"></div>
+      </div>
+
+      <!-- ═══ POWERS ═══ -->
+      <div class="section-page" id="tab-powers">
+        <div class="section-head">
+          <div class="section-title"><span>◈</span> POWER-UPS</div>
+          <div class="filter-row">
+            <div class="filter-chip active" onclick="setFilter(this)">All</div>
+            <div class="filter-chip" onclick="setFilter(this)">Attack</div>
+            <div class="filter-chip" onclick="setFilter(this)">Defense</div>
+            <div class="filter-chip" onclick="setFilter(this)">Luck</div>
+          </div>
+        </div>
+        <div class="grid" id="grid-powers"></div>
+      </div>
+
+      <!-- ═══ CURRENCY ═══ -->
+      <div class="section-page" id="tab-currency">
+        <div class="sub-title"><span>◈</span> COIN BUNDLES</div>
+        <div class="bundle-grid" id="grid-coin-bundles"></div>
+
+        <div class="sub-title"><span>◈</span> DIAMOND BUNDLES</div>
+        <div class="bundle-grid" id="grid-gem-bundles"></div>
+      </div>
+
+    </div><!-- /shell -->
+  </div><!-- /scroll-area -->
+
+</div><!-- /phone -->
+
+<!-- CONFIRM MODAL (bottom sheet) -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-icon" id="modal-icon"></div>
+    <div class="modal-title" id="modal-title">CONFIRM PURCHASE</div>
+    <div class="modal-sub" id="modal-sub">Are you sure you want to buy this item?</div>
+    <div class="modal-price" id="modal-price"></div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal()">CANCEL</button>
+      <button class="modal-confirm" onclick="executePurchase()">CONFIRM →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="shop.js"></script>
+</body>
+</html>

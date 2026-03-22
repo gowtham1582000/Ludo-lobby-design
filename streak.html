@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Daya Pass Arena - Streak</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root { --green:#00e5a0; --gold:#ffb800; --blue:#3b82f6; --rose:#f43f5e; --text:#e8f0ff; --soft:rgba(232,240,255,.72); --muted:rgba(232,240,255,.42); --border:rgba(255,255,255,.09); --border2:rgba(255,255,255,.14); --fast:.15s ease; --med:.25s ease; }
+    * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+    html,body { width:100%; min-height:100vh; background:#04060c; color:var(--text); font-family:'Rajdhani',sans-serif; display:flex; justify-content:center; }
+    .phone { position:relative; width:390px; height:690px; overflow:hidden; background:linear-gradient(180deg, rgba(6,9,18,.96), rgba(10,15,24,.98)); box-shadow:0 0 0 1px rgba(0,229,160,.08), 0 40px 120px rgba(0,0,0,.9); }
+    .bg { position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at 20% 14%, rgba(255,184,0,.16), transparent 24%), radial-gradient(circle at 82% 18%, rgba(244,63,94,.12), transparent 24%), radial-gradient(circle at 50% 80%, rgba(59,130,246,.1), transparent 28%), linear-gradient(145deg, #091221 0%, #0f1422 40%, #060b14 100%); }
+    .bg::before { content:""; position:absolute; inset:-18%; background:repeating-linear-gradient(60deg, rgba(255,184,0,.07) 0 1px, transparent 1px 24px), repeating-linear-gradient(-60deg, rgba(244,63,94,.04) 0 1px, transparent 1px 24px); transform:perspective(900px) rotateX(62deg) translateY(150px) scale(1.2); opacity:.75; }
+    .shell { position:relative; z-index:1; height:690px; overflow-y:auto; padding:0 14px 104px; scrollbar-width:none; }
+    .shell::-webkit-scrollbar { display:none; }
+    .hdr { position:sticky; top:0; z-index:5; margin:0 -14px; padding:14px; display:flex; align-items:center; justify-content:space-between; background:linear-gradient(180deg, rgba(8,12,20,.96), rgba(8,12,20,.72)); border-bottom:1px solid rgba(255,255,255,.05); backdrop-filter:blur(12px); }
+    .hdr-side,.hdr-copy,.section-title,.strip,.chain,.summary { display:flex; align-items:center; gap:10px; }
+    .hdr-copy { flex-direction:column; align-items:flex-start; gap:2px; }
+    .eyebrow { font-size:11px; letter-spacing:1.8px; text-transform:uppercase; color:var(--muted); }
+    .hdr-title { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1.3px; line-height:.9; }
+    .icon-btn,.chip-btn,.mini-btn,.action,.nav-btn { border:1px solid var(--border2); background:rgba(255,255,255,.05); color:var(--text); font:inherit; cursor:pointer; transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast), background var(--fast); }
+    .icon-btn:hover,.chip-btn:hover,.mini-btn:hover,.action:hover,.nav-btn:hover,.panel:hover,.timeline-node:hover { transform:translateY(-2px); border-color:rgba(255,184,0,.34); box-shadow:0 12px 28px rgba(255,184,0,.12); }
+    .icon-btn { width:40px; height:40px; border-radius:14px; display:grid; place-items:center; }
+    .chip-btn,.mini-btn { border-radius:999px; font-weight:700; }
+    .chip-btn { height:40px; padding:0 14px; }
+    .mini-btn { height:34px; padding:0 12px; }
+    .ico { width:16px; height:16px; position:relative; display:inline-block; color:currentColor; }
+    .ico::before,.ico::after { content:""; position:absolute; }
+    .ico.back::before { width:10px; height:10px; border-left:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg); left:4px; top:3px; }
+    .ico.fire::before { inset:1px 4px; background:currentColor; clip-path:polygon(48% 0, 68% 20%, 78% 46%, 64% 100%, 28% 80%, 18% 46%, 32% 22%); }
+    .ico.spark::before { inset:1px 5px; background:currentColor; clip-path:polygon(55% 0,100% 0,55% 50%,100% 50%,20% 100%,42% 56%,0 56%); }
+    .ico.grid::before { inset:2px; border:2px solid currentColor; border-radius:4px; }
+    .ico.grid::after { inset:2px; background:linear-gradient(currentColor,currentColor) 50% 0/2px 100% no-repeat, linear-gradient(currentColor,currentColor) 0 50%/100% 2px no-repeat; }
+    .section { margin-top:14px; }
+    .insight {
+      border: 1px solid rgba(255,184,0,.16);
+      border-radius: 18px;
+      padding: 12px;
+      background: linear-gradient(90deg, rgba(255,184,0,.12), rgba(244,63,94,.08));
+    }
+    .insight strong { display:block; font-size:12px; text-transform:uppercase; letter-spacing:.8px; color:var(--gold); }
+    .insight span { display:block; margin-top:6px; font-size:13px; color:var(--soft); line-height:1.2; }
+    .panel { border:1px solid var(--border); border-radius:24px; padding:14px; background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)), rgba(13,18,32,.9); transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast); }
+    .hero-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+    .hero-top h2 { font-family:'Bebas Neue',sans-serif; font-size:30px; letter-spacing:1.2px; line-height:.9; }
+    .hero-top p { color:var(--soft); font-size:13px; margin-top:5px; }
+    .streak-chip { min-width:84px; height:40px; padding:0 14px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,184,0,.22); background:rgba(255,184,0,.1); color:var(--gold); font-weight:800; }
+    .chain { justify-content:center; gap:12px; margin:18px 0; }
+    .flame {
+      width:44px; height:60px; border-radius:22px 22px 28px 28px; position:relative;
+      background:linear-gradient(180deg, rgba(255,184,0,.92), rgba(244,63,94,.7));
+      box-shadow:0 0 18px rgba(255,184,0,.3); transform-origin:center bottom; animation:pulse .9s ease-in-out infinite alternate;
+    }
+    .flame::before { content:""; position:absolute; inset:8px 10px 14px; border-radius:50% 50% 60% 60%; background:rgba(255,240,190,.88); }
+    .flame.dim { opacity:.25; box-shadow:none; animation:none; }
+    @keyframes pulse { from { transform:translateY(0) scale(1); } to { transform:translateY(-3px) scale(1.04); } }
+    .summary { justify-content:space-between; }
+    .summary-card { flex:1; border-radius:18px; padding:12px; border:1px solid rgba(255,255,255,.08); background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); }
+    .summary-card b { display:block; font-size:22px; line-height:1; margin-bottom:6px; }
+    .summary-card span { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.7px; }
+    .section-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
+    .section-title { font-family:'Orbitron',sans-serif; font-size:13px; letter-spacing:.9px; text-transform:uppercase; color:var(--soft); }
+    .actions { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+    .action { border-radius:18px; padding:12px 10px; text-align:left; }
+    .action strong { display:block; font-size:12px; text-transform:uppercase; letter-spacing:.7px; }
+    .action span { display:block; margin-top:6px; font-size:11px; line-height:1.15; color:var(--muted); }
+    .timeline { display:grid; gap:10px; }
+    .timeline-node { border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:12px; background:rgba(255,255,255,.035); transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast); }
+    .strip { justify-content:space-between; }
+    .strip strong { font-size:14px; }
+    .strip span { color:var(--muted); font-size:12px; }
+    .risk { min-width:60px; height:32px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,.12); color:var(--soft); font-weight:700; }
+    .footer-nav { position:absolute; left:0; right:0; bottom:0; z-index:8; display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:10px 12px 12px; background:linear-gradient(180deg, rgba(8,12,20,.2), rgba(8,12,20,.96)); border-top:1px solid rgba(255,255,255,.06); backdrop-filter:blur(12px); }
+    .nav-btn { min-height:56px; border-radius:18px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
+    .nav-btn.act { color:var(--gold); border-color:rgba(255,184,0,.3); background:linear-gradient(180deg, rgba(255,184,0,.12), rgba(255,255,255,.03)); }
+    .toast { position:fixed; left:50%; bottom:20px; transform:translateX(-50%) translateY(24px); min-width:180px; max-width:280px; padding:10px 14px; border-radius:14px; background:rgba(7,10,18,.92); border:1px solid rgba(255,255,255,.08); font-size:13px; text-align:center; opacity:0; pointer-events:none; transition:opacity var(--med), transform var(--med); z-index:20; }
+    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="bg"></div>
+    <div class="shell">
+      <div class="hdr">
+        <div class="hdr-side"><button class="icon-btn" onclick="window.location.href='index.html'"><span class="ico back"></span></button><div class="hdr-copy"><div class="eyebrow">Momentum Tracker</div><div class="hdr-title">Streak</div></div></div>
+        <button class="chip-btn" onclick="freezeStreak()"><span class="ico spark"></span>Freeze</button>
+      </div>
+
+      <div class="section">
+        <div class="panel">
+          <div class="hero-top">
+            <div><h2 id="heroTitle">Current Run</h2><p id="heroSub">You are converting pressure into clean finishes.</p></div>
+            <div class="streak-chip"><span id="streakValue">6 Wins</span></div>
+          </div>
+          <div class="chain" id="flameChain"></div>
+          <div class="summary">
+            <div class="summary-card"><b id="peakValue">11</b><span>Season Peak</span></div>
+            <div class="summary-card"><b id="safeValue">78%</b><span>Stability</span></div>
+            <div class="summary-card"><b id="riskValue">Low</b><span>Drop Risk</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="insight">
+          <strong>Pressure Read</strong>
+          <span id="pressureRead">Your chain is stable. Keep early turns clean to preserve momentum.</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="panel">
+          <div class="section-head"><div class="section-title"><span class="ico fire"></span><span>Streak Actions</span></div><button class="mini-btn" onclick="randomizeTimeline()">Refresh</button></div>
+          <div class="actions">
+            <button class="action" onclick="boostStreak()"><strong>Sim Win</strong><span>Extend your chain and increase momentum.</span></button>
+            <button class="action" onclick="coolStreak()"><strong>Cool Down</strong><span>Drop tension without breaking completely.</span></button>
+            <button class="action" onclick="breakStreak()"><strong>Break</strong><span>Reset the run and show recovery mode.</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="panel">
+          <div class="section-head"><div class="section-title"><span class="ico grid"></span><span>Run Timeline</span></div><button class="mini-btn" onclick="boostStreak()">Next Match</button></div>
+          <div class="timeline" id="timeline"></div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-nav">
+      <button class="nav-btn" onclick="window.location.href='index.html'"><span class="ico grid"></span><span>Home</span></button>
+      <button class="nav-btn" onclick="window.location.href='win-rate.html'"><span class="ico fire"></span><span>Win Rate</span></button>
+      <button class="nav-btn act"><span class="ico fire"></span><span>Streak</span></button>
+      <button class="nav-btn" onclick="window.location.href='s-plus-rank.html'"><span class="ico spark"></span><span>S+ Rank</span></button>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+    let streak = 6, peak = 11, stability = 78, risk = 'Low', toastTimer = null;
+    const streakValue = document.getElementById('streakValue');
+    const peakValue = document.getElementById('peakValue');
+    const safeValue = document.getElementById('safeValue');
+    const riskValue = document.getElementById('riskValue');
+    const heroSub = document.getElementById('heroSub');
+    const pressureRead = document.getElementById('pressureRead');
+    const flameChain = document.getElementById('flameChain');
+    const timeline = document.getElementById('timeline');
+    const toast = document.getElementById('toast');
+    function showToast(message){ toast.textContent = message; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 1800); }
+    function renderFlames(){
+      flameChain.innerHTML = '';
+      for (let i = 0; i < 8; i++) {
+        const node = document.createElement('div');
+        node.className = 'flame' + (i < streak ? '' : ' dim');
+        flameChain.appendChild(node);
+      }
+    }
+    function renderStats(){
+      streakValue.textContent = streak + ' Wins';
+      peakValue.textContent = peak;
+      safeValue.textContent = stability + '%';
+      riskValue.textContent = risk;
+      heroSub.textContent = risk === 'Low' ? 'You are converting pressure into clean finishes.' : risk === 'Medium' ? 'One shaky round away from losing tempo.' : 'The chain is unstable. Play cleaner openings.';
+      pressureRead.textContent = risk === 'Low' ? 'Your chain is stable. Keep early turns clean to preserve momentum.' : risk === 'Medium' ? 'Momentum is slipping. A safe win resets the lane.' : 'Risk is high. Avoid chaos picks and rebuild with controlled matches.';
+      renderFlames();
+    }
+    function randomizeTimeline(){
+      const items = [
+        ['Temple Clash', 'Controlled mid board and closed with tempo.', '+12'],
+        ['Arena Rush', 'Aggressive opening forced early collapse.', '+18'],
+        ['Echo Vault', 'Recovered from a bad start in round four.', '+9'],
+        ['Sky Lane', 'Kept risk low with safe token cycling.', '+11']
+      ].sort(() => Math.random() - 0.5);
+      timeline.innerHTML = '';
+      items.forEach((item, index) => {
+        const card = document.createElement('button');
+        card.className = 'timeline-node';
+        card.innerHTML = '<div class="strip"><strong>' + item[0] + '</strong><div class="risk">' + item[2] + '</div></div><div class="strip"><span>' + item[1] + '</span><span>Match ' + (index + 1) + '</span></div>';
+        card.addEventListener('click', () => showToast(item[0] + ' reviewed.'));
+        timeline.appendChild(card);
+      });
+      showToast('Timeline refreshed.');
+    }
+    function boostStreak(){
+      streak = Math.min(8, streak + 1);
+      peak = Math.max(peak, streak);
+      stability = Math.min(96, stability + 4);
+      risk = stability > 84 ? 'Low' : 'Medium';
+      renderStats();
+      randomizeTimeline();
+      showToast('Win simulated. Streak extended.');
+    }
+    function freezeStreak(){
+      stability = Math.min(98, stability + 2);
+      risk = stability >= 86 ? 'Low' : risk;
+      renderStats();
+      showToast('Streak frozen. Your current run is protected for now.');
+    }
+    function coolStreak(){
+      streak = Math.max(2, streak - 1);
+      stability = Math.max(62, stability - 5);
+      risk = stability > 84 ? 'Low' : 'Medium';
+      renderStats();
+      showToast('Pressure eased. Chain still alive.');
+    }
+    function breakStreak(){
+      streak = 0;
+      stability = 48;
+      risk = 'High';
+      renderStats();
+      randomizeTimeline();
+      showToast('Run broken. Recovery mode active.');
+    }
+    renderStats();
+    randomizeTimeline();
+  </script>
+</body>
+</html>

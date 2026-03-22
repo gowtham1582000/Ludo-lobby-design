@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Daya Pass Arena - S+ Rank</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root { --green:#00e5a0; --gold:#ffb800; --blue:#3b82f6; --rose:#f43f5e; --text:#e8f0ff; --soft:rgba(232,240,255,.72); --muted:rgba(232,240,255,.42); --border:rgba(255,255,255,.09); --border2:rgba(255,255,255,.14); --fast:.15s ease; --med:.25s ease; }
+    * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+    html,body { width:100%; min-height:100vh; background:#04060c; color:var(--text); font-family:'Rajdhani',sans-serif; display:flex; justify-content:center; }
+    .phone { position:relative; width:390px; height:690px; overflow:hidden; background:linear-gradient(180deg, rgba(6,9,18,.96), rgba(10,15,24,.98)); box-shadow:0 0 0 1px rgba(0,229,160,.08), 0 40px 120px rgba(0,0,0,.9); }
+    .bg { position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at 20% 14%, rgba(255,184,0,.16), transparent 24%), radial-gradient(circle at 82% 18%, rgba(59,130,246,.14), transparent 24%), radial-gradient(circle at 50% 80%, rgba(0,229,160,.12), transparent 30%), linear-gradient(145deg, #101325 0%, #0d1726 40%, #060b14 100%); }
+    .bg::before { content:""; position:absolute; inset:-18%; background:repeating-linear-gradient(60deg, rgba(255,184,0,.07) 0 1px, transparent 1px 24px), repeating-linear-gradient(-60deg, rgba(59,130,246,.05) 0 1px, transparent 1px 24px); transform:perspective(900px) rotateX(62deg) translateY(150px) scale(1.2); opacity:.76; }
+    .shell { position:relative; z-index:1; height:690px; overflow-y:auto; padding:0 14px 104px; scrollbar-width:none; }
+    .shell::-webkit-scrollbar { display:none; }
+    .hdr { position:sticky; top:0; z-index:5; margin:0 -14px; padding:14px; display:flex; align-items:center; justify-content:space-between; background:linear-gradient(180deg, rgba(8,12,20,.96), rgba(8,12,20,.72)); border-bottom:1px solid rgba(255,255,255,.05); backdrop-filter:blur(12px); }
+    .hdr-side,.hdr-copy,.section-title,.rank-row,.progress-row,.check-row { display:flex; align-items:center; gap:10px; }
+    .hdr-copy { flex-direction:column; align-items:flex-start; gap:2px; }
+    .eyebrow { font-size:11px; letter-spacing:1.8px; text-transform:uppercase; color:var(--muted); }
+    .hdr-title { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1.3px; line-height:.9; }
+    .icon-btn,.chip-btn,.mini-btn,.booster,.nav-btn,.rank-node { border:1px solid var(--border2); background:rgba(255,255,255,.05); color:var(--text); font:inherit; cursor:pointer; transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast), background var(--fast); }
+    .icon-btn:hover,.chip-btn:hover,.mini-btn:hover,.booster:hover,.nav-btn:hover,.panel:hover,.rank-node:hover { transform:translateY(-2px); border-color:rgba(255,184,0,.34); box-shadow:0 12px 28px rgba(255,184,0,.12); }
+    .icon-btn { width:40px; height:40px; border-radius:14px; display:grid; place-items:center; }
+    .chip-btn,.mini-btn { border-radius:999px; font-weight:700; }
+    .chip-btn { height:40px; padding:0 14px; }
+    .mini-btn { height:34px; padding:0 12px; }
+    .ico { width:16px; height:16px; position:relative; display:inline-block; color:currentColor; }
+    .ico::before,.ico::after { content:""; position:absolute; }
+    .ico.back::before { width:10px; height:10px; border-left:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg); left:4px; top:3px; }
+    .ico.crown::before { inset:3px 1px 2px; background:currentColor; clip-path:polygon(0 100%, 10% 35%, 28% 62%, 50% 10%, 72% 62%, 90% 35%, 100% 100%); border-radius:3px; }
+    .ico.spark::before { inset:1px 5px; background:currentColor; clip-path:polygon(55% 0,100% 0,55% 50%,100% 50%,20% 100%,42% 56%,0 56%); }
+    .ico.grid::before { inset:2px; border:2px solid currentColor; border-radius:4px; }
+    .ico.grid::after { inset:2px; background:linear-gradient(currentColor,currentColor) 50% 0/2px 100% no-repeat, linear-gradient(currentColor,currentColor) 0 50%/100% 2px no-repeat; }
+    .section { margin-top:14px; }
+    .insight {
+      border: 1px solid rgba(255,184,0,.16);
+      border-radius: 18px;
+      padding: 12px;
+      background: linear-gradient(90deg, rgba(255,184,0,.12), rgba(0,229,160,.08));
+    }
+    .insight strong { display:block; font-size:12px; text-transform:uppercase; letter-spacing:.8px; color:var(--gold); }
+    .insight span { display:block; margin-top:6px; font-size:13px; color:var(--soft); line-height:1.2; }
+    .panel { border:1px solid var(--border); border-radius:24px; padding:14px; background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)), rgba(13,18,32,.9); transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast); }
+    .hero-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+    .hero-top h2 { font-family:'Bebas Neue',sans-serif; font-size:30px; letter-spacing:1.2px; line-height:.9; }
+    .hero-top p { color:var(--soft); font-size:13px; margin-top:5px; }
+    .badge-core { width:92px; min-height:104px; border-radius:24px; padding:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; text-align:center; background:linear-gradient(180deg, rgba(255,184,0,.16), rgba(255,255,255,.02)); border:1px solid rgba(255,184,0,.22); }
+    .badge-mark { width:50px; height:50px; border-radius:16px; display:grid; place-items:center; background:rgba(4,6,12,.34); border:1px solid rgba(255,255,255,.1); color:var(--gold); }
+    .badge-mark .ico { width:24px; height:24px; }
+    .badge-mark .ico.crown::before { inset:4px 2px 3px; }
+    .badge-core strong { font-size:16px; }
+    .badge-core span { font-size:11px; color:var(--soft); text-transform:uppercase; letter-spacing:.7px; }
+    .rank-row { margin-top:16px; align-items:stretch; }
+    .rank-stats { flex:1; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .stat { border-radius:18px; padding:12px; border:1px solid rgba(255,255,255,.08); background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); }
+    .stat b { display:block; font-size:22px; line-height:1; margin-bottom:6px; }
+    .stat span { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.7px; }
+    .progress-row { justify-content:space-between; color:var(--soft); font-size:12px; margin:14px 0 8px; }
+    .bar { height:12px; border-radius:999px; overflow:hidden; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.08); }
+    .bar-fill { width:74%; height:100%; border-radius:999px; background:linear-gradient(90deg, var(--gold), var(--green), var(--blue)); box-shadow:0 0 16px rgba(255,184,0,.34); transition:width var(--med); }
+    .section-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
+    .section-title { font-family:'Orbitron',sans-serif; font-size:13px; letter-spacing:.9px; text-transform:uppercase; color:var(--soft); }
+    .path { display:grid; gap:10px; }
+    .rank-node { border-radius:20px; padding:12px; display:grid; grid-template-columns:42px 1fr auto; align-items:center; gap:10px; }
+    .node-mark { width:42px; height:42px; border-radius:14px; display:grid; place-items:center; border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.05); font-weight:800; }
+    .node-copy strong, .booster strong { display:block; font-size:14px; }
+    .node-copy span, .booster span { display:block; margin-top:4px; font-size:12px; color:var(--muted); }
+    .node-score { min-width:64px; height:32px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,.12); color:var(--soft); font-weight:700; }
+    .checks,.boosters { display:grid; gap:10px; }
+    .check { border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:12px; background:rgba(255,255,255,.035); }
+    .check-row { justify-content:space-between; }
+    .tick { width:24px; height:24px; border-radius:50%; display:grid; place-items:center; border:1px solid rgba(255,255,255,.14); font-size:12px; font-weight:800; }
+    .tick.ok { color:var(--green); border-color:rgba(0,229,160,.3); background:rgba(0,229,160,.12); }
+    .tick.off { color:var(--muted); }
+    .booster { border-radius:18px; padding:12px; text-align:left; }
+    .footer-nav { position:absolute; left:0; right:0; bottom:0; z-index:8; display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:10px 12px 12px; background:linear-gradient(180deg, rgba(8,12,20,.2), rgba(8,12,20,.96)); border-top:1px solid rgba(255,255,255,.06); backdrop-filter:blur(12px); }
+    .nav-btn { min-height:56px; border-radius:18px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
+    .nav-btn.act { color:var(--gold); border-color:rgba(255,184,0,.3); background:linear-gradient(180deg, rgba(255,184,0,.12), rgba(255,255,255,.03)); }
+    .toast { position:fixed; left:50%; bottom:20px; transform:translateX(-50%) translateY(24px); min-width:180px; max-width:280px; padding:10px 14px; border-radius:14px; background:rgba(7,10,18,.92); border:1px solid rgba(255,255,255,.08); font-size:13px; text-align:center; opacity:0; pointer-events:none; transition:opacity var(--med), transform var(--med); z-index:20; }
+    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="bg"></div>
+    <div class="shell">
+      <div class="hdr">
+        <div class="hdr-side"><button class="icon-btn" onclick="window.location.href='index.html'"><span class="ico back"></span></button><div class="hdr-copy"><div class="eyebrow">Prestige Target</div><div class="hdr-title">S+ Rank</div></div></div>
+      </div>
+
+      <div class="section">
+        <div class="panel">
+          <div class="hero-top">
+            <div><h2 id="heroTitle">Promotion Window</h2><p id="heroSub">You are inside the final quality band for S+.</p></div>
+            <div class="badge-core"><div class="badge-mark"><span class="ico crown"></span></div><strong id="rankName">S Rank</strong><span>Current</span></div>
+          </div>
+          <div class="rank-row">
+            <div class="rank-stats">
+              <div class="stat"><b id="scoreValue">742</b><span>Promotion Score</span></div>
+              <div class="stat"><b id="qualityValue">91%</b><span>Quality Rate</span></div>
+              <div class="stat"><b id="cleanValue">14</b><span>Clean Wins</span></div>
+              <div class="stat"><b id="windowValue">3</b><span>Matches Left</span></div>
+            </div>
+          </div>
+          <div class="progress-row"><span id="progressLabel">742 / 1000 toward S+ promotion</span><span id="progressPercent">74%</span></div>
+          <div class="bar"><div class="bar-fill" id="progressFill"></div></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="insight">
+          <strong>Promotion Intel</strong>
+          <span id="promoRead">You are inside the safe band. Clean finishes matter more than risky speed.</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="panel">
+          <div class="section-head"><div class="section-title"><span class="ico grid"></span><span>Promotion Path</span></div><button class="mini-btn" onclick="simulatePush()">Advance</button></div>
+          <div class="path" id="rankPath"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="panel">
+          <div class="section-head"><div class="section-title"><span class="ico crown"></span><span>Requirements</span></div><button class="mini-btn" onclick="toggleChecks()">Toggle</button></div>
+          <div class="checks" id="checks"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="panel">
+          <div class="section-head"><div class="section-title"><span class="ico spark"></span><span>Boosters</span></div><button class="mini-btn" onclick="shuffleBoosters()">Refresh</button></div>
+          <div class="boosters" id="boosters"></div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-nav">
+      <button class="nav-btn" onclick="window.location.href='index.html'"><span class="ico grid"></span><span>Home</span></button>
+      <button class="nav-btn" onclick="window.location.href='win-rate.html'"><span class="ico spark"></span><span>Win Rate</span></button>
+      <button class="nav-btn" onclick="window.location.href='streak.html'"><span class="ico spark"></span><span>Streak</span></button>
+      <button class="nav-btn act"><span class="ico crown"></span><span>S+ Rank</span></button>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+    let score = 742, quality = 91, cleanWins = 14, matchesLeft = 3, toastTimer = null;
+    const scoreValue = document.getElementById('scoreValue');
+    const qualityValue = document.getElementById('qualityValue');
+    const cleanValue = document.getElementById('cleanValue');
+    const windowValue = document.getElementById('windowValue');
+    const progressLabel = document.getElementById('progressLabel');
+    const progressPercent = document.getElementById('progressPercent');
+    const progressFill = document.getElementById('progressFill');
+    const rankPath = document.getElementById('rankPath');
+    const checks = document.getElementById('checks');
+    const boosters = document.getElementById('boosters');
+    const heroTitle = document.getElementById('heroTitle');
+    const heroSub = document.getElementById('heroSub');
+    const rankName = document.getElementById('rankName');
+    const promoRead = document.getElementById('promoRead');
+    const toast = document.getElementById('toast');
+    function showToast(message){ toast.textContent = message; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 1800); }
+    function renderHeader(){
+      const percent = Math.max(0, Math.min(100, Math.round((score / 1000) * 100)));
+      scoreValue.textContent = score;
+      qualityValue.textContent = quality + '%';
+      cleanValue.textContent = cleanWins;
+      windowValue.textContent = matchesLeft;
+      progressLabel.textContent = score + ' / 1000 toward S+ promotion';
+      progressPercent.textContent = percent + '%';
+      progressFill.style.width = percent + '%';
+      rankName.textContent = percent >= 100 ? 'S+ Rank' : 'S Rank';
+      heroTitle.textContent = percent >= 100 ? 'Promotion Secured' : 'Promotion Window';
+      heroSub.textContent = percent >= 100 ? 'You crossed the S+ threshold. Hold form to keep it.' : 'You are inside the final quality band for S+.';
+      promoRead.textContent = percent >= 100 ? 'Promotion locked. Your next goal is to stabilize and avoid decay.' : percent >= 85 ? 'You are inside the safe band. Clean finishes matter more than risky speed.' : 'You still need a sharper finish rate before the final S+ jump.';
+    }
+    function renderPath(){
+      const rows = [
+        ['S Entry', 'Base qualification secured', '640'],
+        ['Stability Gate', 'Keep quality above 88%', quality + '%'],
+        ['Clean Finish Gate', 'Finish with low-error wins', cleanWins + ''],
+        ['S+ Promotion', 'Reach the final score line', score + '']
+      ];
+      rankPath.innerHTML = '';
+      rows.forEach((row, index) => {
+        const node = document.createElement('button');
+        node.className = 'rank-node';
+        node.innerHTML = '<div class="node-mark" style="color:' + (index === 3 ? '#ffb800' : '#00e5a0') + ';">' + (index + 1) + '</div><div class="node-copy"><strong>' + row[0] + '</strong><span>' + row[1] + '</span></div><div class="node-score">' + row[2] + '</div>';
+        node.addEventListener('click', () => showToast(row[0] + ' reviewed.'));
+        rankPath.appendChild(node);
+      });
+    }
+    function renderChecks(){
+      const list = [
+        ['Quality stays above 88%', quality >= 88],
+        ['Clean wins at least 15', cleanWins >= 15],
+        ['Promotion score hits 1000', score >= 1000]
+      ];
+      checks.innerHTML = '';
+      list.forEach((item) => {
+        const card = document.createElement('div');
+        card.className = 'check';
+        card.innerHTML = '<div class="check-row"><div><strong>' + item[0] + '</strong></div><div class="tick ' + (item[1] ? 'ok' : 'off') + '">' + (item[1] ? 'OK' : '!') + '</div></div>';
+        checks.appendChild(card);
+      });
+    }
+    function shuffleBoosters(){
+      const list = [
+        ['Sharp Openings', 'Start fast and protect the first lead.'],
+        ['Low-Risk Queue', 'Avoid off-meta rooms for cleaner conversion.'],
+        ['Precision Finish', 'Secure clean wins instead of high-chaos pushes.']
+      ].sort(() => Math.random() - 0.5);
+      boosters.innerHTML = '';
+      list.forEach((item) => {
+        const card = document.createElement('button');
+        card.className = 'booster';
+        card.innerHTML = '<strong>' + item[0] + '</strong><span>' + item[1] + '</span>';
+        card.addEventListener('click', () => showToast(item[0] + ' selected.'));
+        boosters.appendChild(card);
+      });
+      showToast('Boosters refreshed.');
+    }
+    function simulatePush(){
+      score = Math.min(1040, score + 76);
+      quality = Math.min(98, quality + 1);
+      cleanWins = Math.min(20, cleanWins + 1);
+      matchesLeft = Math.max(0, matchesLeft - 1);
+      renderHeader();
+      renderPath();
+      renderChecks();
+      showToast(score >= 1000 ? 'S+ threshold reached.' : 'Promotion push simulated.');
+    }
+    function toggleChecks(){
+      quality = quality >= 90 ? 86 : 92;
+      renderChecks();
+      renderHeader();
+      showToast('Requirement state toggled.');
+    }
+    renderHeader();
+    renderPath();
+    renderChecks();
+    shuffleBoosters();
+  </script>
+</body>
+</html>

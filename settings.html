@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daya Pass Arena – Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="settings.css">
+</head>
+<body>
+
+<div class="container">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="back-btn" onclick="window.location.href='index.html'">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      </div>
+      <span class="page-title">Settings</span>
+    </div>
+    <div class="topbar-icons">
+      <div class="icon-btn" onclick="window.location.href='notifications.html'">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 00-9.33-4.999M9 11v3.159c0 .538-.214 1.055-.595 1.436L7 17h5"/><path stroke-linecap="round" stroke-linejoin="round" d="M13 17a1 1 0 01-2 0"/></svg>
+        <span class="notif-count">3</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE CARD -->
+  <div class="profile-card">
+    <div class="avatar-wrap">
+      <div class="avatar">⚔️</div>
+      <div class="avatar-ring"></div>
+      <div class="lv-badge">LV 7</div>
+    </div>
+    <div class="profile-info">
+      <div class="profile-name">DAYA_X</div>
+      <div class="profile-id">ID: #48291 · Season 1</div>
+      <div class="profile-stats">
+        <div class="stat-chip"><span class="dot" style="background:#f5c518"></span>24,850</div>
+        <div class="stat-chip"><span class="dot" style="background:#4da6ff"></span>480</div>
+      </div>
+    </div>
+    <button class="edit-btn" onclick="showModal('profileModal')">EDIT</button>
+  </div>
+
+  <!-- AUDIO SECTION -->
+  <div class="section">
+    <div class="section-label">Audio</div>
+    <div class="section-panel">
+      <div class="setting-row" onclick="window.location.href='help.html'">
+        <div class="row-icon icon-green">🔊</div>
+        <div class="row-content">
+          <div class="row-title">Master Volume</div>
+          <div class="row-sub">Overall game volume</div>
+        </div>
+        <div class="row-right">
+          <div class="slider-wrap">
+            <input type="range" class="slider" min="0" max="100" value="80" oninput="updateSlider(this,'vol-master')">
+            <span class="slider-val" id="vol-master">80</span>
+          </div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-green">🎵</div>
+        <div class="row-content">
+          <div class="row-title">Background Music</div>
+          <div class="row-sub">Arena BGM & themes</div>
+        </div>
+        <div class="row-right">
+          <div class="slider-wrap">
+            <input type="range" class="slider" min="0" max="100" value="60" oninput="updateSlider(this,'vol-music')">
+            <span class="slider-val" id="vol-music">60</span>
+          </div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-blue">🎲</div>
+        <div class="row-content">
+          <div class="row-title">Sound Effects</div>
+          <div class="row-sub">Dice, moves, tokens</div>
+        </div>
+        <div class="row-right">
+          <div class="slider-wrap">
+            <input type="range" class="slider" min="0" max="100" value="90" oninput="updateSlider(this,'vol-sfx')">
+            <span class="slider-val" id="vol-sfx">90</span>
+          </div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-purple">📳</div>
+        <div class="row-content">
+          <div class="row-title">Vibration</div>
+          <div class="row-sub">Haptic feedback on moves</div>
+        </div>
+        <div class="row-right">
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAMEPLAY SECTION -->
+  <div class="section">
+    <div class="section-label">Gameplay</div>
+    <div class="section-panel">
+      <div class="setting-row" onclick="showModal('themeModal')">
+        <div class="row-icon icon-gold">🎨</div>
+        <div class="row-content">
+          <div class="row-title">Board Theme</div>
+          <div class="row-sub">Visual style of the arena</div>
+        </div>
+        <div class="row-right">
+          <span class="val-badge val-gold">VOLCANO</span>
+          <div class="arrow-icon"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-blue">⏱️</div>
+        <div class="row-content">
+          <div class="row-title">Turn Timer</div>
+          <div class="row-sub">Seconds per turn</div>
+        </div>
+        <div class="row-right">
+          <div class="select-chip" onclick="cycleTimer(this)">
+            30s
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-green">✨</div>
+        <div class="row-content">
+          <div class="row-title">Auto-Roll Dice</div>
+          <div class="row-sub">Roll automatically when timer ends</div>
+        </div>
+        <div class="row-right">
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-gold">🌟</div>
+        <div class="row-content">
+          <div class="row-title">Animations</div>
+          <div class="row-sub">Token & board effects</div>
+        </div>
+        <div class="row-right">
+          <div class="select-chip" onclick="cycleAnim(this)">
+            HIGH
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-purple">💬</div>
+        <div class="row-content">
+          <div class="row-title">In-Game Chat</div>
+          <div class="row-sub">Quick emotes & messages</div>
+        </div>
+        <div class="row-right">
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFICATIONS SECTION -->
+  <div class="section">
+    <div class="section-label">Notifications</div>
+    <div class="section-panel">
+      <div class="setting-row">
+        <div class="row-icon icon-gold">🏆</div>
+        <div class="row-content">
+          <div class="row-title">Tournament Alerts</div>
+          <div class="row-sub">New tournaments & results</div>
+        </div>
+        <div class="row-right">
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-green">👥</div>
+        <div class="row-content">
+          <div class="row-title">Friend Invites</div>
+          <div class="row-sub">When friends invite you</div>
+        </div>
+        <div class="row-right">
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-blue">🎁</div>
+        <div class="row-content">
+          <div class="row-title">Daily Rewards</div>
+          <div class="row-sub">Reminders & lucky spin</div>
+        </div>
+        <div class="row-right">
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-purple">📣</div>
+        <div class="row-content">
+          <div class="row-title">Promotions</div>
+          <div class="row-sub">Special offers & events</div>
+        </div>
+        <div class="row-right">
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACCOUNT SECTION -->
+  <div class="section">
+    <div class="section-label">Account</div>
+    <div class="section-panel">
+      <div class="setting-row" onclick="showModal('langModal')">
+        <div class="row-icon icon-blue">🌐</div>
+        <div class="row-content">
+          <div class="row-title">Language</div>
+          <div class="row-sub">App display language</div>
+        </div>
+        <div class="row-right">
+          <span class="val-badge val-green">EN</span>
+          <div class="arrow-icon"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-gold">🔒</div>
+        <div class="row-content">
+          <div class="row-title">Privacy Mode</div>
+          <div class="row-sub">Hide profile from non-friends</div>
+        </div>
+        <div class="row-right">
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-green">🔗</div>
+        <div class="row-content">
+          <div class="row-title">Linked Accounts</div>
+          <div class="row-sub">Google, Facebook, Apple</div>
+        </div>
+        <div class="row-right">
+          <span class="val-badge val-green">2 LINKED</span>
+          <div class="arrow-icon"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-blue">📱</div>
+        <div class="row-content">
+          <div class="row-title">Two-Factor Auth</div>
+          <div class="row-sub">Extra account security</div>
+        </div>
+        <div class="row-right">
+          <span class="val-badge val-red">OFF</span>
+          <div class="arrow-icon"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUPPORT SECTION -->
+  <div class="section">
+    <div class="section-label">Support</div>
+    <div class="section-panel">
+      <div class="setting-row">
+        <div class="row-icon icon-green">❓</div>
+        <div class="row-content">
+          <div class="row-title">Help & FAQ</div>
+          <div class="row-sub">Game rules and guides</div>
+        </div>
+        <div class="row-right">
+          <div class="arrow-icon"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-blue">💌</div>
+        <div class="row-content">
+          <div class="row-title">Contact Support</div>
+          <div class="row-sub">Report issues or bugs</div>
+        </div>
+        <div class="row-right">
+          <div class="arrow-icon"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-gold">⭐</div>
+        <div class="row-content">
+          <div class="row-title">Rate the Game</div>
+          <div class="row-sub">Share your experience</div>
+        </div>
+        <div class="row-right">
+          <div class="arrow-icon"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DANGER ZONE -->
+  <div class="section">
+    <div class="section-label">Danger Zone</div>
+    <div class="section-panel">
+      <div class="setting-row danger-row" onclick="showModal('logoutModal')">
+        <div class="row-icon icon-red">🚪</div>
+        <div class="row-content">
+          <div class="row-title">Log Out</div>
+          <div class="row-sub">Sign out of your account</div>
+        </div>
+        <div class="row-right">
+          <div class="arrow-icon"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+      <div class="setting-row danger-row">
+        <div class="row-icon icon-red">🗑️</div>
+        <div class="row-content">
+          <div class="row-title">Delete Account</div>
+          <div class="row-sub">Permanently erase all data</div>
+        </div>
+        <div class="row-right">
+          <div class="arrow-icon"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VERSION FOOTER -->
+  <div class="version-footer">
+    <div class="version-text">DAYA PASS ARENA · v2.4.1</div>
+    <div class="version-sub">© 2025 Royal Arena Studios</div>
+  </div>
+
+</div>
+
+<!-- LANGUAGE MODAL -->
+<div class="modal-overlay" id="langModal" onclick="closeModalOutside(event,'langModal')">
+  <div class="modal">
+    <div class="close-modal" onclick="closeModal('langModal')">✕</div>
+    <div class="modal-title">LANGUAGE</div>
+    <div class="lang-grid">
+      <div class="lang-opt selected" onclick="selectLang(this)"><div class="flag">🇬🇧</div><div class="lang-name">English</div></div>
+      <div class="lang-opt" onclick="selectLang(this)"><div class="flag">🇮🇳</div><div class="lang-name">Hindi</div></div>
+      <div class="lang-opt" onclick="selectLang(this)"><div class="flag">🇧🇷</div><div class="lang-name">Português</div></div>
+      <div class="lang-opt" onclick="selectLang(this)"><div class="flag">🇸🇦</div><div class="lang-name">العربية</div></div>
+      <div class="lang-opt" onclick="selectLang(this)"><div class="flag">🇪🇸</div><div class="lang-name">Español</div></div>
+      <div class="lang-opt" onclick="selectLang(this)"><div class="flag">🇫🇷</div><div class="lang-name">Français</div></div>
+    </div>
+    <button class="modal-btn" onclick="closeModal('langModal')">CONFIRM</button>
+  </div>
+</div>
+
+<!-- THEME MODAL -->
+<div class="modal-overlay" id="themeModal" onclick="closeModalOutside(event,'themeModal')">
+  <div class="modal">
+    <div class="close-modal" onclick="closeModal('themeModal')">✕</div>
+    <div class="modal-title">BOARD THEME</div>
+    <div class="theme-grid">
+      <div class="lang-opt selected" onclick="selectTheme(this,'VOLCANO')"><div class="flag">🌋</div><div class="lang-name">Volcano Pit</div></div>
+      <div class="lang-opt" onclick="selectTheme(this,'CLASSIC')"><div class="flag">🏛️</div><div class="lang-name">Classic Arena</div></div>
+      <div class="lang-opt" onclick="selectTheme(this,'CYBER')"><div class="flag">🤖</div><div class="lang-name">Cyber Grid</div></div>
+      <div class="lang-opt" onclick="selectTheme(this,'OCEAN')"><div class="flag">🌊</div><div class="lang-name">Ocean Abyss</div></div>
+    </div>
+    <button class="modal-btn" onclick="closeModal('themeModal')">APPLY THEME</button>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profileModal" onclick="closeModalOutside(event,'profileModal')">
+  <div class="modal">
+    <div class="close-modal" onclick="closeModal('profileModal')">✕</div>
+    <div class="modal-title">EDIT PROFILE</div>
+    <div class="modal-field">
+      <div class="field-label">USERNAME</div>
+      <input type="text" class="field-input" value="DAYA_X"
+        onfocus="this.style.borderColor='rgba(0,255,180,0.4)'"
+        onblur="this.style.borderColor='rgba(255,255,255,0.07)'">
+    </div>
+    <div class="modal-field">
+      <div class="field-label">AVATAR</div>
+      <div class="avatar-picker">
+        <div class="av-opt selected" onclick="selectAvatar(this)">⚔️</div>
+        <div class="av-opt" onclick="selectAvatar(this)">🦁</div>
+        <div class="av-opt" onclick="selectAvatar(this)">🐉</div>
+        <div class="av-opt" onclick="selectAvatar(this)">🎯</div>
+        <div class="av-opt" onclick="selectAvatar(this)">🔱</div>
+      </div>
+    </div>
+    <button class="modal-btn" onclick="closeModal('profileModal')">SAVE CHANGES</button>
+  </div>
+</div>
+
+<!-- LOGOUT MODAL -->
+<div class="modal-overlay" id="logoutModal" onclick="closeModalOutside(event,'logoutModal')">
+  <div class="modal">
+    <div class="close-modal" onclick="closeModal('logoutModal')">✕</div>
+    <div class="modal-title">LOG OUT?</div>
+    <p class="modal-desc">Your progress is saved. You can log back in anytime with your linked accounts.</p>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal('logoutModal')">CANCEL</button>
+      <button class="modal-danger">LOG OUT</button>
+    </div>
+  </div>
+</div>
+
+<script src="settings.js"></script>
+</body>
+</html>

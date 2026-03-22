@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Daya Pass Arena - Help</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;800;900&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --green: #00e5a0;
+      --gold: #ffb800;
+      --blue: #3b82f6;
+      --text: #e8f0ff;
+      --soft: rgba(232, 240, 255, .72);
+      --muted: rgba(232, 240, 255, .42);
+      --border: rgba(255, 255, 255, .09);
+      --border2: rgba(255, 255, 255, .14);
+      --fast: .15s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100vh;
+      background: #04060c;
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      display: flex;
+      justify-content: center;
+    }
+
+    .phone {
+      position: relative;
+      width: 390px;
+      height: 690px;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(6, 9, 18, .96), rgba(10, 15, 24, .98));
+      box-shadow: 0 0 0 1px rgba(0, 229, 160, .08), 0 40px 120px rgba(0, 0, 0, .9);
+    }
+
+    .bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 18% 14%, rgba(59, 130, 246, .14), transparent 24%), radial-gradient(circle at 82% 18%, rgba(0, 229, 160, .12), transparent 22%), linear-gradient(145deg, #091221 0%, #0c1728 38%, #060b14 100%);
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      height: 690px;
+      overflow-y: auto;
+      padding: 0 14px 104px;
+      scrollbar-width: none;
+    }
+
+    .shell::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hdr,
+    .hdr-side,
+    .hdr-copy,
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hdr {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      justify-content: space-between;
+      margin: 0 -14px;
+      padding: 14px;
+      background: linear-gradient(180deg, rgba(8, 12, 20, .96), rgba(8, 12, 20, .72));
+      border-bottom: 1px solid rgba(255, 255, 255, .05);
+      backdrop-filter: blur(12px);
+    }
+
+    .hdr-copy {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .hdr-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 1.3px;
+      line-height: .9;
+    }
+
+    .btn,
+    .faq,
+    .nav-btn {
+      border: 1px solid var(--border2);
+      background: rgba(255, 255, 255, .05);
+      color: var(--text);
+      font: inherit;
+      cursor: pointer;
+      transition: transform var(--fast), border-color var(--fast), box-shadow var(--fast), background var(--fast);
+    }
+
+    .btn:hover,
+    .faq:hover,
+    .nav-btn:hover,
+    .panel:hover {
+      transform: translateY(-2px);
+      border-color: rgba(59, 130, 246, .3);
+      box-shadow: 0 12px 28px rgba(59, 130, 246, .12);
+    }
+
+    .btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+    }
+
+    .ico {
+      width: 16px;
+      height: 16px;
+      position: relative;
+      display: inline-block;
+      color: currentColor;
+    }
+
+    .ico::before,
+    .ico::after {
+      content: "";
+      position: absolute;
+    }
+
+    .ico.back::before {
+      width: 10px;
+      height: 10px;
+      border-left: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: rotate(45deg);
+      left: 4px;
+      top: 3px;
+    }
+
+    .section {
+      margin-top: 14px;
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 14px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .02)), rgba(13, 18, 32, .9);
+      transition: transform var(--fast), border-color var(--fast), box-shadow var(--fast);
+    }
+
+    .panel h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 30px;
+      letter-spacing: 1.2px;
+      line-height: .9;
+    }
+
+    .panel p {
+      color: var(--soft);
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    .section-head {
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 13px;
+      letter-spacing: .9px;
+      text-transform: uppercase;
+      color: var(--soft);
+    }
+
+    .faqs {
+      display: grid;
+      gap: 10px;
+    }
+
+    .faq {
+      border-radius: 18px;
+      padding: 12px;
+      text-align: left;
+    }
+
+    .faq strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .faq span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .footer-nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 8;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 10px 12px 12px;
+      background: linear-gradient(180deg, rgba(8, 12, 20, .2), rgba(8, 12, 20, .96));
+      border-top: 1px solid rgba(255, 255, 255, .06);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-btn {
+      min-height: 56px;
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .nav-btn.act {
+      color: var(--blue);
+      border-color: rgba(59, 130, 246, .28);
+      background: linear-gradient(180deg, rgba(59, 130, 246, .14), rgba(255, 255, 255, .03));
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%) translateY(24px);
+      min-width: 180px;
+      max-width: 280px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(7, 10, 18, .92);
+      border: 1px solid rgba(255, 255, 255, .08);
+      font-size: 13px;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .24s ease, transform .24s ease;
+      z-index: 20;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="phone">
+    <div class="bg"></div>
+    <div class="shell">
+      <div class="hdr">
+        <div class="hdr-side"><button class="btn" onclick="window.location.href='index.html'"><span
+              class="ico back"></span></button>
+          <div class="hdr-copy">
+            <div class="eyebrow">Support Desk</div>
+            <div class="hdr-title">Help</div>
+          </div>
+      </div>
+      <div class="section">
+        <div class="panel">
+          <h2>Need a Fix?</h2>
+          <p>Fast answers for account, matchmaking, ranked, and reward questions.</p>
+        </div>
+      </div>
+      <div class="section">
+        <div class="panel">
+          <div class="section-head">
+            <div class="section-title">Quick Answers</div><button class="btn" onclick="renderFaqs()">OK</button>
+          </div>
+          <div class="faqs" id="faqs"></div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-nav">
+      <button class="nav-btn" onclick="window.location.href='index.html'">Home</button>
+      <button class="nav-btn" onclick="window.location.href='settings.html'">Settings</button>
+      <button class="nav-btn act">Help</button>
+      <button class="nav-btn" onclick="window.location.href='notifications.html'">Alerts</button>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+    const source = [
+      ['Why is matchmaking slow?', 'Queue time increases when rank spread is too wide or party skill gaps are large.'],
+      ['How do I claim ranked rewards?', 'Rewards land in your inbox after the season roll-over or milestone completion.'],
+      ['How do I invite friends faster?', 'Open the friends page and use the compact invite buttons beside active players.'],
+      ['How do I reach S+ rank?', 'Improve quality rate, protect clean wins, and keep your final promotion window stable.']
+    ];
+    let toastTimer = null;
+    const faqs = document.getElementById('faqs');
+    const toast = document.getElementById('toast');
+    function showToast(message) { toast.textContent = message; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 1800); }
+    function renderFaqs() {
+      faqs.innerHTML = '';
+      source.sort(() => Math.random() - 0.5).forEach((item) => {
+        const row = document.createElement('button');
+        row.className = 'faq';
+        row.innerHTML = '<strong>' + item[0] + '</strong><span>' + item[1] + '</span>';
+        row.addEventListener('click', () => showToast('Help article opened.'));
+        faqs.appendChild(row);
+      });
+    }
+    renderFaqs();
+  </script>
+</body>
+
+</html>

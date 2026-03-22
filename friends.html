@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daya Pass Arena – Friends</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="friends.css">
+</head>
+<body>
+
+<div class="container">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="back-btn" onclick="history.back()">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      </div>
+      <div class="title-wrap">
+        <span class="page-title">Friends</span>
+        <span class="friend-count-pill" id="friendCountPill">24 FRIENDS</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="icon-btn notif-btn" id="reqBell" onclick="openPanel('requestsPanel')">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path stroke-linecap="round" stroke-linejoin="round" d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <span class="req-badge" id="reqBadge">3</span>
+      </div>
+      <button class="add-btn" onclick="openPanel('addPanel')">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        Add Friend
+      </button>
+    </div>
+  </div>
+
+  <!-- SEARCH BAR -->
+  <div class="search-bar">
+    <div class="search-icon">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/></svg>
+    </div>
+    <input type="text" class="search-input" id="friendSearch" placeholder="Search by name or ID..." oninput="searchFriends(this.value)">
+    <div class="search-clear" id="searchClear" onclick="clearSearch()" style="display:none;">✕</div>
+  </div>
+
+  <!-- FILTER TABS -->
+  <div class="filter-bar">
+    <div class="filter-tab active" data-filter="all" onclick="filterFriends(this,'all')">All Friends</div>
+    <div class="filter-tab" data-filter="online" onclick="filterFriends(this,'online')">
+      <span class="online-dot-sm"></span>Online
+    </div>
+    <div class="filter-tab" data-filter="local" onclick="filterFriends(this,'local')">📍 Nearby</div>
+    <div class="filter-tab" data-filter="ingame" onclick="filterFriends(this,'ingame')">🎮 In Game</div>
+  </div>
+
+  <!-- ONLINE SUMMARY STRIP -->
+  <div class="online-strip" id="onlineStrip">
+    <div class="strip-label">ONLINE NOW</div>
+    <div class="strip-avatars" id="stripAvatars"></div>
+    <div class="strip-count" id="stripCount"></div>
+  </div>
+
+  <!-- FRIENDS LIST -->
+  <div class="friends-list" id="friendsList"></div>
+
+  <!-- EMPTY STATE -->
+  <div class="empty-state" id="emptyState">
+    <div class="empty-icon">👥</div>
+    <div class="empty-title">NO FRIENDS FOUND</div>
+    <div class="empty-sub">Try a different search or filter.</div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ══════════════════════════════════════════
+     SIDE PANELS
+══════════════════════════════════════════ -->
+
+<!-- OVERLAY -->
+<div class="panel-overlay" id="panelOverlay" onclick="closeAllPanels()"></div>
+
+<!-- ADD FRIEND PANEL -->
+<div class="side-panel modal-panel" id="addPanel">
+  <div class="panel-header">
+    <span class="panel-title">ADD FRIEND</span>
+    <div class="panel-close" onclick="closeAllPanels()">✕</div>
+  </div>
+
+  <div class="panel-search-wrap">
+    <div class="ps-icon"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/></svg></div>
+    <input type="text" class="panel-search-input" id="addSearch" placeholder="Enter name or Player ID..." oninput="searchAdd(this.value)">
+  </div>
+
+  <div class="panel-section-label">SEARCH RESULTS</div>
+  <div id="addResults" class="add-results"></div>
+
+  <div class="panel-divider"></div>
+  <div class="panel-section-label">INVITE VIA LINK</div>
+  <div class="invite-link-box">
+    <span class="invite-link-text" id="inviteLink">daya.gg/invite/DAYA_X_48291</span>
+    <button class="copy-btn" onclick="copyInviteLink()">COPY</button>
+  </div>
+  <div class="invite-share-row">
+    <button class="share-btn whatsapp" onclick="shareVia('whatsapp')">💬 WhatsApp</button>
+    <button class="share-btn telegram" onclick="shareVia('telegram')">✈️ Telegram</button>
+    <button class="share-btn insta" onclick="shareVia('instagram')">📸 Instagram</button>
+  </div>
+</div>
+
+<!-- FRIEND REQUESTS PANEL -->
+<div class="side-panel modal-panel" id="requestsPanel">
+  <div class="panel-header">
+    <span class="panel-title">FRIEND REQUESTS</span>
+    <div class="panel-close" onclick="closeAllPanels()">✕</div>
+  </div>
+  <div class="panel-section-label">INCOMING</div>
+  <div id="incomingReqs"></div>
+  <div class="panel-divider"></div>
+  <div class="panel-section-label">SENT</div>
+  <div id="sentReqs"></div>
+</div>
+
+<!-- FRIEND ACTION PANEL (invite/challenge) -->
+<div class="side-panel" id="actionPanel">
+  <div class="panel-header">
+    <span class="panel-title" id="actionPanelTitle">PLAYER</span>
+    <div class="panel-close" onclick="closeAllPanels()">✕</div>
+  </div>
+  <div class="action-profile" id="actionProfile"></div>
+  <div class="action-buttons" id="actionButtons"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="friends.js"></script>
+</body>
+</html>
