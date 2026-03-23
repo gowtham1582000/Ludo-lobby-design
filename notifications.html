@@ -1,46 +1,291 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=390, initial-scale=1.0">
-  <title>Daya Pass Arena - Notifications</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="notifications.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daya Pass Arena – Notifications</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="notifications.css">
 </head>
 <body>
-  <div class="page-wrapper">
-    <div class="bg-system">
-      <div class="bg-gradient"></div>
-      <div class="bg-grid"></div>
-      <div class="bg-scan"></div>
+
+<div class="container">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="back-btn" onclick="history.back()">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      </div>
+      <div class="topbar-title-wrap">
+        <span class="page-title">Notifications</span>
+        <span class="unread-pill" id="unreadPill">6 NEW</span>
+      </div>
     </div>
-
-    <main class="sheet" aria-label="Notifications">
-      <header class="topbar">
-        <a class="close-btn" href="index.html" aria-label="Back to home" title="Home">&times;</a>
-        <div class="top-title">
-          <div class="eyebrow">INBOX</div>
-          <div class="title">NOTIFICATIONS</div>
-        </div>
-        <button class="icon-btn" id="notifClear" type="button" title="Clear all" aria-label="Clear all">CLR</button>
-      </header>
-
-      <section class="controls" aria-label="Filters and actions">
-        <div class="tabs" role="tablist">
-          <button class="tab active" type="button" data-tab="all" role="tab">All</button>
-          <button class="tab" type="button" data-tab="unread" role="tab">Unread <span class="badge" id="unreadBadge" hidden></span></button>
-        </div>
-        <button class="btn" id="markAllRead" type="button">MARK ALL READ</button>
-      </section>
-
-      <section class="list-wrap" aria-label="Notification list">
-        <div id="notifList" class="notif-list"></div>
-      </section>
-    </main>
-
-    <div class="toast" id="notifToast" aria-live="polite"></div>
+    <div class="topbar-actions">
+      <button class="action-btn" onclick="markAllRead()">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Mark All
+      </button>
+      <button class="action-btn danger" onclick="clearAll()">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+        Clear
+      </button>
+    </div>
   </div>
 
-  <script src="notifications.js"></script>
+  <!-- FILTER TABS -->
+  <div class="filter-bar">
+    <div class="filter-tab active" data-filter="all" onclick="filterNotifs(this,'all')">All</div>
+    <div class="filter-tab" data-filter="tournament" onclick="filterNotifs(this,'tournament')">🏆 Tournament</div>
+    <div class="filter-tab" data-filter="friend" onclick="filterNotifs(this,'friend')">👥 Friends</div>
+    <div class="filter-tab" data-filter="reward" onclick="filterNotifs(this,'reward')">🎁 Rewards</div>
+    <div class="filter-tab" data-filter="system" onclick="filterNotifs(this,'system')">⚙️ System</div>
+  </div>
+
+  <!-- NOTIFICATION LIST -->
+  <div class="notif-list" id="notifList">
+
+    <!-- TODAY GROUP -->
+    <div class="day-group" data-group="today">
+      <div class="day-label">TODAY</div>
+
+      <!-- Tournament Alert – unread -->
+      <div class="notif-card unread" data-type="tournament" onclick="readNotif(this)">
+        <div class="notif-glow tournament-glow"></div>
+        <div class="notif-icon-wrap tournament-icon">🏆</div>
+        <div class="notif-body">
+          <div class="notif-top">
+            <span class="notif-title">Tournament Starting Soon!</span>
+            <span class="notif-time">2m ago</span>
+          </div>
+          <div class="notif-desc">Royal Rumble Season 1 begins in <strong>1 hour</strong>. Prize pool: ₹50,000. Join now to secure your spot!</div>
+          <div class="notif-actions">
+            <button class="naction-btn primary" onclick="event.stopPropagation()">JOIN NOW</button>
+            <button class="naction-btn ghost" onclick="event.stopPropagation()">LATER</button>
+          </div>
+        </div>
+        <div class="unread-dot"></div>
+      </div>
+
+      <!-- Friend Invite – unread -->
+      <div class="notif-card unread" data-type="friend" onclick="readNotif(this)">
+        <div class="notif-glow friend-glow"></div>
+        <div class="notif-icon-wrap friend-icon">
+          <span class="avatar-emoji">🦁</span>
+        </div>
+        <div class="notif-body">
+          <div class="notif-top">
+            <span class="notif-title">KING_R sent you an invite</span>
+            <span class="notif-time">8m ago</span>
+          </div>
+          <div class="notif-desc">Your friend <strong>KING_R</strong> wants you to join their room. 2/4 players ready.</div>
+          <div class="notif-actions">
+            <button class="naction-btn primary" onclick="event.stopPropagation()">ACCEPT</button>
+            <button class="naction-btn ghost" onclick="event.stopPropagation()">DECLINE</button>
+          </div>
+        </div>
+        <div class="unread-dot"></div>
+      </div>
+
+      <!-- Daily Reward – unread -->
+      <div class="notif-card unread" data-type="reward" onclick="readNotif(this)">
+        <div class="notif-glow reward-glow"></div>
+        <div class="notif-icon-wrap reward-icon">🎁</div>
+        <div class="notif-body">
+          <div class="notif-top">
+            <span class="notif-title">Day 7 Reward Ready!</span>
+            <span class="notif-time">1h ago</span>
+          </div>
+          <div class="notif-desc">Your streak bonus is waiting. Claim <strong>+2,500 coins</strong> + 1 Lucky Spin before it expires.</div>
+          <div class="notif-actions">
+            <button class="naction-btn gold" onclick="event.stopPropagation()">CLAIM REWARD</button>
+          </div>
+        </div>
+        <div class="unread-dot"></div>
+      </div>
+
+      <!-- Lucky Spin – unread -->
+      <div class="notif-card unread" data-type="reward" onclick="readNotif(this)">
+        <div class="notif-glow reward-glow"></div>
+        <div class="notif-icon-wrap reward-icon">🎰</div>
+        <div class="notif-body">
+          <div class="notif-top">
+            <span class="notif-title">Free Spin Available!</span>
+            <span class="notif-time">1h ago</span>
+          </div>
+          <div class="notif-desc">1 free Lucky Spin is waiting for you. Spin now to win gems, coins, or rare skins!</div>
+          <div class="notif-actions">
+            <button class="naction-btn gold" onclick="event.stopPropagation()">SPIN NOW</button>
+          </div>
+        </div>
+        <div class="unread-dot"></div>
+      </div>
+
+      <!-- Win Streak – unread -->
+      <div class="notif-card unread" data-type="system" onclick="readNotif(this)">
+        <div class="notif-glow system-glow"></div>
+        <div class="notif-icon-wrap system-icon">🔥</div>
+        <div class="notif-body">
+          <div class="notif-top">
+            <span class="notif-title">14-Game Win Streak!</span>
+            <span class="notif-time">3h ago</span>
+          </div>
+          <div class="notif-desc">You're on fire! Your win streak has reached <strong>14</strong>. Keep going to unlock the Inferno Badge.</div>
+        </div>
+        <div class="unread-dot"></div>
+      </div>
+
+      <!-- Rank Up – unread -->
+      <div class="notif-card unread" data-type="system" onclick="readNotif(this)">
+        <div class="notif-glow system-glow"></div>
+        <div class="notif-icon-wrap system-icon">⭐</div>
+        <div class="notif-body">
+          <div class="notif-top">
+            <span class="notif-title">Rank Up! You're now 5+</span>
+            <span class="notif-time">5h ago</span>
+          </div>
+          <div class="notif-desc">Congratulations DAYA_X! You've ranked up to <strong>Rank 5+</strong>. New rewards unlocked in the arena.</div>
+        </div>
+        <div class="unread-dot"></div>
+      </div>
+
+    </div><!-- /today -->
+
+    <!-- YESTERDAY GROUP -->
+    <div class="day-group" data-group="yesterday">
+      <div class="day-label">YESTERDAY</div>
+
+      <div class="notif-card" data-type="tournament" onclick="readNotif(this)">
+        <div class="notif-icon-wrap tournament-icon">🥈</div>
+        <div class="notif-body">
+          <div class="notif-top">
+            <span class="notif-title">Tournament Result</span>
+            <span class="notif-time">Yesterday</span>
+          </div>
+          <div class="notif-desc">You finished <strong>2nd place</strong> in the Evening Blitz Tournament. You earned ₹8,000 + 500 trophies!</div>
+          <div class="notif-chip-row">
+            <span class="chip chip-gold">+₹8,000</span>
+            <span class="chip chip-blue">+500 🏆</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="notif-card" data-type="friend" onclick="readNotif(this)">
+        <div class="notif-icon-wrap friend-icon">
+          <span class="avatar-emoji">🐉</span>
+        </div>
+        <div class="notif-body">
+          <div class="notif-top">
+            <span class="notif-title">DRAGO_99 is now your friend</span>
+            <span class="notif-time">Yesterday</span>
+          </div>
+          <div class="notif-desc"><strong>DRAGO_99</strong> accepted your friend request. Challenge them to a match!</div>
+          <div class="notif-actions">
+            <button class="naction-btn ghost" onclick="event.stopPropagation()">CHALLENGE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="notif-card" data-type="reward" onclick="readNotif(this)">
+        <div class="notif-icon-wrap reward-icon">💎</div>
+        <div class="notif-body">
+          <div class="notif-top">
+            <span class="notif-title">You won 480 Gems!</span>
+            <span class="notif-time">Yesterday</span>
+          </div>
+          <div class="notif-desc">Lucky Spin reward: <strong>480 Gems</strong> have been added to your wallet.</div>
+          <div class="notif-chip-row">
+            <span class="chip chip-blue">+480 💎</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="notif-card" data-type="system" onclick="readNotif(this)">
+        <div class="notif-icon-wrap system-icon">🛡️</div>
+        <div class="notif-body">
+          <div class="notif-top">
+            <span class="notif-title">New Season 1 Started</span>
+            <span class="notif-time">Yesterday</span>
+          </div>
+          <div class="notif-desc">Season 1: Royal Arena is now live! New leaderboard, exclusive skins, and ₹5,00,000 prize pool await.</div>
+        </div>
+      </div>
+
+    </div><!-- /yesterday -->
+
+    <!-- EARLIER GROUP -->
+    <div class="day-group" data-group="earlier">
+      <div class="day-label">EARLIER</div>
+
+      <div class="notif-card" data-type="tournament" onclick="readNotif(this)">
+        <div class="notif-icon-wrap tournament-icon">🏅</div>
+        <div class="notif-body">
+          <div class="notif-top">
+            <span class="notif-title">Weekly Leaderboard Ended</span>
+            <span class="notif-time">3 days ago</span>
+          </div>
+          <div class="notif-desc">You finished <strong>#12</strong> on the weekly leaderboard. Earn more trophies this week to climb higher!</div>
+          <div class="notif-chip-row">
+            <span class="chip chip-green">Rank #12</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="notif-card" data-type="friend" onclick="readNotif(this)">
+        <div class="notif-icon-wrap friend-icon">
+          <span class="avatar-emoji">🎯</span>
+        </div>
+        <div class="notif-body">
+          <div class="notif-top">
+            <span class="notif-title">NOVA_X challenged you</span>
+            <span class="notif-time">3 days ago</span>
+          </div>
+          <div class="notif-desc"><strong>NOVA_X</strong> sent you a 1v1 challenge. The challenge has expired.</div>
+          <div class="notif-chip-row">
+            <span class="chip chip-red">Expired</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="notif-card" data-type="system" onclick="readNotif(this)">
+        <div class="notif-icon-wrap system-icon">🎨</div>
+        <div class="notif-body">
+          <div class="notif-top">
+            <span class="notif-title">New Skin Unlocked</span>
+            <span class="notif-time">5 days ago</span>
+          </div>
+          <div class="notif-desc">You unlocked the <strong>Volcano Pit</strong> board skin! Go to board themes to apply it.</div>
+        </div>
+      </div>
+
+      <div class="notif-card" data-type="reward" onclick="readNotif(this)">
+        <div class="notif-icon-wrap reward-icon">🎖️</div>
+        <div class="notif-body">
+          <div class="notif-top">
+            <span class="notif-title">Achievement Unlocked</span>
+            <span class="notif-time">1 week ago</span>
+          </div>
+          <div class="notif-desc">You earned the <strong>"First Blood"</strong> achievement for winning 10 games in a row. +100 XP awarded.</div>
+          <div class="notif-chip-row">
+            <span class="chip chip-gold">+100 XP</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /earlier -->
+
+  </div><!-- /notifList -->
+
+  <!-- EMPTY STATE (hidden by default) -->
+  <div class="empty-state" id="emptyState">
+    <div class="empty-icon">🔔</div>
+    <div class="empty-title">All Clear!</div>
+    <div class="empty-sub">No notifications in this category.<br>Play a game to earn some action!</div>
+  </div>
+
+</div><!-- /container -->
+
+<script src="notifications.js"></script>
 </body>
 </html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Daya Pass Arena - Play Online</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root { --green:#00e5a0; --blue:#3b82f6; --gold:#ffb800; --text:#e8f0ff; --soft:rgba(232,240,255,.72); --muted:rgba(232,240,255,.42); --border:rgba(255,255,255,.09); --border2:rgba(255,255,255,.14); --fast:.15s ease; --med:.25s ease; }
+    * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+    html,body { width:100%; min-height:100vh; background:#04060c; color:var(--text); font-family:'Rajdhani',sans-serif; display:flex; justify-content:center; }
+    .phone { position:relative; width:390px; height:690px; overflow:hidden; background:linear-gradient(180deg, rgba(6,9,18,.96), rgba(10,15,24,.98)); box-shadow:0 0 0 1px rgba(0,229,160,.08), 0 40px 120px rgba(0,0,0,.9); }
+    .bg { position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at 20% 14%, rgba(0,229,160,.16), transparent 24%), radial-gradient(circle at 82% 18%, rgba(59,130,246,.16), transparent 24%), radial-gradient(circle at 50% 82%, rgba(255,184,0,.10), transparent 30%), linear-gradient(145deg, #091221 0%, #0c1728 40%, #060b14 100%); }
+    .shell { position:relative; z-index:1; height:690px; overflow-y:auto; padding:0 14px 104px; scrollbar-width:none; }
+    .shell::-webkit-scrollbar { display:none; }
+    .hdr,.hdr-side,.hdr-copy,.section-title,.meta-row { display:flex; align-items:center; gap:10px; }
+    .hdr { position:sticky; top:0; z-index:5; justify-content:space-between; margin:0 -14px; padding:14px; background:linear-gradient(180deg, rgba(8,12,20,.96), rgba(8,12,20,.72)); border-bottom:1px solid rgba(255,255,255,.05); backdrop-filter:blur(12px); }
+    .hdr-copy { flex-direction:column; align-items:flex-start; gap:2px; }
+    .eyebrow { font-size:11px; letter-spacing:1.8px; text-transform:uppercase; color:var(--muted); }
+    .hdr-title { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1.3px; line-height:.9; }
+    .icon-btn,.mini-btn,.mode-card,.nav-btn { border:1px solid var(--border2); background:rgba(255,255,255,.05); color:var(--text); font:inherit; cursor:pointer; transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast), background var(--fast); }
+    .icon-btn:hover,.mini-btn:hover,.mode-card:hover,.nav-btn:hover,.panel:hover { transform:translateY(-2px); border-color:rgba(0,229,160,.32); box-shadow:0 12px 28px rgba(0,229,160,.12); }
+    .icon-btn { width:40px; height:40px; border-radius:14px; display:grid; place-items:center; }
+    .mini-btn { height:38px; padding:0 14px; border-radius:999px; font-weight:700; color:var(--green); }
+    .ico { width:16px; height:16px; position:relative; display:inline-block; color:currentColor; }
+    .ico::before,.ico::after { content:""; position:absolute; }
+    .ico.back::before { width:10px; height:10px; border-left:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg); left:4px; top:3px; }
+    .ico.spark::before { inset:1px 5px; background:currentColor; clip-path:polygon(55% 0,100% 0,55% 50%,100% 50%,20% 100%,42% 56%,0 56%); }
+    .section { margin-top:14px; }
+    .panel { border:1px solid var(--border); border-radius:24px; padding:14px; background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)), rgba(13,18,32,.9); transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast); }
+    .hero h2 { font-family:'Bebas Neue',sans-serif; font-size:32px; line-height:.9; letter-spacing:1.2px; }
+    .hero p { margin-top:6px; color:var(--soft); font-size:13px; line-height:1.3; }
+    .hero-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px; }
+    .stat { border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:10px; background:rgba(255,255,255,.035); }
+    .stat b { display:block; font-size:20px; }
+    .stat span { display:block; margin-top:4px; color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.7px; }
+    .section-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
+    .section-title { font-family:'Orbitron',sans-serif; font-size:13px; letter-spacing:.9px; text-transform:uppercase; color:var(--soft); }
+    .mode-list { display:grid; gap:10px; }
+    .mode-card { border-radius:20px; padding:14px; text-align:left; }
+    .meta-row { justify-content:space-between; }
+    .mode-type { font-family:'Orbitron',sans-serif; font-size:13px; color:var(--green); }
+    .mode-badge { min-width:68px; height:30px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,.1); font-size:11px; color:var(--soft); }
+    .mode-card strong { display:block; font-size:18px; margin-top:8px; }
+    .mode-card span { display:block; margin-top:5px; color:var(--muted); font-size:12px; line-height:1.2; }
+    .bar { height:10px; margin-top:12px; border-radius:999px; overflow:hidden; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.08); }
+    .bar-fill { height:100%; border-radius:999px; background:linear-gradient(90deg, var(--green), var(--blue)); }
+    .queue-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+    .queue-chip { border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:12px; text-align:center; background:rgba(255,255,255,.035); }
+    .queue-chip b { display:block; font-size:18px; }
+    .queue-chip span { display:block; margin-top:4px; color:var(--muted); font-size:11px; text-transform:uppercase; }
+    .footer-nav { position:absolute; left:0; right:0; bottom:0; z-index:8; display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:10px 12px 12px; background:linear-gradient(180deg, rgba(8,12,20,.2), rgba(8,12,20,.96)); border-top:1px solid rgba(255,255,255,.06); backdrop-filter:blur(12px); }
+    .nav-btn { min-height:56px; border-radius:18px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
+    .nav-btn.act { color:var(--green); border-color:rgba(0,229,160,.3); background:linear-gradient(180deg, rgba(0,229,160,.12), rgba(255,255,255,.03)); }
+    .toast { position:fixed; left:50%; bottom:20px; transform:translateX(-50%) translateY(24px); min-width:180px; max-width:280px; padding:10px 14px; border-radius:14px; background:rgba(7,10,18,.92); border:1px solid rgba(255,255,255,.08); font-size:13px; text-align:center; opacity:0; pointer-events:none; transition:opacity var(--med), transform var(--med); z-index:20; }
+    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="bg"></div>
+    <div class="shell">
+      <div class="hdr">
+        <div class="hdr-side"><button class="icon-btn" onclick="window.location.href='index.html'"><span class="ico back"></span></button><div class="hdr-copy"><div class="eyebrow">Live Queue</div><div class="hdr-title">Play Online</div></div></div>
+        <button class="mini-btn" onclick="showToast('Matchmaking priorities refreshed.')"><span class="ico spark"></span>Refresh</button>
+      </div>
+      <div class="section">
+        <div class="panel hero">
+          <h2>Queue Into Real-Time Arena Battles</h2>
+          <p>Choose the pace, party size, and reward lane you want before matchmaking starts.</p>
+          <div class="hero-stats">
+            <div class="stat"><b>12.4K</b><span>Players Live</span></div>
+            <div class="stat"><b>14s</b><span>Avg Queue</span></div>
+            <div class="stat"><b>2x</b><span>XP Window</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="panel">
+          <div class="section-head"><div class="section-title">Queue Picks</div><button class="mini-btn" onclick="showToast('Ranked filters enabled.')">Ranked</button></div>
+          <div class="mode-list">
+            <button class="mode-card" onclick="launchQueue('Quick Duel')">
+              <div class="meta-row"><div class="mode-type">1v1 Duel</div><div class="mode-badge">Fast</div></div>
+              <strong>Quick Duel</strong>
+              <span>Short queue, direct pressure, and trophy-safe warmup rounds.</span>
+              <div class="bar"><div class="bar-fill" style="width:78%"></div></div>
+            </button>
+            <button class="mode-card" onclick="launchQueue('Duo Battle')">
+              <div class="meta-row"><div class="mode-type">2v2 Squad</div><div class="mode-badge">Team</div></div>
+              <strong>Duo Battle</strong>
+              <span>Queue with a partner or let matchmaking pair you into coordinated tempo play.</span>
+              <div class="bar"><div class="bar-fill" style="width:64%"></div></div>
+            </button>
+            <button class="mode-card" onclick="launchQueue('Crown Clash')">
+              <div class="meta-row"><div class="mode-type">4 Player</div><div class="mode-badge">Hot</div></div>
+              <strong>Crown Clash</strong>
+              <span>Classic all-player table with the biggest reward bursts and event missions.</span>
+              <div class="bar"><div class="bar-fill" style="width:88%"></div></div>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="panel">
+          <div class="section-head"><div class="section-title">Queue Snapshot</div><button class="mini-btn" onclick="showToast('Queue balance updated.')">Update</button></div>
+          <div class="queue-row">
+            <div class="queue-chip"><b>Gold</b><span>Rank Lane</span></div>
+            <div class="queue-chip"><b>Classic</b><span>Map Pool</span></div>
+            <div class="queue-chip"><b>+80</b><span>Peak Bonus</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-nav">
+      <button class="nav-btn" onclick="window.location.href='index.html'">Home</button>
+      <button class="nav-btn act">Online</button>
+      <button class="nav-btn" onclick="window.location.href='play-with-friends.html'">Friends</button>
+      <button class="nav-btn" onclick="window.location.href='vs-computer.html'">AI</button>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+    let toastTimer = null;
+    const toast = document.getElementById('toast');
+    function showToast(message){ toast.textContent = message; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 1800); }
+    function launchQueue(name){ showToast('Joining ' + name + '...'); }
+  </script>
+</body>
+</html>

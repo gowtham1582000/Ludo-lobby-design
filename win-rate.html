@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Daya Pass Arena - Win Rate</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root { --green:#00e5a0; --gold:#ffb800; --blue:#3b82f6; --text:#e8f0ff; --soft:rgba(232,240,255,.72); --muted:rgba(232,240,255,.42); --border:rgba(255,255,255,.09); --border2:rgba(255,255,255,.14); --fast:.15s ease; --med:.25s ease; }
+    * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+    html,body { width:100%; min-height:100vh; background:#04060c; color:var(--text); font-family:'Rajdhani',sans-serif; display:flex; justify-content:center; }
+    .phone { position:relative; width:390px; height:690px; overflow:hidden; background:linear-gradient(180deg, rgba(6,9,18,.96), rgba(10,15,24,.98)); box-shadow:0 0 0 1px rgba(0,229,160,.08), 0 40px 120px rgba(0,0,0,.9); }
+    .bg { position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at 20% 14%, rgba(0,229,160,.14), transparent 24%), radial-gradient(circle at 80% 18%, rgba(59,130,246,.14), transparent 22%), radial-gradient(circle at 50% 78%, rgba(255,184,0,.1), transparent 28%), linear-gradient(145deg, #091221 0%, #0c1728 38%, #060b14 100%); }
+    .bg::before { content:""; position:absolute; inset:-18%; background:repeating-linear-gradient(60deg, rgba(0,229,160,.07) 0 1px, transparent 1px 24px), repeating-linear-gradient(-60deg, rgba(59,130,246,.05) 0 1px, transparent 1px 24px); transform:perspective(900px) rotateX(62deg) translateY(150px) scale(1.2); opacity:.75; }
+    .shell { position:relative; z-index:1; height:690px; overflow-y:auto; padding:0 14px 104px; scrollbar-width:none; }
+    .shell::-webkit-scrollbar { display:none; }
+    .hdr { position:sticky; top:0; z-index:5; margin:0 -14px; padding:14px; display:flex; align-items:center; justify-content:space-between; background:linear-gradient(180deg, rgba(8,12,20,.96), rgba(8,12,20,.72)); border-bottom:1px solid rgba(255,255,255,.05); backdrop-filter:blur(12px); }
+    .hdr-side,.hdr-copy,.section-title,.bar-copy,.rate-row,.trend { display:flex; align-items:center; gap:10px; }
+    .hdr-copy { flex-direction:column; align-items:flex-start; gap:2px; }
+    .eyebrow { font-size:11px; letter-spacing:1.8px; text-transform:uppercase; color:var(--muted); }
+    .hdr-title { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1.3px; line-height:.9; }
+    .icon-btn,.chip-btn,.tab-btn,.mini-btn,.outcome,.nav-btn { border:1px solid var(--border2); background:rgba(255,255,255,.05); color:var(--text); font:inherit; cursor:pointer; transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast), background var(--fast); }
+    .icon-btn:hover,.chip-btn:hover,.tab-btn:hover,.mini-btn:hover,.outcome:hover,.nav-btn:hover,.panel:hover { transform:translateY(-2px); border-color:rgba(0,229,160,.36); box-shadow:0 12px 28px rgba(0,229,160,.12); }
+    .icon-btn { width:40px; height:40px; border-radius:14px; display:grid; place-items:center; }
+    .chip-btn,.mini-btn,.tab-btn { border-radius:999px; font-weight:700; }
+    .chip-btn { height:40px; padding:0 14px; }
+    .mini-btn,.tab-btn { height:34px; padding:0 12px; }
+    .tab-btn.active { color:var(--green); border-color:rgba(0,229,160,.26); background:linear-gradient(180deg, rgba(0,229,160,.14), rgba(255,255,255,.03)); }
+    .ico { width:16px; height:16px; position:relative; display:inline-block; color:currentColor; }
+    .ico::before,.ico::after { content:""; position:absolute; }
+    .ico.back::before { width:10px; height:10px; border-left:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg); left:4px; top:3px; }
+    .ico.ring::before { inset:1px; border:2px solid currentColor; border-radius:50%; }
+    .ico.spark::before { inset:1px 5px; background:currentColor; clip-path:polygon(55% 0,100% 0,55% 50%,100% 50%,20% 100%,42% 56%,0 56%); }
+    .ico.grid::before { inset:2px; border:2px solid currentColor; border-radius:4px; }
+    .ico.grid::after { inset:2px; background:linear-gradient(currentColor,currentColor) 50% 0/2px 100% no-repeat, linear-gradient(currentColor,currentColor) 0 50%/100% 2px no-repeat; }
+    .section { margin-top:14px; }
+    .insight {
+      border: 1px solid rgba(0,229,160,.16);
+      border-radius: 18px;
+      padding: 12px;
+      background: linear-gradient(90deg, rgba(0,229,160,.1), rgba(59,130,246,.08));
+    }
+    .insight strong { display:block; font-size:12px; text-transform:uppercase; letter-spacing:.8px; color:var(--green); }
+    .insight span { display:block; margin-top:6px; font-size:13px; color:var(--soft); line-height:1.2; }
+    .panel { border:1px solid var(--border); border-radius:24px; padding:14px; background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)), rgba(13,18,32,.9); transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast); }
+    .hero { overflow:hidden; }
+    .hero-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding-bottom:12px; }
+    .hero-top h2 { font-family:'Bebas Neue',sans-serif; font-size:30px; letter-spacing:1.2px; line-height:.9; }
+    .hero-top p { color:var(--soft); font-size:13px; margin-top:5px; }
+    .token { min-width:84px; height:38px; padding:0 12px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(0,229,160,.22); background:rgba(0,229,160,.09); font-weight:800; color:var(--green); }
+    .gauge-wrap { display:grid; place-items:center; margin:6px 0 12px; }
+    .gauge { width:184px; height:184px; border-radius:50%; padding:14px; background:conic-gradient(var(--green) 0deg, var(--green) 208deg, rgba(255,255,255,.08) 208deg 360deg); box-shadow:0 0 28px rgba(0,229,160,.16); transition:background var(--med), box-shadow var(--med); }
+    .gauge-core { width:100%; height:100%; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:radial-gradient(circle at 30% 20%, rgba(255,255,255,.08), transparent 30%), rgba(8,12,20,.95); border:1px solid rgba(255,255,255,.06); }
+    .gauge-core b { font-size:44px; line-height:1; font-family:'Orbitron',sans-serif; }
+    .gauge-core span { font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-top:6px; }
+    .bar-copy { justify-content:space-between; color:var(--soft); font-size:12px; margin-bottom:8px; }
+    .bar { height:12px; border-radius:999px; overflow:hidden; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.08); }
+    .bar-fill { height:100%; width:58%; border-radius:999px; background:linear-gradient(90deg, var(--green), var(--blue)); transition:width var(--med); }
+    .tabs { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+    .section-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
+    .section-title { font-family:'Orbitron',sans-serif; font-size:13px; letter-spacing:.9px; text-transform:uppercase; color:var(--soft); }
+    .outcomes { display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; }
+    .outcome { border-radius:18px; padding:12px 10px; text-align:left; }
+    .outcome strong { display:block; font-size:13px; text-transform:uppercase; letter-spacing:.6px; }
+    .outcome span { display:block; margin-top:6px; color:var(--muted); font-size:11px; line-height:1.15; }
+    .outcome.active { border-color:rgba(0,229,160,.34); background:linear-gradient(180deg, rgba(0,229,160,.12), rgba(255,255,255,.03)); }
+    .trend { justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(255,255,255,.06); }
+    .trend:last-child { border-bottom:0; padding-bottom:0; }
+    .trend-copy b { display:block; font-size:14px; }
+    .trend-copy span { display:block; margin-top:3px; font-size:12px; color:var(--muted); }
+    .trend-score { min-width:60px; height:32px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,.12); color:var(--soft); font-weight:700; }
+    .footer-nav { position:absolute; left:0; right:0; bottom:0; z-index:8; display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:10px 12px 12px; background:linear-gradient(180deg, rgba(8,12,20,.2), rgba(8,12,20,.96)); border-top:1px solid rgba(255,255,255,.06); backdrop-filter:blur(12px); }
+    .nav-btn { min-height:56px; border-radius:18px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
+    .nav-btn.act { color:var(--green); border-color:rgba(0,229,160,.3); background:linear-gradient(180deg, rgba(0,229,160,.12), rgba(255,255,255,.03)); }
+    .toast { position:fixed; left:50%; bottom:20px; transform:translateX(-50%) translateY(24px); min-width:180px; max-width:280px; padding:10px 14px; border-radius:14px; background:rgba(7,10,18,.92); border:1px solid rgba(255,255,255,.08); font-size:13px; text-align:center; opacity:0; pointer-events:none; transition:opacity var(--med), transform var(--med); z-index:20; }
+    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="bg"></div>
+    <div class="shell">
+      <div class="hdr">
+        <div class="hdr-side">
+          <button class="icon-btn" onclick="window.location.href='index.html'" aria-label="Back to home"><span class="ico back"></span></button>
+          <div class="hdr-copy"><div class="eyebrow">Combat Metric</div><div class="hdr-title">Win Rate</div></div>
+        </div>
+        <button class="chip-btn" onclick="rotateScenario()"><span class="ico spark"></span>Shift Meta</button>
+      </div>
+
+      <div class="section">
+        <div class="panel hero">
+          <div class="hero-top">
+            <div>
+              <h2 id="heroTitle">Elite Queue</h2>
+              <p id="heroSub">Your strongest matchup spread right now.</p>
+            </div>
+            <div class="token" id="matchCount">219 Matches</div>
+          </div>
+          <div class="gauge-wrap">
+            <div class="gauge" id="gauge">
+              <div class="gauge-core">
+                <b id="rateValue">58%</b>
+                <span id="rateLabel">Current Win Rate</span>
+              </div>
+            </div>
+          </div>
+          <div class="bar-copy"><span id="barLeft">127 wins / 92 losses</span><span id="barRight">Meta Edge +8%</span></div>
+          <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="queue">Queue</button>
+            <button class="tab-btn" data-tab="map">Map Pool</button>
+            <button class="tab-btn" data-tab="duo">Duo Sync</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="insight">
+          <strong>Live Read</strong>
+          <span id="liveRead">Elite Queue is giving you the cleanest conversion right now.</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="panel">
+          <div class="section-head"><div class="section-title"><span class="ico grid"></span><span>Scenario Switch</span></div><button class="mini-btn" onclick="rotateScenario()">Randomize</button></div>
+          <div class="outcomes" id="scenarioGrid"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="panel">
+          <div class="section-head"><div class="section-title"><span class="ico ring"></span><span>Trend Reads</span></div><button class="mini-btn" onclick="shuffleTrends()">Refresh</button></div>
+          <div id="trendList"></div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-nav">
+      <button class="nav-btn" onclick="window.location.href='index.html'"><span class="ico ring"></span><span>Home</span></button>
+      <button class="nav-btn act"><span class="ico ring"></span><span>Win Rate</span></button>
+      <button class="nav-btn" onclick="window.location.href='streak.html'"><span class="ico spark"></span><span>Streak</span></button>
+      <button class="nav-btn" onclick="window.location.href='s-plus-rank.html'"><span class="ico grid"></span><span>S+ Rank</span></button>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+    const scenarios = [
+      { title:'Elite Queue', sub:'Your strongest matchup spread right now.', rate:58, wins:'127 wins / 92 losses', edge:'Meta Edge +8%', count:'219 Matches', color:'#00e5a0' },
+      { title:'Temple Maps', sub:'You dominate slower control maps.', rate:64, wins:'86 wins / 49 losses', edge:'Map Edge +12%', count:'135 Matches', color:'#3b82f6' },
+      { title:'Duo Queue', sub:'Team chemistry lifts your close games.', rate:61, wins:'74 wins / 47 losses', edge:'Sync Edge +10%', count:'121 Matches', color:'#ffb800' }
+    ];
+    let current = 0, toastTimer = null;
+    const gauge = document.getElementById('gauge');
+    const rateValue = document.getElementById('rateValue');
+    const heroTitle = document.getElementById('heroTitle');
+    const heroSub = document.getElementById('heroSub');
+    const barLeft = document.getElementById('barLeft');
+    const barRight = document.getElementById('barRight');
+    const matchCount = document.getElementById('matchCount');
+    const barFill = document.getElementById('barFill');
+    const liveRead = document.getElementById('liveRead');
+    const scenarioGrid = document.getElementById('scenarioGrid');
+    const trendList = document.getElementById('trendList');
+    const toast = document.getElementById('toast');
+    function showToast(message){ toast.textContent = message; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 1800); }
+    function applyScenario(index){
+      current = index;
+      const item = scenarios[index];
+      const degrees = Math.round((item.rate / 100) * 360);
+      gauge.style.background = 'conic-gradient(' + item.color + ' 0deg, ' + item.color + ' ' + degrees + 'deg, rgba(255,255,255,.08) ' + degrees + 'deg 360deg)';
+      gauge.style.boxShadow = '0 0 28px ' + item.color + '22';
+      rateValue.textContent = item.rate + '%';
+      heroTitle.textContent = item.title;
+      heroSub.textContent = item.sub;
+      barLeft.textContent = item.wins;
+      barRight.textContent = item.edge;
+      matchCount.textContent = item.count;
+      barFill.style.width = item.rate + '%';
+      liveRead.textContent = item.sub.replace('right now.', 'for the next push.');
+      Array.from(scenarioGrid.children).forEach((card, i) => card.classList.toggle('active', i === index));
+    }
+    function rotateScenario(){ applyScenario((current + 1) % scenarios.length); showToast(scenarios[current].title + ' loaded.'); }
+    function renderScenarios(){
+      scenarioGrid.innerHTML = '';
+      scenarios.forEach((item, index) => {
+        const button = document.createElement('button');
+        button.className = 'outcome' + (index === current ? ' active' : '');
+        button.innerHTML = '<strong>' + item.title + '</strong><span>' + item.sub + '</span>';
+        button.addEventListener('click', () => { applyScenario(index); showToast(item.title + ' focused.'); });
+        scenarioGrid.appendChild(button);
+      });
+    }
+    function shuffleTrends(){
+      const rows = [
+        ['Opening turns', '+11%', 'Your early pressure conversion is climbing.'],
+        ['Clutch rounds', '+7%', 'Close games are leaning your way this week.'],
+        ['Temple maps', '+13%', 'Control-heavy boards remain your best pool.'],
+        ['Late queue hours', '-4%', 'Fatigue starts to cut your final pushes.']
+      ].sort(() => Math.random() - 0.5);
+      trendList.innerHTML = '';
+      rows.forEach((row) => {
+        const el = document.createElement('div');
+        el.className = 'trend';
+        el.innerHTML = '<div class="trend-copy"><b>' + row[0] + '</b><span>' + row[2] + '</span></div><div class="trend-score">' + row[1] + '</div>';
+        trendList.appendChild(el);
+      });
+      showToast('Trend reads refreshed.');
+    }
+    document.querySelectorAll('.tab-btn').forEach((tab, index) => tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach((node) => node.classList.remove('active'));
+      tab.classList.add('active');
+      applyScenario(index);
+    }));
+    renderScenarios();
+    applyScenario(0);
+    shuffleTrends();
+  </script>
+</body>
+</html>

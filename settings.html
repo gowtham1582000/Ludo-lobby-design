@@ -1,594 +1,409 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=390, initial-scale=1.0">
-  <title>Ludo Settings</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap"
-    rel="stylesheet">
-  <style>
-    :root {
-      --cyan: #00F5FF;
-      --cyan-dim: #00C8D4;
-      --orange: #FF6B00;
-      --orange-hot: #FF9500;
-      --purple: #7B2FFF;
-      --purple-soft: #A855F7;
-      --gold: #FFD700;
-      --green-neon: #00FF87;
-      --text: #F0F0FF;
-      --muted: #6B6B9A;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    html,
-    body {
-      width: 100%;
-      min-height: 100vh;
-      background: #010008;
-      font-family: 'Rajdhani', sans-serif;
-      color: var(--text);
-      display: flex;
-      justify-content: center;
-      overflow-x: hidden;
-    }
-
-    .page-wrapper {
-      position: relative;
-      width: 390px;
-      min-height: 844px;
-      overflow: hidden;
-      box-shadow: 0 0 0 1px rgba(0, 245, 255, 0.15), 0 0 60px rgba(0, 245, 255, 0.08), 0 30px 80px rgba(0, 0, 0, 0.8);
-    }
-
-    .bg-system {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    .bg-gradient {
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 300px 380px at 50% -10%, rgba(79, 70, 229, 0.4) 0%, transparent 70%),
-        radial-gradient(ellipse 220px 280px at 92% 35%, rgba(0, 245, 255, 0.06) 0%, transparent 60%),
-        radial-gradient(ellipse 200px 240px at 5% 55%, rgba(123, 47, 255, 0.14) 0%, transparent 60%),
-        linear-gradient(170deg, #04010F 0%, #080520 40%, #060318 70%, #04010F 100%);
-    }
-
-    .bg-grid {
-      position: absolute;
-      inset: 0;
-      background-image: linear-gradient(rgba(0, 245, 255, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 245, 255, 0.035) 1px, transparent 1px);
-      background-size: 28px 28px;
-      mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0.5) 75%, transparent 100%);
-    }
-
-    .bg-scan {
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.1) 2px, rgba(0, 0, 0, 0.1) 4px);
-    }
-
-    .settings-page {
-      position: relative;
-      z-index: 1;
-      min-height: 844px;
-      padding: 22px 16px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .settings-topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .back-btn {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, rgba(0, 245, 255, 0.14), rgba(123, 47, 255, 0.18));
-      border: 1px solid rgba(0, 245, 255, 0.3);
-      color: var(--cyan);
-      font-size: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      text-decoration: none;
-      box-shadow: 0 0 14px rgba(0, 245, 255, 0.12);
-      transition: .18s;
-    }
-
-    .back-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 0 18px rgba(0, 245, 255, 0.2);
-    }
-
-    .settings-title {
-      flex: 1;
-      text-align: center;
-      font-family: 'Orbitron', monospace;
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: 1px;
-    }
-
-    .settings-spacer {
-      width: 38px;
-      height: 38px;
-    }
-
-    .settings-card {
-      position: relative;
-      overflow: hidden;
-      border-radius: 22px;
-      background: linear-gradient(145deg, rgba(12, 9, 40, 0.94), rgba(7, 4, 27, 0.98));
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 18px 40px rgba(0, 0, 0, 0.34);
-      padding: 10px 14px;
-    }
-
-    .setting-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .setting-row:first-child {
-      border-top: none;
-    }
-
-    .setting-row.block {
-      display: block;
-    }
-
-    .setting-copy {
-      min-width: 0;
-    }
-
-    .setting-label {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .setting-desc {
-      margin-top: 3px;
-      font-size: 10px;
-      line-height: 1.35;
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    .toggle-switch {
-      width: 54px;
-      height: 30px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      background: rgba(255, 255, 255, 0.06);
-      position: relative;
-      cursor: pointer;
-      transition: .2s;
-      flex-shrink: 0;
-      box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
-    }
-
-    .toggle-switch::before {
-      content: '';
-      position: absolute;
-      top: 3px;
-      left: 3px;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #F9FAFF, #C7D2FE);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-      transition: .22s cubic-bezier(.22, 1, .36, 1);
-    }
-
-    .toggle-switch.on {
-      background: linear-gradient(135deg, rgba(0, 245, 255, 0.22), rgba(123, 47, 255, 0.26));
-      border-color: rgba(0, 245, 255, 0.36);
-      box-shadow: 0 0 16px rgba(0, 245, 255, 0.18), inset 0 1px 5px rgba(0, 0, 0, 0.3);
-    }
-
-    .toggle-switch.on::before {
-      transform: translateX(24px);
-      background: linear-gradient(135deg, #ffffff, #7DFAFF);
-    }
-
-    .setting-select {
-      width: 100%;
-      margin-top: 10px;
-      border: 1px solid rgba(0, 245, 255, 0.18);
-      background: linear-gradient(145deg, rgba(15, 12, 48, 0.94), rgba(8, 4, 30, 0.98));
-      color: var(--text);
-      padding: 12px 14px;
-      border-radius: 14px;
-      font-size: 11px;
-      font-weight: 700;
-      font-family: 'Rajdhani', sans-serif;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .chip-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .setting-chip {
-      border: 1px solid rgba(0, 245, 255, 0.14);
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(123, 47, 255, 0.08));
-      color: #c8c9f2;
-      padding: 9px 12px;
-      border-radius: 14px;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: .8px;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: .18s;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
-    }
-
-    .setting-chip:hover {
-      transform: translateY(-1px);
-      border-color: rgba(0, 245, 255, 0.3);
-      color: var(--text);
-      box-shadow: 0 0 12px rgba(0, 245, 255, 0.08);
-    }
-
-    .setting-chip.active {
-      color: var(--text);
-      border-color: rgba(0, 245, 255, 0.4);
-      background: linear-gradient(135deg, rgba(0, 245, 255, 0.18), rgba(123, 47, 255, 0.24));
-      box-shadow: 0 0 18px rgba(0, 245, 255, 0.14);
-    }
-
-    .social-links {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .social-link {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 42px;
-      border-radius: 14px;
-      border: 1px solid rgba(0, 245, 255, 0.16);
-      background: linear-gradient(135deg, rgba(0, 245, 255, 0.08), rgba(123, 47, 255, 0.14));
-      color: var(--text);
-      text-decoration: none;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: .8px;
-      text-transform: uppercase;
-      transition: .18s;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-    }
-
-    .social-link:hover {
-      transform: translateY(-1px);
-      border-color: rgba(0, 245, 255, 0.36);
-      box-shadow: 0 0 16px rgba(0, 245, 255, 0.14);
-    }
-
-    .social-link:nth-child(1) {
-      color: #9ffbff;
-    }
-
-    .social-link:nth-child(2) {
-      color: #ffb0de;
-    }
-
-    .social-link:nth-child(3) {
-      color: #9fc8ff;
-    }
-
-    .settings-actions {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 10px;
-    }
-
-    .settings-action {
-      border: none;
-      outline: none;
-      border-radius: 14px;
-      padding: 14px 12px;
-      font-family: 'Orbitron', monospace;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      cursor: pointer;
-      transition: .18s;
-    }
-
-    .settings-action.ghost {
-      color: #cfd2ff;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(123, 47, 255, 0.12));
-      border: 1px solid rgba(123, 47, 255, 0.2);
-      box-shadow: 0 0 12px rgba(123, 47, 255, 0.08);
-    }
-
-    .settings-action.primary {
-      color: #061018;
-      background: linear-gradient(135deg, var(--gold), var(--orange-hot));
-      box-shadow: 0 10px 24px rgba(255, 149, 0, 0.3);
-    }
-
-    .settings-action:hover {
-      transform: translateY(-1px);
-    }
-
-    .settings-action.primary:hover {
-      box-shadow: 0 12px 28px rgba(255, 149, 0, 0.38);
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daya Pass Arena – Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="settings.css">
 </head>
-
 <body>
-  <div class="page-wrapper">
-    <div class="bg-system">
-      <div class="bg-gradient"></div>
-      <div class="bg-grid"></div>
-      <div class="bg-scan"></div>
+
+<div class="container">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="back-btn" onclick="window.location.href='index.html'">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      </div>
+      <span class="page-title">Settings</span>
     </div>
-
-    <div class="settings-page">
-      <div class="settings-topbar">
-        <a class="back-btn" href="index.html">‹</a>
-        <div class="settings-title">Game Settings</div>
-        <div class="settings-spacer"></div>
-      </div>
-
-      <div class="settings-card">
-        <div class="setting-row">
-          <div class="setting-copy">
-            <div class="setting-label">Music</div>
-            <div class="setting-desc">Turn menu and in-game background music on or off.</div>
-          </div>
-          <button class="toggle-switch" id="toggleMusic" onclick="toggleSettingsOption('music')" aria-label="Toggle music"></button>
-        </div>
-
-        <div class="setting-row">
-          <div class="setting-copy">
-            <div class="setting-label">Sound</div>
-            <div class="setting-desc">Turn dice, token movement and result sounds on or off.</div>
-          </div>
-          <button class="toggle-switch" id="toggleSfx" onclick="toggleSettingsOption('sfx')" aria-label="Toggle sound"></button>
-        </div>
-
-        <div class="setting-row">
-          <div class="setting-copy">
-            <div class="setting-label">Vibration</div>
-            <div class="setting-desc">Enable phone vibration when rolling or finishing a move.</div>
-          </div>
-          <button class="toggle-switch" id="toggleVibration" onclick="toggleSettingsOption('vibration')" aria-label="Toggle vibration"></button>
-        </div>
-
-        <div class="setting-row block">
-          <div class="setting-copy">
-            <div class="setting-label">Select Language</div>
-            <div class="setting-desc">Switch the game text to your preferred language.</div>
-            <select class="setting-select" id="languageSelect" onchange="selectSettingsLanguage(this.value)" aria-label="Select language">
-              <option value="english">English</option>
-              <option value="hindi">Hindi</option>
-              <option value="bangla">Bangla</option>
-              <option value="urdu">Urdu</option>
-              <option value="tamil">Tamil</option>
-              <option value="telugu">Telugu</option>
-              <option value="marathi">Marathi</option>
-              <option value="gujarati">Gujarati</option>
-              <option value="punjabi">Punjabi</option>
-              <option value="malayalam">Malayalam</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="setting-row block">
-          <div class="setting-copy">
-            <div class="setting-label">Select Region</div>
-            <div class="setting-desc">Choose the region used for your regional trophy rankings.</div>
-            <select class="setting-select" id="regionSelect" onchange="selectSettingsRegion(this.value)" aria-label="Select region">
-              <option value="India">India</option>
-              <option value="United States">United States</option>
-              <option value="Brazil">Brazil</option>
-              <option value="United Kingdom">United Kingdom</option>
-              <option value="Japan">Japan</option>
-              <option value="Indonesia">Indonesia</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="setting-row block">
-          <div class="setting-copy">
-            <div class="setting-label">Privacy</div>
-            <div class="setting-desc">Choose who can see your profile and match activity.</div>
-          </div>
-          <div class="chip-group">
-            <button class="setting-chip" id="privacyChipPublic" onclick="selectSettingsPrivacy('public')">Public</button>
-            <button class="setting-chip" id="privacyChipFriends" onclick="selectSettingsPrivacy('friends')">Friends</button>
-            <button class="setting-chip" id="privacyChipPrivate" onclick="selectSettingsPrivacy('private')">Private</button>
-          </div>
-        </div>
-
-        <div class="setting-row block">
-          <div class="setting-copy">
-            <div class="setting-label">Tutorial</div>
-            <div class="setting-desc">Replay the tutorial if you want to learn the controls again.</div>
-          </div>
-          <div class="chip-group">
-            <button class="setting-chip active" id="tutorialChipOpen" onclick="openTutorialSettings()">Open Tutorial</button>
-          </div>
-        </div>
-
-        <div class="setting-row block">
-          <div class="setting-copy">
-            <div class="setting-label">Follow us on</div>
-            <div class="setting-desc">Follow the game on social platforms for updates and announcements.</div>
-          </div>
-          <div class="social-links">
-            <a class="social-link" href="https://x.com/" target="_blank" rel="noopener noreferrer">X</a>
-            <a class="social-link" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a>
-            <a class="social-link" href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">Facebook</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="settings-actions">
-        <button class="settings-action ghost" onclick="resetSettings()">RESET</button>
-        <button class="settings-action primary" id="saveSettingsBtn" onclick="saveSettings()">SAVE SETTINGS</button>
+    <div class="topbar-icons">
+      <div class="icon-btn" onclick="window.location.href='notifications.html'">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 00-9.33-4.999M9 11v3.159c0 .538-.214 1.055-.595 1.436L7 17h5"/><path stroke-linecap="round" stroke-linejoin="round" d="M13 17a1 1 0 01-2 0"/></svg>
+        <span class="notif-count">3</span>
       </div>
     </div>
   </div>
 
-  <script>
-    const saveSettingsBtn = document.getElementById('saveSettingsBtn');
-    const languageSelectEl = document.getElementById('languageSelect');
-    const regionSelectEl = document.getElementById('regionSelect');
-    const languageLabels = {
-      english: 'English',
-      hindi: 'Hindi',
-      bangla: 'Bangla',
-      urdu: 'Urdu',
-      tamil: 'Tamil',
-      telugu: 'Telugu',
-      marathi: 'Marathi',
-      gujarati: 'Gujarati',
-      punjabi: 'Punjabi',
-      malayalam: 'Malayalam'
-    };
+  <!-- PROFILE CARD -->
+  <div class="profile-card">
+    <div class="avatar-wrap">
+      <div class="avatar">⚔️</div>
+      <div class="avatar-ring"></div>
+      <div class="lv-badge">LV 7</div>
+    </div>
+    <div class="profile-info">
+      <div class="profile-name">DAYA_X</div>
+      <div class="profile-id">ID: #48291 · Season 1</div>
+      <div class="profile-stats">
+        <div class="stat-chip"><span class="dot" style="background:#f5c518"></span>24,850</div>
+        <div class="stat-chip"><span class="dot" style="background:#4da6ff"></span>480</div>
+      </div>
+    </div>
+    <button class="edit-btn" onclick="showModal('profileModal')">EDIT</button>
+  </div>
 
-    const settingsDefaults = {
-      music: true,
-      sfx: true,
-      vibration: true,
-      language: 'english',
-      privacy: 'friends',
-      region: 'India'
-    };
+  <!-- AUDIO SECTION -->
+  <div class="section">
+    <div class="section-label">Audio</div>
+    <div class="section-panel">
+      <div class="setting-row" onclick="window.location.href='help.html'">
+        <div class="row-icon icon-green">🔊</div>
+        <div class="row-content">
+          <div class="row-title">Master Volume</div>
+          <div class="row-sub">Overall game volume</div>
+        </div>
+        <div class="row-right">
+          <div class="slider-wrap">
+            <input type="range" class="slider" min="0" max="100" value="80" oninput="updateSlider(this,'vol-master')">
+            <span class="slider-val" id="vol-master">80</span>
+          </div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-green">🎵</div>
+        <div class="row-content">
+          <div class="row-title">Background Music</div>
+          <div class="row-sub">Arena BGM & themes</div>
+        </div>
+        <div class="row-right">
+          <div class="slider-wrap">
+            <input type="range" class="slider" min="0" max="100" value="60" oninput="updateSlider(this,'vol-music')">
+            <span class="slider-val" id="vol-music">60</span>
+          </div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-blue">🎲</div>
+        <div class="row-content">
+          <div class="row-title">Sound Effects</div>
+          <div class="row-sub">Dice, moves, tokens</div>
+        </div>
+        <div class="row-right">
+          <div class="slider-wrap">
+            <input type="range" class="slider" min="0" max="100" value="90" oninput="updateSlider(this,'vol-sfx')">
+            <span class="slider-val" id="vol-sfx">90</span>
+          </div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-purple">📳</div>
+        <div class="row-content">
+          <div class="row-title">Vibration</div>
+          <div class="row-sub">Haptic feedback on moves</div>
+        </div>
+        <div class="row-right">
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    let settingsState = { ...settingsDefaults };
+  <!-- GAMEPLAY SECTION -->
+  <div class="section">
+    <div class="section-label">Gameplay</div>
+    <div class="section-panel">
+      <div class="setting-row" onclick="showModal('themeModal')">
+        <div class="row-icon icon-gold">🎨</div>
+        <div class="row-content">
+          <div class="row-title">Board Theme</div>
+          <div class="row-sub">Visual style of the arena</div>
+        </div>
+        <div class="row-right">
+          <span class="val-badge val-gold">VOLCANO</span>
+          <div class="arrow-icon"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-blue">⏱️</div>
+        <div class="row-content">
+          <div class="row-title">Turn Timer</div>
+          <div class="row-sub">Seconds per turn</div>
+        </div>
+        <div class="row-right">
+          <div class="select-chip" onclick="cycleTimer(this)">
+            30s
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-green">✨</div>
+        <div class="row-content">
+          <div class="row-title">Auto-Roll Dice</div>
+          <div class="row-sub">Roll automatically when timer ends</div>
+        </div>
+        <div class="row-right">
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-gold">🌟</div>
+        <div class="row-content">
+          <div class="row-title">Animations</div>
+          <div class="row-sub">Token & board effects</div>
+        </div>
+        <div class="row-right">
+          <div class="select-chip" onclick="cycleAnim(this)">
+            HIGH
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-purple">💬</div>
+        <div class="row-content">
+          <div class="row-title">In-Game Chat</div>
+          <div class="row-sub">Quick emotes & messages</div>
+        </div>
+        <div class="row-right">
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    function renderSettingsUI() {
-      const toggleMap = {
-        music: 'toggleMusic',
-        sfx: 'toggleSfx',
-        vibration: 'toggleVibration'
-      };
+  <!-- NOTIFICATIONS SECTION -->
+  <div class="section">
+    <div class="section-label">Notifications</div>
+    <div class="section-panel">
+      <div class="setting-row">
+        <div class="row-icon icon-gold">🏆</div>
+        <div class="row-content">
+          <div class="row-title">Tournament Alerts</div>
+          <div class="row-sub">New tournaments & results</div>
+        </div>
+        <div class="row-right">
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-green">👥</div>
+        <div class="row-content">
+          <div class="row-title">Friend Invites</div>
+          <div class="row-sub">When friends invite you</div>
+        </div>
+        <div class="row-right">
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-blue">🎁</div>
+        <div class="row-content">
+          <div class="row-title">Daily Rewards</div>
+          <div class="row-sub">Reminders & lucky spin</div>
+        </div>
+        <div class="row-right">
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-purple">📣</div>
+        <div class="row-content">
+          <div class="row-title">Promotions</div>
+          <div class="row-sub">Special offers & events</div>
+        </div>
+        <div class="row-right">
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      Object.entries(toggleMap).forEach(([key, id]) => {
-        const el = document.getElementById(id);
-        if (el) el.classList.toggle('on', !!settingsState[key]);
-      });
+  <!-- ACCOUNT SECTION -->
+  <div class="section">
+    <div class="section-label">Account</div>
+    <div class="section-panel">
+      <div class="setting-row" onclick="showModal('langModal')">
+        <div class="row-icon icon-blue">🌐</div>
+        <div class="row-content">
+          <div class="row-title">Language</div>
+          <div class="row-sub">App display language</div>
+        </div>
+        <div class="row-right">
+          <span class="val-badge val-green">EN</span>
+          <div class="arrow-icon"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-gold">🔒</div>
+        <div class="row-content">
+          <div class="row-title">Privacy Mode</div>
+          <div class="row-sub">Hide profile from non-friends</div>
+        </div>
+        <div class="row-right">
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-green">🔗</div>
+        <div class="row-content">
+          <div class="row-title">Linked Accounts</div>
+          <div class="row-sub">Google, Facebook, Apple</div>
+        </div>
+        <div class="row-right">
+          <span class="val-badge val-green">2 LINKED</span>
+          <div class="arrow-icon"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-blue">📱</div>
+        <div class="row-content">
+          <div class="row-title">Two-Factor Auth</div>
+          <div class="row-sub">Extra account security</div>
+        </div>
+        <div class="row-right">
+          <span class="val-badge val-red">OFF</span>
+          <div class="arrow-icon"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      if (languageSelectEl) {
-        languageSelectEl.value = settingsState.language;
-      }
+  <!-- SUPPORT SECTION -->
+  <div class="section">
+    <div class="section-label">Support</div>
+    <div class="section-panel">
+      <div class="setting-row">
+        <div class="row-icon icon-green">❓</div>
+        <div class="row-content">
+          <div class="row-title">Help & FAQ</div>
+          <div class="row-sub">Game rules and guides</div>
+        </div>
+        <div class="row-right">
+          <div class="arrow-icon"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-blue">💌</div>
+        <div class="row-content">
+          <div class="row-title">Contact Support</div>
+          <div class="row-sub">Report issues or bugs</div>
+        </div>
+        <div class="row-right">
+          <div class="arrow-icon"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="row-icon icon-gold">⭐</div>
+        <div class="row-content">
+          <div class="row-title">Rate the Game</div>
+          <div class="row-sub">Share your experience</div>
+        </div>
+        <div class="row-right">
+          <div class="arrow-icon"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      if (regionSelectEl) {
-        regionSelectEl.value = settingsState.region;
-      }
+  <!-- DANGER ZONE -->
+  <div class="section">
+    <div class="section-label">Danger Zone</div>
+    <div class="section-panel">
+      <div class="setting-row danger-row" onclick="showModal('logoutModal')">
+        <div class="row-icon icon-red">🚪</div>
+        <div class="row-content">
+          <div class="row-title">Log Out</div>
+          <div class="row-sub">Sign out of your account</div>
+        </div>
+        <div class="row-right">
+          <div class="arrow-icon"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+      <div class="setting-row danger-row">
+        <div class="row-icon icon-red">🗑️</div>
+        <div class="row-content">
+          <div class="row-title">Delete Account</div>
+          <div class="row-sub">Permanently erase all data</div>
+        </div>
+        <div class="row-right">
+          <div class="arrow-icon"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      const privacyChipMap = {
-        public: 'privacyChipPublic',
-        friends: 'privacyChipFriends',
-        private: 'privacyChipPrivate'
-      };
+  <!-- VERSION FOOTER -->
+  <div class="version-footer">
+    <div class="version-text">DAYA PASS ARENA · v2.4.1</div>
+    <div class="version-sub">© 2025 Royal Arena Studios</div>
+  </div>
 
-      Object.entries(privacyChipMap).forEach(([key, id]) => {
-        const el = document.getElementById(id);
-        if (el) el.classList.toggle('active', settingsState.privacy === key);
-      });
-    }
+</div>
 
-    function toggleSettingsOption(key) {
-      settingsState[key] = !settingsState[key];
-      renderSettingsUI();
-    }
+<!-- LANGUAGE MODAL -->
+<div class="modal-overlay" id="langModal" onclick="closeModalOutside(event,'langModal')">
+  <div class="modal">
+    <div class="close-modal" onclick="closeModal('langModal')">✕</div>
+    <div class="modal-title">LANGUAGE</div>
+    <div class="lang-grid">
+      <div class="lang-opt selected" onclick="selectLang(this)"><div class="flag">🇬🇧</div><div class="lang-name">English</div></div>
+      <div class="lang-opt" onclick="selectLang(this)"><div class="flag">🇮🇳</div><div class="lang-name">Hindi</div></div>
+      <div class="lang-opt" onclick="selectLang(this)"><div class="flag">🇧🇷</div><div class="lang-name">Português</div></div>
+      <div class="lang-opt" onclick="selectLang(this)"><div class="flag">🇸🇦</div><div class="lang-name">العربية</div></div>
+      <div class="lang-opt" onclick="selectLang(this)"><div class="flag">🇪🇸</div><div class="lang-name">Español</div></div>
+      <div class="lang-opt" onclick="selectLang(this)"><div class="flag">🇫🇷</div><div class="lang-name">Français</div></div>
+    </div>
+    <button class="modal-btn" onclick="closeModal('langModal')">CONFIRM</button>
+  </div>
+</div>
 
-    function selectSettingsLanguage(language) {
-      settingsState.language = language;
-      renderSettingsUI();
-    }
+<!-- THEME MODAL -->
+<div class="modal-overlay" id="themeModal" onclick="closeModalOutside(event,'themeModal')">
+  <div class="modal">
+    <div class="close-modal" onclick="closeModal('themeModal')">✕</div>
+    <div class="modal-title">BOARD THEME</div>
+    <div class="theme-grid">
+      <div class="lang-opt selected" onclick="selectTheme(this,'VOLCANO')"><div class="flag">🌋</div><div class="lang-name">Volcano Pit</div></div>
+      <div class="lang-opt" onclick="selectTheme(this,'CLASSIC')"><div class="flag">🏛️</div><div class="lang-name">Classic Arena</div></div>
+      <div class="lang-opt" onclick="selectTheme(this,'CYBER')"><div class="flag">🤖</div><div class="lang-name">Cyber Grid</div></div>
+      <div class="lang-opt" onclick="selectTheme(this,'OCEAN')"><div class="flag">🌊</div><div class="lang-name">Ocean Abyss</div></div>
+    </div>
+    <button class="modal-btn" onclick="closeModal('themeModal')">APPLY THEME</button>
+  </div>
+</div>
 
-    function selectSettingsPrivacy(privacy) {
-      settingsState.privacy = privacy;
-      renderSettingsUI();
-    }
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profileModal" onclick="closeModalOutside(event,'profileModal')">
+  <div class="modal">
+    <div class="close-modal" onclick="closeModal('profileModal')">✕</div>
+    <div class="modal-title">EDIT PROFILE</div>
+    <div class="modal-field">
+      <div class="field-label">USERNAME</div>
+      <input type="text" class="field-input" value="DAYA_X"
+        onfocus="this.style.borderColor='rgba(0,255,180,0.4)'"
+        onblur="this.style.borderColor='rgba(255,255,255,0.07)'">
+    </div>
+    <div class="modal-field">
+      <div class="field-label">AVATAR</div>
+      <div class="avatar-picker">
+        <div class="av-opt selected" onclick="selectAvatar(this)">⚔️</div>
+        <div class="av-opt" onclick="selectAvatar(this)">🦁</div>
+        <div class="av-opt" onclick="selectAvatar(this)">🐉</div>
+        <div class="av-opt" onclick="selectAvatar(this)">🎯</div>
+        <div class="av-opt" onclick="selectAvatar(this)">🔱</div>
+      </div>
+    </div>
+    <button class="modal-btn" onclick="closeModal('profileModal')">SAVE CHANGES</button>
+  </div>
+</div>
 
-    function selectSettingsRegion(region) {
-      settingsState.region = region;
-      renderSettingsUI();
-    }
+<!-- LOGOUT MODAL -->
+<div class="modal-overlay" id="logoutModal" onclick="closeModalOutside(event,'logoutModal')">
+  <div class="modal">
+    <div class="close-modal" onclick="closeModal('logoutModal')">✕</div>
+    <div class="modal-title">LOG OUT?</div>
+    <p class="modal-desc">Your progress is saved. You can log back in anytime with your linked accounts.</p>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal('logoutModal')">CANCEL</button>
+      <button class="modal-danger">LOG OUT</button>
+    </div>
+  </div>
+</div>
 
-    function openTutorialSettings() {
-      const originalText = saveSettingsBtn.textContent;
-      saveSettingsBtn.textContent = 'TUTORIAL OPENED';
-      setTimeout(() => {
-        saveSettingsBtn.textContent = originalText;
-      }, 1200);
-    }
-
-    function resetSettings() {
-      settingsState = { ...settingsDefaults };
-      renderSettingsUI();
-    }
-
-    function saveSettings() {
-      localStorage.setItem('ludoArenaSettings', JSON.stringify(settingsState));
-      localStorage.setItem('ludo_rank_region_v1', settingsState.region);
-      const originalText = saveSettingsBtn.textContent;
-      saveSettingsBtn.textContent = 'SAVED';
-      setTimeout(() => {
-        saveSettingsBtn.textContent = originalText;
-      }, 900);
-    }
-
-    function loadSettings() {
-      try {
-        const raw = localStorage.getItem('ludoArenaSettings');
-        if (raw) {
-          settingsState = { ...settingsDefaults, ...JSON.parse(raw) };
-        }
-        const savedRegion = localStorage.getItem('ludo_rank_region_v1');
-        if (savedRegion) {
-          settingsState.region = savedRegion;
-        }
-      } catch (error) {
-        settingsState = { ...settingsDefaults };
-      }
-      renderSettingsUI();
-    }
-
-    loadSettings();
-  </script>
+<script src="settings.js"></script>
 </body>
-
 </html>

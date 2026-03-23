@@ -1,816 +1,481 @@
-/* Friends page: demo social system with friend requests + account directory (localStorage). */
-(function () {
-  'use strict';
+/* ============================================================
+   friends.js — Daya Pass Arena · Friends Page
+   ============================================================ */
 
-  const LS_FRIENDS = 'dpa_friends_v1';
-  const LS_PLAYERS = 'dpa_players_v1';
-  const LS_REQ_IN = 'dpa_friend_requests_in_v1';
-  const LS_REQ_OUT = 'dpa_friend_requests_out_v1';
-  const ME = { name: 'You', tag: '0001' };
+/* ══════════════════════════════════════════
+   DATA
+══════════════════════════════════════════ */
 
-  const addInput = document.getElementById('addFriendInput');
-  const addBtn = document.getElementById('addFriendBtn');
-  const searchEl = document.getElementById('friendSearch');
+const FRIENDS = [
+  { id:'F001', name:'KING_R',    avatar:'🦁', status:'online',  locale:'Chennai, IN', trophies:3820, winrate:79, rank:'S+', ingameRoom:null },
+  { id:'F002', name:'DRAGO_99',  avatar:'🐉', status:'ingame',  locale:'Mumbai, IN',  trophies:5100, winrate:85, rank:'S+', ingameRoom:'Room #4421' },
+  { id:'F003', name:'NOVA_X',    avatar:'🎯', status:'online',  locale:'Delhi, IN',   trophies:2240, winrate:62, rank:'A',  ingameRoom:null },
+  { id:'F004', name:'BLAZE_K',   avatar:'🔥', status:'online',  locale:'Chennai, IN', trophies:1980, winrate:58, rank:'A',  ingameRoom:null },
+  { id:'F005', name:'SHADOW_Z',  avatar:'🌑', status:'ingame',  locale:'Bangalore, IN', trophies:4400, winrate:81, rank:'S', ingameRoom:'Room #2209' },
+  { id:'F006', name:'STORM_99',  avatar:'⚡', status:'offline', locale:'Hyderabad, IN', trophies:1650, winrate:54, rank:'B+', ingameRoom:null },
+  { id:'F007', name:'QUEEN_V',   avatar:'👑', status:'online',  locale:'Chennai, IN', trophies:6700, winrate:91, rank:'SS', ingameRoom:null },
+  { id:'F008', name:'VIPER_7',   avatar:'🐍', status:'offline', locale:'Pune, IN',    trophies:1100, winrate:47, rank:'B',  ingameRoom:null },
+  { id:'F009', name:'ACE_11',    avatar:'🃏', status:'online',  locale:'Coimbatore, IN', trophies:3100, winrate:73, rank:'A+', ingameRoom:null },
+  { id:'F010', name:'PANDA_P',   avatar:'🐼', status:'offline', locale:'Kolkata, IN', trophies:890,  winrate:43, rank:'B-', ingameRoom:null },
+  { id:'F011', name:'TITAN_X',   avatar:'🗿', status:'ingame',  locale:'Chennai, IN', trophies:7800, winrate:88, rank:'SS+', ingameRoom:'Tournament #12' },
+  { id:'F012', name:'ROGUE_M',   avatar:'🎭', status:'online',  locale:'Chennai, IN', trophies:2900, winrate:67, rank:'A',  ingameRoom:null },
+];
 
-  const friendsWrap = document.getElementById('friendsWrap');
-  const requestsWrap = document.getElementById('requestsWrap');
+const INCOMING_REQUESTS = [
+  { id:'R001', name:'CYBER_Q',  avatar:'🤖', mutual:3, since:'2h ago' },
+  { id:'R002', name:'OMEGA_8',  avatar:'♾️',  mutual:1, since:'5h ago' },
+  { id:'R003', name:'ZEN_WOLF', avatar:'🐺', mutual:5, since:'1d ago' },
+];
 
-  const listEl = document.getElementById('friendsList');
-  const requestsEl = document.getElementById('requestsList');
+const SENT_REQUESTS = [
+  { id:'S001', name:'PRISM_X',  avatar:'🔮', since:'3h ago' },
+  { id:'S002', name:'DELTA_4',  avatar:'🔺', since:'2d ago' },
+];
 
-  const playerResultsWrap = document.getElementById('playerResultsWrap');
-  const playerResultsEl = document.getElementById('playerResults');
-  const playerResultsSub = document.getElementById('playerResultsSub');
+/* Search DB — players not yet friends */
+const SEARCH_DB = [
+  { id:'P001', name:'FLASH_V',  avatar:'⚡', trophies:2100, mutual:2, isFriend:false },
+  { id:'P002', name:'GHOST_K',  avatar:'👻', trophies:3300, mutual:0, isFriend:false },
+  { id:'P003', name:'COBRA_9',  avatar:'🐍', trophies:1500, mutual:4, isFriend:false },
+  { id:'P004', name:'NOVA_X',   avatar:'🎯', trophies:2240, mutual:3, isFriend:true  },
+  { id:'P005', name:'LUMOS_1',  avatar:'💡', trophies:4400, mutual:1, isFriend:false },
+  { id:'P006', name:'REAPER_X', avatar:'💀', trophies:5500, mutual:0, isFriend:false },
+  { id:'P007', name:'TITAN_X',  avatar:'🗿', trophies:7800, mutual:6, isFriend:true  },
+  { id:'P008', name:'AURA_9',   avatar:'🌟', trophies:980,  mutual:0, isFriend:false },
+];
 
-  const totalEl = document.getElementById('friendsTotal');
-  const onlineEl = document.getElementById('friendsOnline');
-  const refreshBtn = document.getElementById('friendsRefresh');
-  const toastEl = document.getElementById('friendsToast');
-  const reqBadgeEl = document.getElementById('reqBadge');
-  const filtersWrap = document.getElementById('friendsFilters');
+/* Track sent requests locally */
+const sentSet = new Set();
 
-  const viewBtns = Array.from(document.querySelectorAll('.view-chip'));
-  const filterBtns = Array.from(document.querySelectorAll('.filter-chip'));
+/* ══════════════════════════════════════════
+   RENDER FRIENDS LIST
+══════════════════════════════════════════ */
 
-  let activeView = 'friends';
-  let activeFilter = 'all';
+let currentFilter = 'all';
+let currentSearch = '';
 
-  let players = loadPlayers();
-  let friends = loadFriends();
-  let reqIn = loadRequests(LS_REQ_IN);
-  let reqOut = loadRequests(LS_REQ_OUT);
+/**
+ * Build and inject all friend cards into #friendsList.
+ */
+function renderFriends() {
+  const list = document.getElementById('friendsList');
+  list.innerHTML = '';
 
-  if (!players.length) {
-    players = seedPlayers();
-    saveJson(LS_PLAYERS, players);
-  }
+  const sorted = [...FRIENDS].sort((a, b) => {
+    const order = { ingame: 0, online: 1, offline: 2 };
+    return order[a.status] - order[b.status];
+  });
 
-  if (!friends.length) {
-    friends = seedFriendsFromPlayers(players);
-    saveJson(LS_FRIENDS, friends);
-  }
+  const filtered = sorted.filter(f => {
+    const matchSearch = currentSearch === '' ||
+      f.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
+      f.id.toLowerCase().includes(currentSearch.toLowerCase());
 
-  if (!reqIn.length && !reqOut.length) {
-    reqIn = seedIncomingRequests(players, friends);
-    saveJson(LS_REQ_IN, reqIn);
-  }
+    const matchFilter =
+      currentFilter === 'all'   ? true :
+      currentFilter === 'online' ? f.status === 'online' :
+      currentFilter === 'local'  ? f.locale.toLowerCase().includes('chennai') :
+      currentFilter === 'ingame' ? f.status === 'ingame' : true;
 
-  wireEvents();
-  render();
+    return matchSearch && matchFilter;
+  });
 
-  function wireEvents() {
-    addBtn.addEventListener('click', onSendRequestFromInput);
-    addInput.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') onSendRequestFromInput();
+  // Group labels
+  const groups = [
+    { key: 'ingame', label: 'IN GAME', items: filtered.filter(f => f.status === 'ingame') },
+    { key: 'online', label: 'ONLINE',  items: filtered.filter(f => f.status === 'online') },
+    { key: 'offline',label: 'OFFLINE', items: filtered.filter(f => f.status === 'offline') },
+  ];
+
+  let anyRendered = false;
+
+  groups.forEach(group => {
+    if (group.items.length === 0) return;
+    anyRendered = true;
+
+    const label = document.createElement('div');
+    label.className = 'section-label';
+    label.textContent = `${group.label} · ${group.items.length}`;
+    list.appendChild(label);
+
+    group.items.forEach((f, idx) => {
+      const card = buildFriendCard(f, idx);
+      list.appendChild(card);
     });
+  });
 
-    searchEl.addEventListener('input', render);
-
-    refreshBtn.addEventListener('click', function () {
-      randomizeOnline();
-      maybeGenerateIncoming();
-      persistAll();
-      render();
-      showToast('Updated', false);
-    });
-
-    viewBtns.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        activeView = btn.dataset.view || 'friends';
-        viewBtns.forEach(b => b.classList.toggle('active', b === btn));
-        render();
-      });
-    });
-
-    filterBtns.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        activeFilter = btn.dataset.filter || 'all';
-        filterBtns.forEach(b => b.classList.toggle('active', b === btn));
-        render();
-      });
-    });
-
-    document.addEventListener('click', function (e) {
-      const target = e.target;
-      if (!(target instanceof HTMLElement)) return;
-
-      const action = target.getAttribute('data-action');
-      if (!action) return;
-
-      const tag = target.getAttribute('data-tag') || '';
-      if (!tag) return;
-
-      if (action === 'match') return onMatch(tag);
-      if (action === 'remove') return onRemoveFriend(tag);
-      if (action === 'request') return onSendRequest(tag);
-      if (action === 'cancel') return onCancelRequest(tag);
-      if (action === 'accept') return onAccept(tag);
-      if (action === 'reject') return onReject(tag);
-    });
+  const empty = document.getElementById('emptyState');
+  if (!anyRendered) {
+    empty.classList.add('visible');
+  } else {
+    empty.classList.remove('visible');
   }
 
-  function render() {
-    syncBadge();
+  updateOnlineStrip();
+  updateFriendCount();
+}
 
-    const query = normalize(searchEl.value || '');
-    const onlineCount = friends.reduce((n, f) => n + (f.online ? 1 : 0), 0);
-    totalEl.textContent = String(friends.length);
-    onlineEl.textContent = String(onlineCount);
+/**
+ * Build a single friend card element.
+ */
+function buildFriendCard(f, idx) {
+  const card = document.createElement('div');
+  card.className = `friend-card ${f.status}`;
+  card.style.animationDelay = `${idx * 0.04}s`;
+  card.onclick = () => openActionPanel(f);
 
-    const showFriends = activeView === 'friends';
-    friendsWrap.classList.toggle('hidden', !showFriends);
-    requestsWrap.classList.toggle('hidden', showFriends);
-    if (filtersWrap) filtersWrap.classList.toggle('hidden', !showFriends);
+  const canInvite = f.status === 'online';
+  const inviteLabel = f.status === 'ingame' ? 'IN GAME' : f.status === 'offline' ? 'OFFLINE' : 'INVITE';
 
-    filterBtns.forEach(function (b) {
-      b.disabled = !showFriends;
-      b.style.opacity = showFriends ? '' : '0.5';
-    });
+  const ingameBadge = f.status === 'ingame'
+    ? `<div class="ingame-banner">🎮 ${f.ingameRoom}</div>` : '';
 
-    if (showFriends) {
-      renderFriendsList(query);
-      renderPlayerResults(query);
-    } else {
-      playerResultsWrap.classList.add('hidden');
-      renderRequestsList(query);
-    }
+  card.innerHTML = `
+    <div class="fc-avatar-wrap">
+      <div class="fc-avatar">${f.avatar}</div>
+      <div class="fc-status-dot ${f.status}"></div>
+    </div>
+    <div class="fc-info">
+      <div class="fc-name">${f.name}</div>
+      <div class="fc-meta">
+        <span class="fc-status-txt ${f.status}">
+          ${f.status === 'online' ? '● Online' : f.status === 'ingame' ? '● In Game' : '○ Offline'}
+        </span>
+        <span class="fc-locale">📍 ${f.locale}</span>
+      </div>
+      ${ingameBadge}
+      <div class="fc-stats">
+        <span class="fc-stat trophy">🏆 ${f.trophies.toLocaleString()}</span>
+        <span class="fc-stat winrate">${f.winrate}% WR</span>
+        <span class="fc-stat rank">${f.rank}</span>
+      </div>
+    </div>
+    <div class="fc-actions">
+      <button class="fc-btn invite" onclick="event.stopPropagation(); inviteFriend('${f.id}','${f.name}')" ${canInvite ? '' : 'disabled'}>${inviteLabel}</button>
+      <button class="fc-btn more" onclick="event.stopPropagation(); openActionPanel(getFriendById('${f.id}'))">···</button>
+    </div>
+  `;
+  return card;
+}
+
+function getFriendById(id) {
+  return FRIENDS.find(f => f.id === id);
+}
+
+/* ══════════════════════════════════════════
+   ONLINE STRIP
+══════════════════════════════════════════ */
+
+function updateOnlineStrip() {
+  const online = FRIENDS.filter(f => f.status === 'online' || f.status === 'ingame');
+  const strip = document.getElementById('onlineStrip');
+  const avatarsEl = document.getElementById('stripAvatars');
+  const countEl = document.getElementById('stripCount');
+
+  if (online.length === 0) { strip.style.display = 'none'; return; }
+  strip.style.display = 'flex';
+
+  const show = online.slice(0, 6);
+  avatarsEl.innerHTML = show.map(f => {
+    const bg = f.status === 'ingame'
+      ? 'background:rgba(77,166,255,0.15);border:1px solid rgba(77,166,255,0.2)'
+      : 'background:rgba(0,255,180,0.1);border:1px solid rgba(0,255,180,0.15)';
+    return `<div class="strip-av" style="${bg}">${f.avatar}<span class="online-indicator"></span></div>`;
+  }).join('');
+
+  countEl.textContent = online.length > 6 ? `+${online.length - 6} more` : `${online.length} online`;
+}
+
+/* ══════════════════════════════════════════
+   SEARCH & FILTER
+══════════════════════════════════════════ */
+
+function searchFriends(val) {
+  currentSearch = val.trim();
+  const clearBtn = document.getElementById('searchClear');
+  clearBtn.style.display = currentSearch ? '' : 'none';
+  renderFriends();
+}
+
+function clearSearch() {
+  document.getElementById('friendSearch').value = '';
+  currentSearch = '';
+  document.getElementById('searchClear').style.display = 'none';
+  renderFriends();
+}
+
+function filterFriends(tab, filter) {
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  currentFilter = filter;
+  renderFriends();
+}
+
+/* ══════════════════════════════════════════
+   FRIEND COUNT PILL
+══════════════════════════════════════════ */
+
+function updateFriendCount() {
+  const pill = document.getElementById('friendCountPill');
+  pill.textContent = `${FRIENDS.length} FRIENDS`;
+}
+
+/* ══════════════════════════════════════════
+   INVITE / MATCHUP
+══════════════════════════════════════════ */
+
+/**
+ * Send a game invite to an online friend.
+ */
+function inviteFriend(id, name) {
+  showToast(`🎮 Invite sent to ${name}!`, 'green');
+}
+
+/* ══════════════════════════════════════════
+   ACTION PANEL (per friend)
+══════════════════════════════════════════ */
+
+function openActionPanel(f) {
+  if (!f) return;
+  document.getElementById('actionPanelTitle').textContent = f.name;
+
+  document.getElementById('actionProfile').innerHTML = `
+    <div class="ap-ava">${f.avatar}</div>
+    <div class="ap-name">${f.name}</div>
+    <div class="ap-id">ID: #${f.id} · 📍 ${f.locale}</div>
+    <div class="ap-stats">
+      <div class="ap-stat"><div class="ap-stat-val">${f.trophies.toLocaleString()}</div><div class="ap-stat-lbl">TROPHIES</div></div>
+      <div class="ap-stat"><div class="ap-stat-val">${f.winrate}%</div><div class="ap-stat-lbl">WIN RATE</div></div>
+      <div class="ap-stat"><div class="ap-stat-val">${f.rank}</div><div class="ap-stat-lbl">RANK</div></div>
+    </div>
+  `;
+
+  const btns = [];
+
+  if (f.status === 'online') {
+    btns.push({ icon:'🎮', title:'Invite to Play', sub:'Send a match invite', cls:'primary', action:`inviteFriend('${f.id}','${f.name}');closeAllPanels();` });
+    btns.push({ icon:'⚔️', title:'1v1 Challenge', sub:'Head-to-head battle', cls:'', action:`showToast('⚔️ Challenge sent to ${f.name}!','blue');closeAllPanels();` });
+  } else if (f.status === 'ingame') {
+    btns.push({ icon:'👁️', title:'Spectate Game', sub:f.ingameRoom, cls:'', action:`showToast('👁️ Joining as spectator...','blue');closeAllPanels();` });
   }
 
-  function renderFriendsList(query) {
-    const filtered = friends.filter(function (f) {
-      if (activeFilter === 'online' && !f.online) return false;
-      if (!query) return true;
-      return normalize(f.name).includes(query) || normalize(f.tag).includes(query);
-    });
+  btns.push({ icon:'👤', title:'View Profile', sub:'Stats, history & achievements', cls:'', action:`showToast('Opening profile...','');closeAllPanels();` });
+  btns.push({ icon:'💬', title:'Send Message', sub:'Chat privately', cls:'', action:`showToast('💬 Opening chat...','');closeAllPanels();` });
+  btns.push({ icon:'🚫', title:'Remove Friend', sub:'Remove from your friends list', cls:'danger', action:`removeFriend('${f.id}','${f.name}');closeAllPanels();` });
 
-    listEl.innerHTML = '';
+  document.getElementById('actionButtons').innerHTML = btns.map(b => `
+    <div class="action-row-btn ${b.cls}" onclick="${b.action}">
+      <span class="arb-icon">${b.icon}</span>
+      <div class="arb-text">
+        <div class="arb-title">${b.title}</div>
+        <div class="arb-sub">${b.sub}</div>
+      </div>
+      <span class="arb-arrow">›</span>
+    </div>
+  `).join('');
 
-    if (!filtered.length) {
-      listEl.appendChild(renderEmpty('🛰️', 'No friends found', 'Search players to send requests, or change your filter.'));
-      return;
-    }
+  openPanel('actionPanel');
+}
 
-    filtered.forEach(function (f) {
-      listEl.appendChild(renderFriendRow(f));
-    });
+function removeFriend(id, name) {
+  const idx = FRIENDS.findIndex(f => f.id === id);
+  if (idx > -1) FRIENDS.splice(idx, 1);
+  renderFriends();
+  showToast(`${name} removed from friends`, 'red');
+}
+
+/* ══════════════════════════════════════════
+   ADD FRIEND PANEL
+══════════════════════════════════════════ */
+
+function searchAdd(val) {
+  const results = document.getElementById('addResults');
+  const q = val.trim().toLowerCase();
+
+  if (!q) {
+    results.innerHTML = `
+      <div class="add-placeholder">
+        <div class="add-placeholder-icon">🔍</div>
+        Search by username or player ID (e.g. #48291)
+      </div>`;
+    return;
   }
 
-  function renderPlayerResults(query) {
-    const q = String(query || '').trim();
-    const hasQuery = q.length >= 2 || /^\d{3,6}$/.test(q) || /^#\d{3,6}$/.test(q);
+  const matches = SEARCH_DB.filter(p =>
+    p.name.toLowerCase().includes(q) ||
+    p.id.toLowerCase().includes(q)
+  );
 
-    if (!hasQuery) {
-      playerResultsWrap.classList.add('hidden');
-      playerResultsEl.innerHTML = '';
-      playerResultsSub.textContent = 'Type to find players with accounts';
-      return;
-    }
-
-    const matches = findPlayers(q).slice(0, 6).filter(p => p.tag !== ME.tag);
-    playerResultsWrap.classList.remove('hidden');
-    playerResultsEl.innerHTML = '';
-
-    if (!matches.length) {
-      playerResultsSub.textContent = 'No in-game account found for "' + q + '"';
-      playerResultsEl.appendChild(renderMiniEmpty('No players found'));
-      return;
-    }
-
-    playerResultsSub.textContent = 'Tap REQUEST to send a friend request';
-    matches.forEach(function (p) {
-      playerResultsEl.appendChild(renderPlayerRow(p));
-    });
+  if (matches.length === 0) {
+    results.innerHTML = `<div class="add-placeholder"><div class="add-placeholder-icon">😶</div>No players found for "${val}"</div>`;
+    return;
   }
 
-  function renderRequestsList(query) {
-    const q = normalize(query || '');
+  results.innerHTML = matches.map(p => {
+    let btnCls = '', btnTxt = 'ADD';
+    if (p.isFriend) { btnCls = 'already'; btnTxt = 'FRIENDS'; }
+    else if (sentSet.has(p.id)) { btnCls = 'sent'; btnTxt = 'SENT ✓'; }
+    return `
+      <div class="ar-card">
+        <div class="ar-ava">${p.avatar}</div>
+        <div class="ar-info">
+          <div class="ar-name">${p.name}</div>
+          <div class="ar-id">ID: ${p.id} · 🏆 ${p.trophies.toLocaleString()} · ${p.mutual} mutual</div>
+        </div>
+        <button class="ar-btn ${btnCls}" onclick="sendRequest('${p.id}','${p.name}',this)" ${p.isFriend || sentSet.has(p.id) ? 'disabled' : ''}>${btnTxt}</button>
+      </div>`;
+  }).join('');
+}
 
-    const inFiltered = reqIn.filter(function (r) {
-      if (!q) return true;
-      return normalize(r.fromName).includes(q) || normalize(r.fromTag).includes(q);
-    });
+function sendRequest(id, name, btn) {
+  sentSet.add(id);
+  btn.textContent = 'SENT ✓';
+  btn.classList.add('sent');
+  btn.disabled = true;
+  showToast(`Friend request sent to ${name}!`, 'green');
+}
 
-    const outFiltered = reqOut.filter(function (r) {
-      if (!q) return true;
-      return normalize(r.toName).includes(q) || normalize(r.toTag).includes(q);
-    });
+function copyInviteLink() {
+  const txt = document.getElementById('inviteLink').textContent;
+  if (navigator.clipboard) navigator.clipboard.writeText(txt);
+  showToast('Invite link copied!', 'green');
+}
 
-    requestsEl.innerHTML = '';
+function shareVia(platform) {
+  showToast(`Opening ${platform}...`, 'blue');
+}
 
-    requestsEl.appendChild(renderSectionHead('Incoming Requests', inFiltered.length));
-    if (!inFiltered.length) {
-      requestsEl.appendChild(renderInlineEmpty('No incoming requests'));
-    } else {
-      inFiltered.forEach(function (r) {
-        requestsEl.appendChild(renderRequestRow({ name: r.fromName, tag: r.fromTag }, 'incoming'));
-      });
-    }
+/* ══════════════════════════════════════════
+   REQUESTS PANEL
+══════════════════════════════════════════ */
 
-    requestsEl.appendChild(renderSectionHead('Sent Requests', outFiltered.length));
-    if (!outFiltered.length) {
-      requestsEl.appendChild(renderInlineEmpty('No sent requests'));
-    } else {
-      outFiltered.forEach(function (r) {
-        requestsEl.appendChild(renderRequestRow({ name: r.toName, tag: r.toTag }, 'sent'));
-      });
-    }
+function renderRequestsPanel() {
+  const incoming = document.getElementById('incomingReqs');
+  const sent = document.getElementById('sentReqs');
+
+  if (INCOMING_REQUESTS.length === 0) {
+    incoming.innerHTML = `<div class="add-placeholder"><div class="add-placeholder-icon">📭</div>No incoming requests</div>`;
+  } else {
+    incoming.innerHTML = INCOMING_REQUESTS.map(r => `
+      <div class="req-card" id="inc_${r.id}">
+        <div class="req-ava">${r.avatar}</div>
+        <div class="req-info">
+          <div class="req-name">${r.name}</div>
+          <div class="req-meta">${r.mutual} mutual friends · ${r.since}</div>
+        </div>
+        <div class="req-acts">
+          <button class="req-btn accept" onclick="acceptRequest('${r.id}','${r.name}')">ACCEPT</button>
+          <button class="req-btn decline" onclick="declineRequest('${r.id}','${r.name}')">✕</button>
+        </div>
+      </div>`).join('');
   }
 
-  function onSendRequestFromInput() {
-    const raw = (addInput.value || '').trim();
-    if (!raw) return;
-
-    const parsed = parsePlayerInput(raw);
-    if (!parsed) {
-      showToast('Enter a valid name or tag', true);
-      return;
-    }
-
-    const p = resolvePlayer(parsed);
-    if (!p) {
-      showToast('Player not found (no account)', true);
-      return;
-    }
-
-    addInput.value = '';
-    onSendRequest(p.tag);
+  if (SENT_REQUESTS.length === 0) {
+    sent.innerHTML = `<div class="add-placeholder"><div class="add-placeholder-icon">📤</div>No sent requests</div>`;
+  } else {
+    sent.innerHTML = SENT_REQUESTS.map(r => `
+      <div class="req-card" id="sent_${r.id}">
+        <div class="req-ava">${r.avatar}</div>
+        <div class="req-info">
+          <div class="req-name">${r.name}</div>
+          <div class="req-meta">Sent ${r.since}</div>
+        </div>
+        <div class="req-acts">
+          <span class="req-status-sent">PENDING</span>
+          <button class="req-btn cancel" onclick="cancelRequest('${r.id}','${r.name}')">CANCEL</button>
+        </div>
+      </div>`).join('');
   }
 
-  function onSendRequest(tag) {
-    if (tag === ME.tag) {
-      showToast('Cannot request yourself', true);
-      return;
-    }
+  updateReqBadge();
+}
 
-    const p = players.find(x => x.tag === tag);
-    if (!p) {
-      showToast('Player not found (no account)', true);
-      return;
-    }
+function acceptRequest(id, name) {
+  const el = document.getElementById(`inc_${id}`);
+  if (el) { el.style.opacity = '0'; el.style.transform = 'translateX(20px)'; el.style.transition = '0.25s'; setTimeout(() => el.remove(), 260); }
+  const idx = INCOMING_REQUESTS.findIndex(r => r.id === id);
+  if (idx > -1) INCOMING_REQUESTS.splice(idx, 1);
+  // Add to friends list
+  const avatars = ['🌟','💫','🔮','🎪'];
+  FRIENDS.push({ id, name, avatar: avatars[Math.floor(Math.random()*avatars.length)], status:'online', locale:'India', trophies: Math.floor(Math.random()*3000+500), winrate: Math.floor(Math.random()*40+40), rank:'B+', ingameRoom:null });
+  renderFriends();
+  updateReqBadge();
+  showToast(`${name} is now your friend!`, 'green');
+}
 
-    if (friends.some(f => f.tag === tag)) {
-      showToast('Already friends', true);
-      return;
-    }
+function declineRequest(id, name) {
+  const el = document.getElementById(`inc_${id}`);
+  if (el) { el.style.opacity = '0'; el.style.transform = 'translateX(20px)'; el.style.transition = '0.25s'; setTimeout(() => el.remove(), 260); }
+  const idx = INCOMING_REQUESTS.findIndex(r => r.id === id);
+  if (idx > -1) INCOMING_REQUESTS.splice(idx, 1);
+  updateReqBadge();
+  showToast(`Request from ${name} declined`, 'red');
+}
 
-    if (reqOut.some(r => r.toTag === tag)) {
-      showToast('Request already sent', true);
-      return;
-    }
+function cancelRequest(id, name) {
+  const el = document.getElementById(`sent_${id}`);
+  if (el) { el.style.opacity = '0'; el.style.transform = 'translateX(20px)'; el.style.transition = '0.25s'; setTimeout(() => el.remove(), 260); }
+  const idx = SENT_REQUESTS.findIndex(r => r.id === id);
+  if (idx > -1) SENT_REQUESTS.splice(idx, 1);
+  showToast(`Request to ${name} cancelled`, 'red');
+}
 
-    if (reqIn.some(r => r.fromTag === tag)) {
-      showToast('Request already received (accept it)', false);
-      setView('requests');
-      return;
-    }
+function updateReqBadge() {
+  const badge = document.getElementById('reqBadge');
+  const n = INCOMING_REQUESTS.length;
+  badge.textContent = n;
+  badge.style.display = n > 0 ? '' : 'none';
+}
 
-    reqOut.unshift({
-      id: cryptoSafeId(),
-      fromName: ME.name,
-      fromTag: ME.tag,
-      toName: p.name,
-      toTag: p.tag,
-      ts: Date.now(),
-    });
+/* ══════════════════════════════════════════
+   PANEL MANAGEMENT
+══════════════════════════════════════════ */
 
-    persistAll();
-    render();
-    showToast('Request sent to ' + p.name, false);
+function openPanel(id) {
+  closeAllPanels(false);
+  document.getElementById('panelOverlay').classList.add('open');
+  document.getElementById(id).classList.add('open');
+
+  if (id === 'requestsPanel') renderRequestsPanel();
+  if (id === 'addPanel') {
+    document.getElementById('addSearch').value = '';
+    document.getElementById('addResults').innerHTML = `
+      <div class="add-placeholder">
+        <div class="add-placeholder-icon">🔍</div>
+        Search by username or player ID (e.g. #48291)
+      </div>`;
   }
-
-  function onCancelRequest(tag) {
-    const idx = reqOut.findIndex(r => r.toTag === tag);
-    if (idx === -1) return;
-    const r = reqOut[idx];
-    reqOut.splice(idx, 1);
-    persistAll();
-    render();
-    showToast('Cancelled request to ' + r.toName, false);
-  }
-
-  function onAccept(tag) {
-    const idx = reqIn.findIndex(r => r.fromTag === tag);
-    if (idx === -1) return;
-    const r = reqIn[idx];
-    reqIn.splice(idx, 1);
-
-    if (!friends.some(f => f.tag === tag)) {
-      friends.unshift({
-        id: 'f_' + tag,
-        name: r.fromName,
-        tag: r.fromTag,
-        online: true,
-        lastSeen: Date.now(),
-      });
-    }
-
-    persistAll();
-    render();
-    showToast('Added ' + r.fromName, false);
-  }
-
-  function onReject(tag) {
-    const idx = reqIn.findIndex(r => r.fromTag === tag);
-    if (idx === -1) return;
-    const r = reqIn[idx];
-    reqIn.splice(idx, 1);
-    persistAll();
-    render();
-    showToast('Rejected ' + r.fromName, false);
-  }
-
-  function onMatch(tag) {
-    const f = friends.find(x => x.tag === tag);
-    if (!f || !f.online) return;
-    showToast('Invite sent to ' + f.name, false);
-  }
-
-  function onRemoveFriend(tag) {
-    const idx = friends.findIndex(f => f.tag === tag);
-    if (idx === -1) return;
-    const removed = friends[idx];
-    friends.splice(idx, 1);
-    persistAll();
-    render();
-    showToast('Removed ' + removed.name, false);
-  }
-
-  function setView(v) {
-    activeView = v;
-    viewBtns.forEach(function (b) {
-      b.classList.toggle('active', (b.dataset.view || '') === v);
-    });
-    render();
-  }
-
-  function syncBadge() {
-    const n = reqIn.length;
-    if (n > 0) {
-      reqBadgeEl.hidden = false;
-      reqBadgeEl.textContent = String(n);
-    } else {
-      reqBadgeEl.hidden = true;
-      reqBadgeEl.textContent = '';
-    }
-  }
-
-  function persistAll() {
-    saveJson(LS_FRIENDS, friends);
-    saveJson(LS_REQ_IN, reqIn);
-    saveJson(LS_REQ_OUT, reqOut);
-  }
-
-  function randomizeOnline() {
-    const now = Date.now();
-    friends = friends.map(function (f) {
-      const nextOnline = Math.random() > 0.55;
-      return { ...f, online: nextOnline, lastSeen: nextOnline ? f.lastSeen : (f.online ? now : f.lastSeen) };
-    });
-  }
-
-  function maybeGenerateIncoming() {
-    if (Math.random() > 0.33) return;
-
-    const candidates = players.filter(function (p) {
-      if (p.tag === ME.tag) return false;
-      if (friends.some(f => f.tag === p.tag)) return false;
-      if (reqIn.some(r => r.fromTag === p.tag)) return false;
-      if (reqOut.some(r => r.toTag === p.tag)) return false;
-      return true;
-    });
-
-    if (!candidates.length) return;
-    const pick = candidates[Math.floor(Math.random() * candidates.length)];
-
-    reqIn.unshift({
-      id: cryptoSafeId(),
-      fromName: pick.name,
-      fromTag: pick.tag,
-      toName: ME.name,
-      toTag: ME.tag,
-      ts: Date.now(),
-    });
-  }
-
-  function resolvePlayer(parsed) {
-    if (parsed.tag) {
-      const t = parsed.tag.replace(/^#/, '');
-      return players.find(p => p.tag === t) || null;
-    }
-    const n = normalize(parsed.name);
-    return players.find(p => normalize(p.name) === n) || null;
-  }
-
-  function findPlayers(qRaw) {
-    const q = normalize(qRaw).replace(/^#/, '');
-    const digits = q.replace(/[^\d]/g, '');
-    return players.filter(function (p) {
-      if (digits && digits.length >= 3 && String(p.tag).includes(digits)) return true;
-      return normalize(p.name).includes(q) || normalize(p.tag).includes(q);
-    });
-  }
-
-  function renderFriendRow(f) {
-    const row = document.createElement('div');
-    row.className = 'friend-row';
-    row.setAttribute('data-id', f.tag);
-
-    const av = document.createElement('div');
-    av.className = 'av';
-    av.textContent = initials(f.name);
-
-    const meta = document.createElement('div');
-    meta.className = 'meta';
-
-    const nameRow = document.createElement('div');
-    nameRow.className = 'name-row';
-
-    const name = document.createElement('div');
-    name.className = 'fname';
-    name.textContent = f.name;
-
-    const tag = document.createElement('div');
-    tag.className = 'tag';
-    tag.textContent = '#' + String(f.tag).replace(/^#/, '');
-
-    nameRow.appendChild(name);
-    nameRow.appendChild(tag);
-
-    const statusRow = document.createElement('div');
-    statusRow.className = 'status-row';
-
-    const dot = document.createElement('span');
-    dot.className = 'dot' + (f.online ? ' online' : '');
-
-    const status = document.createElement('span');
-    status.textContent = f.online ? 'Online now' : ('Last seen ' + timeAgo(f.lastSeen));
-
-    statusRow.appendChild(dot);
-    statusRow.appendChild(status);
-
-    meta.appendChild(nameRow);
-    meta.appendChild(statusRow);
-
-    const actions = document.createElement('div');
-    actions.className = 'actions';
-
-    const matchBtn = document.createElement('button');
-    matchBtn.className = 'act match';
-    matchBtn.type = 'button';
-    matchBtn.setAttribute('data-action', 'match');
-    matchBtn.setAttribute('data-tag', f.tag);
-    matchBtn.textContent = 'MATCH-UP';
-    if (!f.online) matchBtn.disabled = true;
-
-    const removeBtn = document.createElement('button');
-    removeBtn.className = 'act remove';
-    removeBtn.type = 'button';
-    removeBtn.setAttribute('data-action', 'remove');
-    removeBtn.setAttribute('data-tag', f.tag);
-    removeBtn.textContent = 'REMOVE';
-
-    actions.appendChild(matchBtn);
-    actions.appendChild(removeBtn);
-
-    row.appendChild(av);
-    row.appendChild(meta);
-    row.appendChild(actions);
-
-    return row;
-  }
-
-  function renderPlayerRow(p) {
-    const row = document.createElement('div');
-    row.className = 'mini-row';
-
-    const av = document.createElement('div');
-    av.className = 'av';
-    av.textContent = initials(p.name);
-
-    const meta = document.createElement('div');
-    meta.className = 'meta';
-
-    const nameRow = document.createElement('div');
-    nameRow.className = 'name-row';
-
-    const name = document.createElement('div');
-    name.className = 'fname';
-    name.textContent = p.name;
-
-    const tag = document.createElement('div');
-    tag.className = 'tag';
-    tag.textContent = '#' + p.tag;
-
-    nameRow.appendChild(name);
-    nameRow.appendChild(tag);
-
-    const statusRow = document.createElement('div');
-    statusRow.className = 'status-row';
-    const status = document.createElement('span');
-    status.textContent = 'Account found';
-    statusRow.appendChild(status);
-
-    meta.appendChild(nameRow);
-    meta.appendChild(statusRow);
-
-    const actions = document.createElement('div');
-    actions.className = 'mini-actions';
-
-    if (friends.some(f => f.tag === p.tag)) {
-      actions.appendChild(renderStateBtn('FRIENDS'));
-    } else if (reqIn.some(r => r.fromTag === p.tag)) {
-      actions.appendChild(renderActionBtn('ACCEPT', 'accept', p.tag));
-      actions.appendChild(renderActionBtn('REJECT', 'reject', p.tag));
-    } else if (reqOut.some(r => r.toTag === p.tag)) {
-      actions.appendChild(renderStateBtn('SENT'));
-      actions.appendChild(renderActionBtn('CANCEL', 'cancel', p.tag));
-    } else {
-      actions.appendChild(renderActionBtn('REQUEST', 'request', p.tag, 'request'));
-    }
-
-    row.appendChild(av);
-    row.appendChild(meta);
-    row.appendChild(actions);
-    return row;
-  }
-
-  function renderRequestRow(p, kind) {
-    const row = document.createElement('div');
-    row.className = 'mini-row';
-
-    const av = document.createElement('div');
-    av.className = 'av';
-    av.textContent = initials(p.name);
-
-    const meta = document.createElement('div');
-    meta.className = 'meta';
-
-    const nameRow = document.createElement('div');
-    nameRow.className = 'name-row';
-
-    const name = document.createElement('div');
-    name.className = 'fname';
-    name.textContent = p.name;
-
-    const tag = document.createElement('div');
-    tag.className = 'tag';
-    tag.textContent = '#' + p.tag;
-
-    nameRow.appendChild(name);
-    nameRow.appendChild(tag);
-
-    const statusRow = document.createElement('div');
-    statusRow.className = 'status-row';
-    const status = document.createElement('span');
-    status.textContent = kind === 'incoming' ? 'Wants to be friends' : 'Pending approval';
-    statusRow.appendChild(status);
-
-    meta.appendChild(nameRow);
-    meta.appendChild(statusRow);
-
-    const actions = document.createElement('div');
-    actions.className = 'mini-actions';
-
-    if (kind === 'incoming') {
-      actions.appendChild(renderActionBtn('ACCEPT', 'accept', p.tag));
-      actions.appendChild(renderActionBtn('REJECT', 'reject', p.tag));
-    } else {
-      actions.appendChild(renderStateBtn('SENT'));
-      actions.appendChild(renderActionBtn('CANCEL', 'cancel', p.tag));
-    }
-
-    row.appendChild(av);
-    row.appendChild(meta);
-    row.appendChild(actions);
-    return row;
-  }
-
-  function renderActionBtn(label, action, tag, cls) {
-    const b = document.createElement('button');
-    b.className = 'act ' + (cls || action);
-    b.type = 'button';
-    b.setAttribute('data-action', action);
-    b.setAttribute('data-tag', tag);
-    b.textContent = label;
-    return b;
-  }
-
-  function renderStateBtn(label) {
-    const b = document.createElement('button');
-    b.className = 'act state';
-    b.type = 'button';
-    b.disabled = true;
-    b.textContent = label;
-    return b;
-  }
-
-  function renderSectionHead(title, count) {
-    const head = document.createElement('div');
-    head.className = 'section-head';
-
-    const t = document.createElement('div');
-    t.className = 'section-title';
-    t.textContent = title;
-
-    const c = document.createElement('div');
-    c.className = 'section-count';
-    c.textContent = String(count);
-
-    head.appendChild(t);
-    head.appendChild(c);
-    return head;
-  }
-
-  function renderInlineEmpty(text) {
-    const d = document.createElement('div');
-    d.className = 'empty';
-    d.style.padding = '10px 14px 18px';
-    d.innerHTML = '<div class="empty-sub">' + escapeHtml(text) + '</div>';
-    return d;
-  }
-
-  function renderMiniEmpty(text) {
-    const d = document.createElement('div');
-    d.className = 'empty';
-    d.style.padding = '10px 14px';
-    d.innerHTML = '<div class="empty-sub">' + escapeHtml(text) + '</div>';
-    return d;
-  }
-
-  function renderEmpty(ico, title, sub) {
-    const empty = document.createElement('div');
-    empty.className = 'empty';
-    empty.innerHTML = [
-      '<div class="empty-ico">' + escapeHtml(ico) + '</div>',
-      '<div class="empty-title">' + escapeHtml(title) + '</div>',
-      '<div class="empty-sub">' + escapeHtml(sub) + '</div>',
-    ].join('');
-    return empty;
-  }
-
-  function loadFriends() {
-    const arr = loadJsonArray(LS_FRIENDS);
-    return arr.map(function (x) {
-      return {
-        id: String(x.id || ('f_' + String(x.tag || makeTag()))),
-        name: String(x.name || 'Player'),
-        tag: String(x.tag || makeTag()).replace(/^#/, ''),
-        online: Boolean(x.online),
-        lastSeen: typeof x.lastSeen === 'number' ? x.lastSeen : Date.now(),
-      };
-    });
-  }
-
-  function loadPlayers() {
-    const arr = loadJsonArray(LS_PLAYERS);
-    return arr
-      .filter(x => x && typeof x === 'object')
-      .map(function (x) {
-        return { name: String(x.name || 'Player').slice(0, 18), tag: String(x.tag || makeTag()).replace(/^#/, '') };
-      });
-  }
-
-  function loadRequests(key) {
-    const arr = loadJsonArray(key);
-    return arr
-      .filter(x => x && typeof x === 'object')
-      .map(function (x) {
-        return {
-          id: String(x.id || cryptoSafeId()),
-          fromName: String(x.fromName || 'Player'),
-          fromTag: String(x.fromTag || '').replace(/^#/, ''),
-          toName: String(x.toName || 'Player'),
-          toTag: String(x.toTag || '').replace(/^#/, ''),
-          ts: typeof x.ts === 'number' ? x.ts : Date.now(),
-        };
-      })
-      .filter(r => r.fromTag && r.toTag);
-  }
-
-  function seedPlayers() {
-    return [
-      { name: ME.name, tag: ME.tag },
-      { name: 'Riya', tag: '1042' },
-      { name: 'Vikram', tag: '7719' },
-      { name: 'Neha', tag: '8820' },
-      { name: 'Arjun', tag: '2301' },
-      { name: 'Sana', tag: '6127' },
-      { name: 'Rahul', tag: '4408' },
-      { name: 'Ishaan', tag: '9055' },
-      { name: 'Meera', tag: '3184' },
-      { name: 'Kiran', tag: '5261' },
-      { name: 'Aanya', tag: '7902' },
-      { name: 'Zoya', tag: '1190' },
-      { name: 'Dev', tag: '6631' },
-      { name: 'Ananya', tag: '2450' },
-      { name: 'Kabir', tag: '9088' },
-      { name: 'Fatima', tag: '3017' },
-      { name: 'Siddharth', tag: '5570' },
-      { name: 'Priya', tag: '7722' },
-    ];
-  }
-
-  function seedFriendsFromPlayers(pl) {
-    const baseTags = ['1042', '8820', '6127', '9055', '7902'];
-    const now = Date.now();
-    return baseTags
-      .map(t => pl.find(p => p.tag === t))
-      .filter(Boolean)
-      .map(function (p, i) {
-        const online = i % 2 === 0;
-        return { id: 'seed_' + String(i), name: p.name, tag: p.tag, online, lastSeen: online ? now : (now - (i + 2) * 60 * 60 * 1000) };
-      });
-  }
-
-  function seedIncomingRequests(pl, fr) {
-    const taken = new Set(fr.map(x => x.tag));
-    const candidates = pl.filter(p => p.tag !== ME.tag && !taken.has(p.tag));
-    const a = candidates.find(p => p.tag === '1190') || candidates[0];
-    const b = candidates.find(p => p.tag === '6631') || candidates[1];
-    const now = Date.now();
-    return [a, b].filter(Boolean).map(function (p, i) {
-      return { id: 'req_seed_' + String(i), fromName: p.name, fromTag: p.tag, toName: ME.name, toTag: ME.tag, ts: now - (i + 1) * 15 * 60 * 1000 };
-    });
-  }
-
-  function parsePlayerInput(raw) {
-    const s = String(raw || '').trim();
-    if (!s) return null;
-
-    const tagOnly = s.match(/^#?\s*(\d{3,6})\s*$/);
-    if (tagOnly) return { name: '', tag: tagOnly[1] };
-
-    const nameTag = s.match(/^(.+?)\s*#\s*(\d{3,6})\s*$/);
-    if (nameTag) return { name: String(nameTag[1]).trim().slice(0, 18), tag: String(nameTag[2]).trim() };
-
-    return { name: s.slice(0, 18), tag: '' };
-  }
-
-  function loadJsonArray(key) {
-    try {
-      const raw = localStorage.getItem(key);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
-  }
-
-  function saveJson(key, value) {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch {
-      // ignore
-    }
-  }
-
-  function normalize(s) {
-    return String(s || '').toLowerCase().replace(/\s+/g, ' ').trim();
-  }
-
-  function initials(name) {
-    const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
-    const a = parts[0] ? parts[0][0] : 'P';
-    const b = parts.length > 1 ? parts[1][0] : '';
-    return (a + b).toUpperCase();
-  }
-
-  function timeAgo(ts) {
-    const t = typeof ts === 'number' ? ts : Date.now();
-    const s = Math.max(0, Math.floor((Date.now() - t) / 1000));
-    if (s < 60) return s + 's ago';
-    const m = Math.floor(s / 60);
-    if (m < 60) return m + 'm ago';
-    const h = Math.floor(m / 60);
-    if (h < 24) return h + 'h ago';
-    const d = Math.floor(h / 24);
-    return d + 'd ago';
-  }
-
-  function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, function (c) {
-      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] || c;
-    });
-  }
-
-  let toastTimer = null;
-  function showToast(message, isError) {
-    toastEl.textContent = message;
-    toastEl.classList.remove('show', 'error');
-    if (isError) toastEl.classList.add('error');
-    void toastEl.offsetWidth;
-    toastEl.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2200);
-  }
-
-  function makeTag() {
-    return String(Math.floor(1000 + Math.random() * 9000));
-  }
-
-  function cryptoSafeId() {
-    if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
-    return 'id_' + Math.random().toString(16).slice(2) + '_' + Date.now();
-  }
-})();
+}
+
+function closeAllPanels(closeOverlay = true) {
+  document.querySelectorAll('.side-panel').forEach(p => p.classList.remove('open'));
+  if (closeOverlay) document.getElementById('panelOverlay').classList.remove('open');
+}
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+
+let toastTimer = null;
+
+/**
+ * Show a brief toast notification.
+ * @param {string} msg  - Message text
+ * @param {string} type - 'green' | 'blue' | 'red' | ''
+ */
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.classList.remove('show'); }, 2600);
+}
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderFriends();
+  updateReqBadge();
+});

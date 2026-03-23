@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Daya Pass Arena - Trophies</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --c-border: rgba(255,255,255,0.08);
+      --c-border2: rgba(255,255,255,0.14);
+      --c-green: #00e5a0;
+      --c-gold: #ffb800;
+      --c-blue: #3b82f6;
+      --c-rose: #f43f5e;
+      --c-text: #e8f0ff;
+      --c-soft: rgba(232,240,255,0.72);
+      --c-muted: rgba(232,240,255,0.42);
+      --fast: .14s ease;
+      --med: .24s ease;
+      --slow: .45s ease;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      background: #04060c;
+      font-family: 'Rajdhani', sans-serif;
+      color: var(--c-text);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow-x: hidden;
+    }
+    .phone {
+      position: relative;
+      width: 390px;
+      height: 690px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: linear-gradient(180deg, rgba(6,9,18,0.96), rgba(10,15,24,0.98));
+      box-shadow: 0 0 0 1px rgba(0,229,160,0.08), 0 40px 120px rgba(0,0,0,0.9);
+    }
+    .bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 18% 14%, rgba(255,184,0,0.14), transparent 26%),
+        radial-gradient(circle at 82% 22%, rgba(0,229,160,0.12), transparent 26%),
+        radial-gradient(circle at 50% 78%, rgba(59,130,246,0.12), transparent 32%),
+        linear-gradient(145deg, #0d1324 0%, #0d1726 40%, #060b14 100%);
+    }
+    .bg::before {
+      content: "";
+      position: absolute;
+      inset: -16%;
+      background:
+        repeating-linear-gradient(60deg, rgba(255,184,0,0.08) 0 1px, transparent 1px 24px),
+        repeating-linear-gradient(-60deg, rgba(0,229,160,0.05) 0 1px, transparent 1px 24px);
+      transform: perspective(900px) rotateX(62deg) translateY(150px) scale(1.2);
+      opacity: 0.8;
+    }
+    .bg::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(4,6,12,0.08), rgba(4,6,12,0.65)),
+        radial-gradient(circle at 50% 14%, rgba(255,255,255,0.08), transparent 24%);
+    }
+    .shell {
+      position: relative;
+      z-index: 1;
+      height: 690px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-bottom: 86px;
+      scrollbar-width: none;
+    }
+    .shell::-webkit-scrollbar { display: none; }
+    .hdr {
+      position: sticky;
+      top: 0;
+      z-index: 8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 14px 12px;
+      background: linear-gradient(180deg, rgba(8,12,20,0.96), rgba(8,12,20,0.72));
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      backdrop-filter: blur(12px);
+    }
+    .hdr-side, .hdr-copy, .section-title, .hero-meta, .hero-row, .bar-copy, .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hdr-copy { flex-direction: column; align-items: flex-start; gap: 2px; }
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--c-muted);
+    }
+    .hdr-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      line-height: 0.9;
+      letter-spacing: 1.3px;
+    }
+    .icon-btn, .chip-btn, .mini-btn, .tab-btn, .league-card, .nav-btn {
+      border: 1px solid var(--c-border2);
+      background: rgba(255,255,255,0.05);
+      color: var(--c-text);
+      cursor: pointer;
+      transition: transform var(--fast), border-color var(--fast), background var(--fast), box-shadow var(--fast);
+      font: inherit;
+    }
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+    }
+    .chip-btn, .mini-btn, .tab-btn {
+      border-radius: 999px;
+      font-weight: 700;
+    }
+    .chip-btn { height: 40px; padding: 0 14px; display: inline-flex; align-items: center; gap: 8px; }
+    .mini-btn { height: 34px; padding: 0 12px; }
+    .tab-btn { height: 34px; padding: 0 14px; color: var(--c-soft); }
+    .tab-btn.active {
+      color: var(--c-gold);
+      background: linear-gradient(180deg, rgba(255,184,0,0.16), rgba(255,255,255,0.03));
+      border-color: rgba(255,184,0,0.26);
+    }
+    .icon-btn:hover, .chip-btn:hover, .mini-btn:hover, .tab-btn:hover, .league-card:hover, .nav-btn:hover, .panel:hover, .reward-card:hover, .leader-item:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,184,0,0.32);
+      box-shadow: 0 12px 30px rgba(255,184,0,0.12);
+    }
+    .ico { width: 16px; height: 16px; position: relative; display: inline-block; color: currentColor; }
+    .ico::before, .ico::after { content: ""; position: absolute; }
+    .ico.back::before { width: 10px; height: 10px; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); left: 4px; top: 3px; }
+    .ico.cup::before { inset: 1px; background: currentColor; clip-path: polygon(18% 8%, 82% 8%, 72% 48%, 58% 60%, 58% 78%, 72% 78%, 72% 92%, 28% 92%, 28% 78%, 42% 78%, 42% 60%, 28% 48%); }
+    .ico.crown::before { inset: 3px 1px 2px; background: currentColor; clip-path: polygon(0 100%, 10% 35%, 28% 62%, 50% 10%, 72% 62%, 90% 35%, 100% 100%); border-radius: 3px; }
+    .ico.grid::before { inset: 2px; border: 2px solid currentColor; border-radius: 4px; }
+    .ico.grid::after { inset: 2px; background: linear-gradient(currentColor, currentColor) 50% 0 / 2px 100% no-repeat, linear-gradient(currentColor, currentColor) 0 50% / 100% 2px no-repeat; }
+    .ico.spark::before { inset: 1px 5px; background: currentColor; clip-path: polygon(55% 0, 100% 0, 55% 50%, 100% 50%, 20% 100%, 42% 56%, 0 56%); }
+    .ico.list::before { inset: 2px; background: linear-gradient(currentColor, currentColor) 0 2px / 100% 2px no-repeat, linear-gradient(currentColor, currentColor) 0 7px / 100% 2px no-repeat, linear-gradient(currentColor, currentColor) 0 12px / 100% 2px no-repeat; }
+    .section { padding: 0 14px; margin-top: 14px; }
+    .panel, .reward-card, .leader-item, .league-card {
+      border: 1px solid var(--c-border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)), rgba(13,18,32,0.88);
+    }
+    .hero-card {
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid var(--c-border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)), rgba(13,18,32,0.92);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+    .hero-top {
+      padding: 18px;
+      background:
+        radial-gradient(circle at 85% 18%, rgba(255,184,0,0.18), transparent 18%),
+        radial-gradient(circle at 18% 22%, rgba(0,229,160,0.18), transparent 22%),
+        linear-gradient(180deg, rgba(255,255,255,0.05), transparent);
+    }
+    .hero-meta { justify-content: space-between; }
+    .title-stack { display: flex; flex-direction: column; gap: 4px; }
+    .title-stack h2 { font-size: 30px; line-height: 0.9; font-family: 'Bebas Neue', sans-serif; letter-spacing: 1.2px; }
+    .title-stack p { color: var(--c-soft); font-size: 13px; }
+    .token-pill {
+      height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      font-weight: 700;
+      color: var(--c-gold);
+    }
+    .hero-row { margin-top: 16px; align-items: stretch; }
+    .rank-badge {
+      width: 118px;
+      min-height: 132px;
+      border-radius: 24px;
+      padding: 12px;
+      background:
+        radial-gradient(circle at 30% 22%, rgba(255,255,255,0.16), transparent 22%),
+        linear-gradient(180deg, rgba(255,184,0,0.16), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,184,0,0.24);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-align: center;
+    }
+    .rank-core {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: rgba(4,6,12,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--c-gold);
+    }
+    .rank-core .ico { width: 26px; height: 26px; }
+    .rank-core .ico.crown::before { inset: 4px 2px 3px; }
+    .rank-badge strong { font-size: 16px; letter-spacing: 0.5px; }
+    .rank-badge span { font-size: 11px; color: var(--c-soft); text-transform: uppercase; letter-spacing: 0.8px; }
+    .hero-stats {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .stat-card {
+      border-radius: 20px;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    }
+    .stat-card b { display: block; font-size: 24px; line-height: 1; margin-bottom: 6px; }
+    .stat-card span { font-size: 11px; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.7px; }
+    .hero-bottom { padding: 0 18px 18px; display: flex; flex-direction: column; gap: 10px; }
+    .bar-copy { justify-content: space-between; font-size: 12px; color: var(--c-soft); }
+    .bar {
+      height: 12px;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.08);
+    }
+    .bar-fill {
+      width: 68%;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--c-gold), var(--c-green), var(--c-blue));
+      box-shadow: 0 0 16px rgba(255,184,0,0.36);
+      transition: width var(--slow);
+    }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.9px;
+      text-transform: uppercase;
+      color: var(--c-soft);
+    }
+    .league-track {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .league-card {
+      border-radius: 20px;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      align-items: center;
+      gap: 10px;
+    }
+    .league-mark, .reward-mark, .leader-rank {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      font-weight: 800;
+    }
+    .league-copy strong, .reward-copy strong, .leader-copy strong { display: block; font-size: 15px; }
+    .league-copy span, .reward-copy span, .leader-copy span { display: block; margin-top: 3px; font-size: 12px; color: var(--c-muted); }
+    .league-score {
+      min-width: 70px;
+      height: 34px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--c-soft);
+      font-weight: 700;
+    }
+    .reward-list, .leader-list { display: grid; gap: 10px; }
+    .reward-card, .leader-item {
+      border-radius: 18px;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      align-items: center;
+      gap: 10px;
+    }
+    .reward-mark.gold, .leader-rank.top1 { color: var(--c-gold); }
+    .reward-mark.green, .leader-rank.top2 { color: var(--c-green); }
+    .reward-mark.blue, .leader-rank.top3 { color: var(--c-blue); }
+    .footer-nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 6;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 10px 12px 12px;
+      background: linear-gradient(180deg, rgba(8,12,20,0.2), rgba(8,12,20,0.96));
+      border-top: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(12px);
+    }
+    .nav-btn {
+      min-height: 56px;
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .nav-btn.act {
+      color: var(--c-gold);
+      border-color: rgba(255,184,0,0.28);
+      background: linear-gradient(180deg, rgba(255,184,0,0.14), rgba(255,255,255,0.03));
+    }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%) translateY(24px);
+      min-width: 180px;
+      max-width: 280px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(7,10,18,0.92);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--c-text);
+      font-size: 13px;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--med), transform var(--med);
+      z-index: 20;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="bg"></div>
+    <div class="shell">
+      <div class="hdr">
+        <div class="hdr-side">
+          <button class="icon-btn" onclick="window.location.href='index.html'" aria-label="Back to lobby"><span class="ico back"></span></button>
+          <div class="hdr-copy">
+            <div class="eyebrow">Competitive Record</div>
+            <div class="hdr-title">Trophies</div>
+          </div>
+        </div>
+        <button class="chip-btn" onclick="cycleLeague()"><span class="ico spark"></span><span>Shift League</span></button>
+      </div>
+
+      <div class="section">
+        <div class="hero-card">
+          <div class="hero-top">
+            <div class="hero-meta">
+              <div class="title-stack">
+                <h2 id="leagueTitle">Mythic Circuit</h2>
+                <p id="leagueSub">Push one more tier to enter Crown Division</p>
+              </div>
+              <div class="token-pill"><span class="ico cup"></span><span id="trophyTotal">2480</span></div>
+            </div>
+            <div class="hero-row">
+              <div class="rank-badge">
+                <div class="rank-core"><span class="ico crown"></span></div>
+                <strong id="rankName">Mythic II</strong>
+                <span>Current Tier</span>
+              </div>
+              <div class="hero-stats">
+                <div class="stat-card"><b id="seasonBest">2640</b><span>Season Best</span></div>
+                <div class="stat-card"><b id="globalRank">#183</b><span>Global Rank</span></div>
+                <div class="stat-card"><b id="streak">6W</b><span>Win Streak</span></div>
+                <div class="stat-card"><b id="bonusRate">+18%</b><span>Bonus Rate</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="hero-bottom">
+            <div class="bar-copy">
+              <span id="progressLabel">2480 / 3000 to Crown Division</span>
+              <span id="progressPercent">83%</span>
+            </div>
+            <div class="bar"><div class="bar-fill" id="progressFill"></div></div>
+            <div class="tabs">
+              <button class="tab-btn active" data-target="league">Leagues</button>
+              <button class="tab-btn" data-target="rewards">Reward Trail</button>
+              <button class="tab-btn" data-target="leaders">Leaders</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="panel" id="leaguePanel" style="padding:14px; border-radius:22px;">
+          <div class="section-head">
+            <div class="section-title"><span class="ico crown"></span><span>League Ladder</span></div>
+            <button class="mini-btn" onclick="cycleLeague()">Preview</button>
+          </div>
+          <div class="league-track" id="leagueTrack"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="panel" id="rewardsPanel" style="padding:14px; border-radius:22px; display:none;">
+          <div class="section-head">
+            <div class="section-title"><span class="ico cup"></span><span>Reward Trail</span></div>
+            <button class="mini-btn" onclick="claimReward()">Claim</button>
+          </div>
+          <div class="reward-list" id="rewardList"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="panel" id="leadersPanel" style="padding:14px; border-radius:22px; display:none;">
+          <div class="section-head">
+            <div class="section-title"><span class="ico list"></span><span>Top Leaders</span></div>
+            <button class="mini-btn" onclick="refreshLeaders()">Refresh</button>
+          </div>
+          <div class="leader-list" id="leaderList"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-nav">
+      <button class="nav-btn" onclick="window.location.href='index.html'"><span class="ico grid"></span><span>Lobby</span></button>
+      <button class="nav-btn" onclick="window.location.href='win-rate.html'"><span class="ico crown"></span><span>Win Rate</span></button>
+      <button class="nav-btn act"><span class="ico cup"></span><span>Trophies</span></button>
+      <button class="nav-btn" onclick="window.location.href='streak.html'"><span class="ico list"></span><span>Streak</span></button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const toast = document.getElementById('toast');
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    const progressPercent = document.getElementById('progressPercent');
+    const leagueTrack = document.getElementById('leagueTrack');
+    const rewardList = document.getElementById('rewardList');
+    const leaderList = document.getElementById('leaderList');
+    const leagueTitle = document.getElementById('leagueTitle');
+    const leagueSub = document.getElementById('leagueSub');
+    const rankName = document.getElementById('rankName');
+    const trophyTotal = document.getElementById('trophyTotal');
+
+    let toastTimer = null;
+    let currentLeague = 2;
+
+    const leagues = [
+      { name: 'Gold Arena', score: 1680, goal: 2000, tier: 'Gold IV', hint: 'Stable climb. Play three wins to promote.' },
+      { name: 'Diamond Arena', score: 2120, goal: 2400, tier: 'Diamond I', hint: 'Sharp lobby. Bonus trophies active this week.' },
+      { name: 'Mythic Circuit', score: 2480, goal: 3000, tier: 'Mythic II', hint: 'Push one more tier to enter Crown Division.' },
+      { name: 'Crown Division', score: 3180, goal: 3600, tier: 'Crown III', hint: 'Elite tier. Every loss costs double pressure.' }
+    ];
+
+    const rewards = [
+      { title: 'Victory Crate', copy: 'Unlocked at 2400 trophies', action: 'Ready', color: 'gold' },
+      { title: 'Arena Frame', copy: 'Exclusive profile border', action: 'Owned', color: 'green' },
+      { title: 'Season Coins', copy: '2,500 trophy milestone', action: 'Claim', color: 'blue' },
+      { title: 'Mythic Trail', copy: 'Unlock at Crown Division', action: 'Locked', color: 'gold' }
+    ];
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+    }
+
+    function renderHeader() {
+      const league = leagues[currentLeague];
+      const percent = Math.max(0, Math.min(100, Math.round((league.score / league.goal) * 100)));
+      leagueTitle.textContent = league.name;
+      leagueSub.textContent = league.hint;
+      rankName.textContent = league.tier;
+      trophyTotal.textContent = league.score;
+      progressLabel.textContent = league.score + ' / ' + league.goal + ' to next division';
+      progressPercent.textContent = percent + '%';
+      progressFill.style.width = percent + '%';
+    }
+
+    function renderLeagues() {
+      leagueTrack.innerHTML = '';
+      leagues.forEach((league, index) => {
+        const card = document.createElement('button');
+        card.className = 'league-card';
+        card.innerHTML =
+          '<div class="league-mark" style="color:' + (index === currentLeague ? '#ffb800' : '#00e5a0') + ';">' + (index + 1) + '</div>' +
+          '<div class="league-copy"><strong>' + league.name + '</strong><span>' + league.tier + '  ' + league.hint + '</span></div>' +
+          '<div class="league-score">' + league.score + '</div>';
+        card.addEventListener('click', () => {
+          currentLeague = index;
+          renderHeader();
+          renderLeagues();
+          showToast(league.name + ' loaded.');
+        });
+        leagueTrack.appendChild(card);
+      });
+    }
+
+    function renderRewards() {
+      rewardList.innerHTML = '';
+      rewards.forEach((reward) => {
+        const card = document.createElement('div');
+        card.className = 'reward-card';
+        card.innerHTML =
+          '<div class="reward-mark ' + reward.color + '">' + reward.action.charAt(0) + '</div>' +
+          '<div class="reward-copy"><strong>' + reward.title + '</strong><span>' + reward.copy + '</span></div>' +
+          '<button class="mini-btn">' + reward.action + '</button>';
+        card.querySelector('button').addEventListener('click', () => showToast(reward.title + ' ' + reward.action.toLowerCase() + '.'));
+        rewardList.appendChild(card);
+      });
+    }
+
+    function renderLeaders() {
+      leaderList.innerHTML = '';
+      [
+        { rank: '#1', name: 'NovaPrime', score: 3910, cls: 'top1' },
+        { rank: '#2', name: 'KairoX', score: 3825, cls: 'top2' },
+        { rank: '#3', name: 'ZenFlux', score: 3770, cls: 'top3' },
+        { rank: '#183', name: 'Daya Player', score: leagues[currentLeague].score, cls: '' }
+      ].forEach((leader) => {
+        const row = document.createElement('div');
+        row.className = 'leader-item';
+        row.innerHTML =
+          '<div class="leader-rank ' + leader.cls + '">' + leader.rank + '</div>' +
+          '<div class="leader-copy"><strong>' + leader.name + '</strong><span>Current trophy total</span></div>' +
+          '<div class="league-score">' + leader.score + '</div>';
+        leaderList.appendChild(row);
+      });
+    }
+
+    function claimReward() {
+      showToast('Reward claimed to inbox.');
+    }
+
+    function refreshLeaders() {
+      renderLeaders();
+      showToast('Leader board refreshed.');
+    }
+
+    function cycleLeague() {
+      currentLeague = (currentLeague + 1) % leagues.length;
+      renderHeader();
+      renderLeagues();
+      showToast('Previewing ' + leagues[currentLeague].name + '.');
+    }
+
+    document.querySelectorAll('.tab-btn').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach((tab) => tab.classList.remove('active'));
+        button.classList.add('active');
+        document.getElementById('leaguePanel').style.display = button.dataset.target === 'league' ? 'block' : 'none';
+        document.getElementById('rewardsPanel').style.display = button.dataset.target === 'rewards' ? 'block' : 'none';
+        document.getElementById('leadersPanel').style.display = button.dataset.target === 'leaders' ? 'block' : 'none';
+      });
+    });
+
+    renderHeader();
+    renderLeagues();
+    renderRewards();
+    renderLeaders();
+  </script>
+</body>
+</html>
