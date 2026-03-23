@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daya Pass Arena – Rank</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="rank.css">
+</head>
+<body>
+
+<div class="container">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="back-btn" onclick="history.back()">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      </div>
+      <div class="title-wrap">
+        <span class="page-title">Rank Arena</span>
+        <span class="season-pill">SEASON 1</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="season-timer">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+        <span id="countdown">18d 6h left</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLAYER RANK HERO CARD -->
+  <div class="hero-card" id="heroCard">
+    <div class="hero-bg-layer"></div>
+    <div class="hero-circuit-lines"></div>
+    <div class="hero-top">
+      <div class="hero-avatar-wrap">
+        <div class="hero-avatar">⚔️</div>
+        <div class="hero-avatar-ring"></div>
+        <div class="hero-tier-badge" id="tierBadge">MYTHIC</div>
+      </div>
+      <div class="hero-info">
+        <div class="hero-name">DAYA_X</div>
+        <div class="hero-id">ID #48291 · Season 1</div>
+        <div class="hero-rank-row">
+          <span class="hero-rank-label">GLOBAL RANK</span>
+          <span class="hero-rank-num" id="globalRank">#247</span>
+        </div>
+      </div>
+      <div class="hero-tier-icon" id="heroTierIcon">🔱</div>
+    </div>
+
+    <!-- RANK PROGRESS BAR -->
+    <div class="rank-progress-wrap">
+      <div class="rank-progress-labels">
+        <span class="rp-left">S+  <span class="rp-pts" id="curPts">8,240</span> pts</span>
+        <span class="rp-right">Next: MYTHIC I  <span class="rp-target">10,000</span></span>
+      </div>
+      <div class="rank-progress-track">
+        <div class="rank-progress-fill" id="rankFill" style="width:82.4%"></div>
+        <div class="rank-progress-glow" id="rankGlow" style="left:82.4%"></div>
+      </div>
+      <div class="rank-progress-sublabel">1,760 pts needed to promote</div>
+    </div>
+
+    <!-- QUICK STATS ROW -->
+    <div class="quick-stats">
+      <div class="qs-item">
+        <div class="qs-val" id="qsWinStreak">14</div>
+        <div class="qs-lbl">WIN STREAK</div>
+      </div>
+      <div class="qs-sep"></div>
+      <div class="qs-item">
+        <div class="qs-val green" id="qsWinRate">83%</div>
+        <div class="qs-lbl">WIN RATE</div>
+      </div>
+      <div class="qs-sep"></div>
+      <div class="qs-item">
+        <div class="qs-val gold" id="qsBonusRate">+2.5x</div>
+        <div class="qs-lbl">BONUS RATE</div>
+      </div>
+      <div class="qs-sep"></div>
+      <div class="qs-item">
+        <div class="qs-val trophy" id="qsTrophies">1,240</div>
+        <div class="qs-lbl">TROPHIES</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION TABS -->
+  <div class="section-tabs">
+    <div class="stab active" data-tab="mythic" onclick="switchTab(this,'mythic')">🔱 Mythic Circuit</div>
+    <div class="stab" data-tab="league"  onclick="switchTab(this,'league')">🏆 Leader League</div>
+    <div class="stab" data-tab="rewards" onclick="switchTab(this,'rewards')">🎁 Reward Trail</div>
+    <div class="stab" data-tab="leaders" onclick="switchTab(this,'leaders')">👑 Leaders</div>
+  </div>
+
+  <!-- ══ TAB: MYTHIC CIRCUIT ══ -->
+  <div class="tab-content active" id="tab-mythic">
+
+    <!-- OVERALL TIER PANEL -->
+    <div class="tier-panel">
+      <div class="tier-panel-header">
+        <span class="tph-label">OVERALL TIER</span>
+        <span class="tph-sub">Season 1 Progress</span>
+      </div>
+      <div class="tier-ladder" id="tierLadder"></div>
+    </div>
+
+    <!-- MYTHIC CIRCUIT STATS -->
+    <div class="circuit-grid" id="circuitGrid"></div>
+
+    <!-- WIN STREAK CARD -->
+    <div class="streak-card" id="streakCard">
+      <div class="streak-header">
+        <div class="streak-icon-wrap">🔥</div>
+        <div class="streak-info">
+          <div class="streak-title">WIN STREAK</div>
+          <div class="streak-sub">Current active streak</div>
+        </div>
+        <div class="streak-big" id="streakBig">14</div>
+      </div>
+      <div class="streak-milestones" id="streakMilestones"></div>
+    </div>
+
+    <!-- BONUS RATE CARD -->
+    <div class="bonus-card">
+      <div class="bonus-header">
+        <span class="bonus-title">BONUS RATE MULTIPLIER</span>
+        <span class="bonus-val" id="bonusVal">+2.5x</span>
+      </div>
+      <div class="bonus-bars" id="bonusBars"></div>
+      <div class="bonus-footnote">Bonus multiplier applies to all trophy and coin gains this session.</div>
+    </div>
+
+  </div>
+
+  <!-- ══ TAB: LEADER LEAGUE ══ -->
+  <div class="tab-content" id="tab-league">
+    <div class="league-hero" id="leagueHero"></div>
+    <div class="league-tabs">
+      <div class="ltab active" data-league="diamond" onclick="switchLeague(this,'diamond')">💎 Diamond</div>
+      <div class="ltab" data-league="platinum" onclick="switchLeague(this,'platinum')">🔷 Platinum</div>
+      <div class="ltab" data-league="gold"     onclick="switchLeague(this,'gold')">🥇 Gold</div>
+      <div class="ltab" data-league="silver"   onclick="switchLeague(this,'silver')">🥈 Silver</div>
+    </div>
+    <div class="league-list" id="leagueList"></div>
+  </div>
+
+  <!-- ══ TAB: REWARD TRAIL ══ -->
+  <div class="tab-content" id="tab-rewards">
+    <div class="reward-trail-wrap">
+      <div class="trail-progress-bar">
+        <div class="trail-fill" id="trailFill" style="width:62%"></div>
+      </div>
+      <div class="reward-trail" id="rewardTrail"></div>
+    </div>
+    <div class="reward-footer">
+      <div class="rf-label">SEASON ENDS IN</div>
+      <div class="rf-timer" id="rfTimer">18d 06h 42m</div>
+      <div class="rf-sub">Complete matches to unlock all rewards</div>
+    </div>
+  </div>
+
+  <!-- ══ TAB: LEADERS ══ -->
+  <div class="tab-content" id="tab-leaders">
+    <div class="leaders-scope-tabs">
+      <div class="scope-tab active" data-scope="global" onclick="switchScope(this,'global')">🌐 Global</div>
+      <div class="scope-tab" data-scope="regional" onclick="switchScope(this,'regional')">📍 Regional</div>
+      <div class="scope-tab" data-scope="friends"  onclick="switchScope(this,'friends')">👥 Friends</div>
+    </div>
+    <!-- TOP 3 PODIUM -->
+    <div class="podium" id="podium"></div>
+    <!-- REST OF LEADERBOARD -->
+    <div class="leaderboard-list" id="leaderboardList"></div>
+    <!-- MY RANK ROW -->
+    <div class="my-rank-row" id="myRankRow"></div>
+  </div>
+
+</div><!-- /container -->
+
+<script src="rank.js"></script>
+</body>
+</html>

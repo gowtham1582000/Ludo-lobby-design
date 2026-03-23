@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Daya Pass Arena - Help</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;800;900&display=swap"
@@ -36,12 +36,13 @@
       font-family: 'Rajdhani', sans-serif;
       display: flex;
       justify-content: center;
+      overflow-x: hidden;
     }
 
     .phone {
       position: relative;
-      width: 390px;
-      height: 690px;
+      width: min(100%, 390px);
+      min-height: 100vh;
       overflow: hidden;
       background: linear-gradient(180deg, rgba(6, 9, 18, .96), rgba(10, 15, 24, .98));
       box-shadow: 0 0 0 1px rgba(0, 229, 160, .08), 0 40px 120px rgba(0, 0, 0, .9);
@@ -57,7 +58,7 @@
     .shell {
       position: relative;
       z-index: 1;
-      height: 690px;
+      min-height: 100vh;
       overflow-y: auto;
       padding: 0 14px 104px;
       scrollbar-width: none;
@@ -188,6 +189,8 @@
     .section-head {
       justify-content: space-between;
       margin-bottom: 12px;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
     .section-title {
@@ -223,7 +226,7 @@
     }
 
     .footer-nav {
-      position: absolute;
+      position: sticky;
       left: 0;
       right: 0;
       bottom: 0;
@@ -280,6 +283,44 @@
       opacity: 1;
       transform: translateX(-50%) translateY(0);
     }
+
+    @media (max-width: 420px) {
+      .phone {
+        box-shadow: none;
+      }
+
+      .shell {
+        padding: 0 12px 100px;
+      }
+
+      .hdr {
+        margin: 0 -12px;
+        padding: 12px;
+      }
+
+      .hdr-side,
+      .hdr-copy {
+        min-width: 0;
+      }
+
+      .hdr-title {
+        font-size: 24px;
+      }
+
+      .panel {
+        border-radius: 20px;
+      }
+
+      .footer-nav {
+        gap: 6px;
+        padding: 10px 10px 12px;
+      }
+
+      .nav-btn {
+        min-height: 52px;
+        font-size: 10px;
+      }
+    }
   </style>
 </head>
 
@@ -294,6 +335,7 @@
             <div class="eyebrow">Support Desk</div>
             <div class="hdr-title">Help</div>
           </div>
+        </div>
       </div>
       <div class="section">
         <div class="panel">

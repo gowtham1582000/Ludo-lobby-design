@@ -1,808 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Daya Pass Arena - Items</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #07080f;
-      --surface: #0d1022;
-      --card: #111528;
-      --border: rgba(255,255,255,0.08);
-      --text: #e8eaf6;
-      --muted: #7480a8;
-      --green: #00ff88;
-      --cyan: #00cfff;
-      --gold: #ffc840;
-      --pink: #ff4d94;
-      --phone: 390px;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: #000;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      font-family: 'Rajdhani', sans-serif;
-      color: var(--text);
-    }
-
-    .phone {
-      width: var(--phone);
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at 18% 12%, rgba(0,255,136,.12), transparent 24%),
-        radial-gradient(circle at 84% 10%, rgba(0,207,255,.12), transparent 26%),
-        linear-gradient(180deg, #080a14 0%, #0a1020 42%, #080a14 100%);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .phone::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-      background-size: 24px 24px;
-      mask-image: linear-gradient(180deg, rgba(0,0,0,.35), transparent 88%);
-      pointer-events: none;
-    }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px;
-      background: rgba(7,8,15,.92);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .topbar-left { display: flex; align-items: center; gap: 10px; }
-    .icon-btn,
-    .tiny-btn,
-    .tab,
-    .loadout-slot,
-    .inventory-card,
-    .nav-btn,
-    .detail-action {
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      color: var(--text);
-      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
-    }
-
-    .icon-btn:active,
-    .tiny-btn:active,
-    .tab:active,
-    .loadout-slot:active,
-    .inventory-card:active,
-    .nav-btn:active,
-    .detail-action:active { transform: scale(.97); }
-
-    .icon-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-    }
-
-    .icon-back {
-      width: 12px;
-      height: 12px;
-      border-left: 2px solid currentColor;
-      border-bottom: 2px solid currentColor;
-      transform: rotate(45deg);
-      margin-left: 4px;
-    }
-
-    .eyebrow {
-      font-size: 10px;
-      letter-spacing: 2.4px;
-      color: var(--muted);
-      text-transform: uppercase;
-      font-family: 'Orbitron', sans-serif;
-    }
-
-    .title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 18px;
-      font-weight: 900;
-      letter-spacing: 1.2px;
-    }
-
-    .tiny-btn {
-      min-width: 84px;
-      height: 38px;
-      border-radius: 999px;
-      padding: 0 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      cursor: pointer;
-      color: var(--green);
-      font-weight: 700;
-    }
-
-    .scroll {
-      position: relative;
-      z-index: 1;
-      padding: 14px 12px 92px;
-      overflow-y: auto;
-      min-height: calc(100vh - 70px);
-    }
-
-    .hero,
-    .panel,
-    .detail-panel {
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      overflow: hidden;
-      box-shadow: 0 14px 40px rgba(0,0,0,.28);
-    }
-
-    .hero {
-      padding: 16px;
-      position: relative;
-      margin-bottom: 14px;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: auto -18% -40% auto;
-      width: 170px;
-      height: 170px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,207,255,.24), transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .hero-copy h2 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 20px;
-      line-height: 1.2;
-      margin-top: 6px;
-      max-width: 200px;
-    }
-
-    .hero-copy p {
-      margin-top: 7px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.45;
-    }
-
-    .locker-badge {
-      padding: 7px 10px;
-      border-radius: 999px;
-      background: rgba(0,255,136,.12);
-      border: 1px solid rgba(0,255,136,.22);
-      color: var(--green);
-      font-weight: 700;
-      font-size: 12px;
-    }
-
-    .hero-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-
-    .stat-tile {
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.06);
-      border-radius: 16px;
-      padding: 10px;
-    }
-
-    .stat-tile span {
-      display: block;
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: .6px;
-      text-transform: uppercase;
-    }
-
-    .stat-tile strong {
-      display: block;
-      margin-top: 5px;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 16px;
-    }
-
-    .panel {
-      padding: 14px;
-      margin-bottom: 14px;
-    }
-
-    .panel-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .panel-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 12px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .tabs {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      padding-bottom: 2px;
-      scrollbar-width: none;
-    }
-
-    .tabs::-webkit-scrollbar { display: none; }
-
-    .tab {
-      height: 34px;
-      border-radius: 999px;
-      padding: 0 14px;
-      white-space: nowrap;
-      font-size: 12px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-
-    .tab.active {
-      color: var(--green);
-      border-color: rgba(0,255,136,.28);
-      background: linear-gradient(180deg, rgba(0,255,136,.14), rgba(255,255,255,.03));
-      box-shadow: 0 0 0 1px rgba(0,255,136,.08), 0 10px 26px rgba(0,255,136,.12);
-    }
-
-    .loadout-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-
-    .loadout-slot {
-      border-radius: 18px;
-      padding: 12px 10px;
-      cursor: pointer;
-      text-align: left;
-      min-height: 118px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .loadout-slot.active {
-      border-color: rgba(0,207,255,.28);
-      box-shadow: 0 12px 30px rgba(0,207,255,.12);
-      background: linear-gradient(180deg, rgba(0,207,255,.12), rgba(255,255,255,.04));
-    }
-
-    .slot-icon {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      background: rgba(255,255,255,.06);
-      font-size: 22px;
-      margin-bottom: 12px;
-    }
-
-    .loadout-slot strong { display: block; font-size: 13px; }
-    .loadout-slot span { display: block; margin-top: 4px; color: var(--muted); font-size: 11px; }
-
-    .inventory-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    .inventory-card {
-      border-radius: 18px;
-      padding: 12px;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      min-height: 156px;
-    }
-
-    .inventory-card.active {
-      border-color: rgba(255,200,64,.28);
-      box-shadow: 0 12px 34px rgba(255,200,64,.12);
-    }
-
-    .inventory-card::before {
-      content: "";
-      position: absolute;
-      inset: auto -20px -38px auto;
-      width: 84px;
-      height: 84px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,.12), transparent 70%);
-      pointer-events: none;
-    }
-
-    .card-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      height: 22px;
-      padding: 0 8px;
-      border-radius: 999px;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: .8px;
-      margin-bottom: 12px;
-      border: 1px solid rgba(255,255,255,.08);
-      color: var(--cyan);
-      background: rgba(0,207,255,.08);
-    }
-
-    .inventory-icon {
-      width: 54px;
-      height: 54px;
-      border-radius: 16px;
-      display: grid;
-      place-items: center;
-      font-size: 26px;
-      margin-bottom: 12px;
-      background: rgba(255,255,255,.06);
-    }
-
-    .inventory-card h3 {
-      font-size: 13px;
-      line-height: 1.25;
-      margin-bottom: 6px;
-    }
-
-    .inventory-card p {
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.4;
-    }
-
-    .meta-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .qty {
-      color: var(--gold);
-      font-weight: 700;
-      font-size: 12px;
-    }
-
-    .rarity {
-      color: var(--green);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .6px;
-      text-transform: uppercase;
-    }
-
-    .detail-panel {
-      padding: 14px;
-    }
-
-    .detail-top {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .detail-icon {
-      width: 58px;
-      height: 58px;
-      border-radius: 18px;
-      display: grid;
-      place-items: center;
-      font-size: 28px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.08);
-      flex-shrink: 0;
-    }
-
-    .detail-panel h3 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 15px;
-      line-height: 1.3;
-    }
-
-    .detail-panel p {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.45;
-      margin-top: 5px;
-    }
-
-    .detail-bars {
-      display: grid;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .detail-line span {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 5px;
-    }
-
-    .bar {
-      height: 8px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.06);
-      overflow: hidden;
-    }
-
-    .bar i {
-      display: block;
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, var(--cyan), var(--green));
-    }
-
-    .detail-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .detail-action {
-      height: 42px;
-      border-radius: 14px;
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    .detail-action.primary {
-      color: #001a10;
-      background: linear-gradient(135deg, var(--green), #86ffca);
-      border-color: transparent;
-    }
-
-    .detail-action.alt {
-      color: var(--cyan);
-      border-color: rgba(0,207,255,.24);
-      background: rgba(0,207,255,.08);
-    }
-
-    .footer-nav {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: 0;
-      width: var(--phone);
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      padding: 10px 12px 12px;
-      background: linear-gradient(180deg, rgba(8,12,20,.2), rgba(8,12,20,.96));
-      border-top: 1px solid rgba(255,255,255,.06);
-      backdrop-filter: blur(12px);
-    }
-
-    .nav-btn {
-      min-height: 56px;
-      border-radius: 18px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      cursor: pointer;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .7px;
-    }
-
-    .nav-btn.active {
-      color: var(--green);
-      border-color: rgba(0,255,136,.28);
-      background: linear-gradient(180deg, rgba(0,255,136,.14), rgba(255,255,255,.03));
-    }
-
-    .toast {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%) translateY(22px);
-      bottom: 86px;
-      min-width: 180px;
-      max-width: 300px;
-      padding: 11px 14px;
-      border-radius: 14px;
-      background: rgba(6,8,15,.94);
-      border: 1px solid rgba(255,255,255,.08);
-      text-align: center;
-      font-size: 13px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .2s ease, transform .2s ease;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Items – Daya Pass Arena</title>
+  <link rel="stylesheet" href="items.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 </head>
 <body>
   <div class="phone">
-    <header class="topbar">
-      <div class="topbar-left">
-        <button class="icon-btn" onclick="window.location.href='index.html'"><span class="icon-back"></span></button>
-        <div>
-          <div class="eyebrow">Inventory Grid</div>
-          <div class="title">Items</div>
+    <div class="bg-orb bg-orb-left"></div>
+    <div class="bg-orb bg-orb-right"></div>
+    <div class="shell">
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="currency"><span class="coin-icon">🪙</span><span id="coins">24,850</span></div>
+    <div class="top-title">ROYAL ARENA</div>
+    <div class="currency"><span class="gem-icon">💎</span><span id="gems">480</span></div>
+  </div>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <a href="index.html" class="back-btn" aria-label="Go back to home">←</a>
+    <div class="season-badge">● SEASON 7</div>
+    <h1 class="page-title">ITEMS</h1>
+    <div class="live-badge">47.6K LIVE</div>
+  </div>
+
+  <section class="collection-hero">
+    <div class="collection-copy">
+      <div class="collection-kicker">LOADOUT CONTROL</div>
+      <h2>Build a sharper arena style for every match.</h2>
+      <p>Swap dice, pawns, and boards on the fly. Your equipped picks update instantly.</p>
+    </div>
+    <div class="collection-stats">
+      <div class="collection-stat">
+        <span class="stat-value" id="ownedCount">0</span>
+        <span class="stat-label">Owned</span>
+      </div>
+      <div class="collection-stat">
+        <span class="stat-value" id="equippedCount">3</span>
+        <span class="stat-label">Equipped</span>
+      </div>
+      <div class="collection-stat wide">
+        <span class="stat-value" id="rareCount">0</span>
+        <span class="stat-label">Rare+</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab active" data-tab="inventory">🎒 Inventory</button>
+    <button class="tab" data-tab="loadout">⚔️ Loadout</button>
+    <button class="tab" data-tab="dice">🎲 Dice</button>
+    <button class="tab" data-tab="pawns">♟️ Pawns</button>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main class="content-area">
+
+    <!-- ── INVENTORY TAB ── -->
+    <section class="tab-panel active" id="panel-inventory">
+      <div class="panel-intro">
+        <p>All items you own. Tap an item to equip it in your loadout.</p>
+      </div>
+
+      <div class="inv-section">
+        <div class="inv-section-label">🎲 DICE SKINS</div>
+        <div class="item-grid" id="inv-dice-grid"></div>
+      </div>
+
+      <div class="inv-section">
+        <div class="inv-section-label">♟️ PAWN SKINS</div>
+        <div class="item-grid" id="inv-pawn-grid"></div>
+      </div>
+
+      <div class="inv-section">
+        <div class="inv-section-label">🎴 BOARDS</div>
+        <div class="item-grid" id="inv-board-grid"></div>
+      </div>
+    </section>
+
+    <!-- ── LOADOUT TAB ── -->
+    <section class="tab-panel" id="panel-loadout">
+      <div class="panel-intro"><p>Equip your active dice, pawn and board for all game modes.</p></div>
+      <div class="loadout-grid">
+        <div class="loadout-slot" id="slot-dice">
+          <div class="slot-label">ACTIVE DICE</div>
+          <div class="slot-preview" id="preview-dice">
+            <div class="slot-icon">🎲</div>
+            <div class="slot-name">Classic Cube</div>
+          </div>
+          <button class="slot-change-btn" data-type="dice">Change</button>
+        </div>
+        <div class="loadout-slot" id="slot-pawn">
+          <div class="slot-label">ACTIVE PAWN</div>
+          <div class="slot-preview" id="preview-pawn">
+            <div class="slot-icon">♟️</div>
+            <div class="slot-name">Default Pawn</div>
+          </div>
+          <button class="slot-change-btn" data-type="pawn">Change</button>
+        </div>
+        <div class="loadout-slot" id="slot-board">
+          <div class="slot-label">ACTIVE BOARD</div>
+          <div class="slot-preview" id="preview-board">
+            <div class="slot-icon">🗺️</div>
+            <div class="slot-name">Ice Kingdom</div>
+          </div>
+          <button class="slot-change-btn" data-type="board">Change</button>
         </div>
       </div>
-      <button class="tiny-btn" id="refreshBtn">Refresh</button>
-    </header>
+    </section>
 
-    <div class="scroll">
-      <section class="hero">
-        <div class="hero-head">
-          <div class="hero-copy">
-            <div class="eyebrow">Loadout Locker</div>
-            <h2>Equip faster. Switch smarter.</h2>
-            <p>Keep your best boosts, board skins, and tactical tools ready without opening long menus.</p>
-          </div>
-          <div class="locker-badge" id="heroMode">Rank Set</div>
-        </div>
-        <div class="hero-stats">
-          <div class="stat-tile"><span>Equipped</span><strong id="equippedCount">04</strong></div>
-          <div class="stat-tile"><span>Boost Stock</span><strong id="stockCount">15</strong></div>
-          <div class="stat-tile"><span>Rare Items</span><strong id="rareCount">06</strong></div>
-        </div>
-      </section>
+    <!-- ── DICE TAB ── -->
+    <section class="tab-panel" id="panel-dice">
+      <div class="panel-intro"><p>Browse and equip your dice skins.</p></div>
+      <div class="item-grid" id="dice-equip-grid"></div>
+    </section>
 
-      <section class="panel">
-        <div class="panel-head">
-          <div class="panel-title">Quick Set</div>
-          <div class="tabs" id="modeTabs">
-            <button class="tab active" data-mode="ranked">Ranked</button>
-            <button class="tab" data-mode="casual">Casual</button>
-            <button class="tab" data-mode="event">Event</button>
-          </div>
-        </div>
-        <div class="loadout-grid" id="loadoutGrid"></div>
-      </section>
+    <!-- ── PAWNS TAB ── -->
+    <section class="tab-panel" id="panel-pawns">
+      <div class="panel-intro"><p>Browse and equip your pawn skins.</p></div>
+      <div class="item-grid" id="pawn-equip-grid"></div>
+    </section>
 
-      <section class="panel">
-        <div class="panel-head">
-          <div class="panel-title">Inventory</div>
-          <div class="tabs" id="categoryTabs">
-            <button class="tab active" data-kind="boosts">Boosts</button>
-            <button class="tab" data-kind="skins">Skins</button>
-            <button class="tab" data-kind="utility">Utility</button>
-          </div>
-        </div>
-        <div class="inventory-grid" id="inventoryGrid"></div>
-      </section>
+  </main>
 
-      <section class="detail-panel">
-        <div class="detail-top">
-          <div class="detail-icon" id="detailIcon">⚡</div>
-          <div>
-            <div class="eyebrow">Selected Item</div>
-            <h3 id="detailTitle">XP Rush</h3>
-            <p id="detailText">Temporary XP acceleration for long ranked sessions.</p>
-          </div>
-        </div>
-        <div class="detail-bars">
-          <div class="detail-line">
-            <span><b>Impact</b><b id="impactValue">78%</b></span>
-            <div class="bar"><i id="impactBar" style="width:78%"></i></div>
-          </div>
-          <div class="detail-line">
-            <span><b>Cooldown</b><b id="cooldownValue">18%</b></span>
-            <div class="bar"><i id="cooldownBar" style="width:18%"></i></div>
-          </div>
-        </div>
-        <div class="detail-actions">
-          <button class="detail-action primary" id="equipBtn">Equip</button>
-          <button class="detail-action alt" id="useBtn">Use Now</button>
-        </div>
-      </section>
+    </div>
+
+  <!-- SHOP FAB -->
+  <button class="shop-fab" id="shopBtn" title="Go to Shop">
+    <span class="shop-fab-icon">🛒</span>
+    <span class="shop-fab-label">SHOP</span>
+  </button>
+
+  <!-- EQUIP MODAL -->
+  <div class="modal-overlay" id="equipModal">
+    <div class="modal-card">
+      <button class="modal-close" id="modalClose">✕</button>
+      <div class="modal-item-preview" id="modalPreview"></div>
+      <div class="modal-item-name" id="modalName"></div>
+      <div class="modal-item-rarity" id="modalRarity"></div>
+      <div class="modal-item-desc" id="modalDesc"></div>
+      <button class="modal-equip-btn" id="modalEquipBtn">⚔️ EQUIP</button>
     </div>
   </div>
 
-  <nav class="footer-nav">
-    <button class="nav-btn" onclick="window.location.href='index.html'">Home</button>
-    <button class="nav-btn active">Items</button>
-    <button class="nav-btn" onclick="window.location.href='shop.html'">Shop</button>
-    <button class="nav-btn" onclick="window.location.href='friends.html'">Friends</button>
-  </nav>
-
-  <div class="toast" id="toast"></div>
-
-  <script>
-    const loadouts = {
-      ranked: [
-        { icon: '⚡', name: 'XP Rush', note: 'Boost live' },
-        { icon: '🧿', name: 'Rank Shield', note: 'Loss cover' },
-        { icon: '🎲', name: 'Prism Pass', note: 'Skin active' },
-      ],
-      casual: [
-        { icon: '🌈', name: 'Party Board', note: 'Color set' },
-        { icon: '💬', name: 'Quick Chat', note: 'Emotes ready' },
-        { icon: '🍀', name: 'Lucky Roll', note: 'Fun mode' },
-      ],
-      event: [
-        { icon: '🏁', name: 'Sprint Card', note: 'Event boost' },
-        { icon: '👑', name: 'Festival Frame', note: 'Theme live' },
-        { icon: '🛡', name: 'Safe Save', note: 'Progress guard' },
-      ],
-    };
-
-    const items = {
-      boosts: [
-        { id: 'xp', badge: 'Boost', icon: '⚡', name: 'XP Rush', text: 'Double XP for three matches with stack-safe timing.', qty: 'x4', rarity: 'Rare', impact: 78, cooldown: 18 },
-        { id: 'shield', badge: 'Defense', icon: '🧿', name: 'Rank Shield', text: 'Cancels one rank-point loss after a defeat.', qty: 'x2', rarity: 'Epic', impact: 66, cooldown: 42 },
-        { id: 'coins', badge: 'Boost', icon: '💰', name: 'Coin Burst', text: 'Adds a clean payout spike to every win.', qty: 'x6', rarity: 'Rare', impact: 70, cooldown: 24 },
-        { id: 'focus', badge: 'Support', icon: '🎯', name: 'Focus Pulse', text: 'Raises opening-roll consistency in tense matches.', qty: 'x3', rarity: 'Epic', impact: 84, cooldown: 31 },
-      ],
-      skins: [
-        { id: 'board', badge: 'Skin', icon: '🧩', name: 'Temple Board', text: 'Stone-gold arena surface with soft torch edge light.', qty: 'Owned', rarity: 'Legend', impact: 58, cooldown: 8 },
-        { id: 'trail', badge: 'Skin', icon: '🌊', name: 'Cyber Trail', text: 'Animated movement streak for premium turns.', qty: 'Owned', rarity: 'Rare', impact: 62, cooldown: 10 },
-        { id: 'frame', badge: 'Skin', icon: '👑', name: 'Champion Frame', text: 'Sharp profile frame built for leaderboard flex.', qty: 'Owned', rarity: 'Epic', impact: 55, cooldown: 12 },
-        { id: 'dice', badge: 'Skin', icon: '🎲', name: 'Neon Pass', text: 'Compact pass skin synced with the shop art style.', qty: 'Owned', rarity: 'Rare', impact: 64, cooldown: 14 },
-      ],
-      utility: [
-        { id: 'room', badge: 'Utility', icon: '🗝', name: 'Room Key', text: 'Launches a private match room with pinned code.', qty: 'x2', rarity: 'Rare', impact: 60, cooldown: 21 },
-        { id: 'chat', badge: 'Utility', icon: '💬', name: 'Quick Chat Pack', text: 'Preset callouts for faster squad coordination.', qty: 'x8', rarity: 'Core', impact: 44, cooldown: 6 },
-        { id: 'map', badge: 'Utility', icon: '🗺', name: 'Map Vote', text: 'Overrides one arena veto during party vote phase.', qty: 'x1', rarity: 'Epic', impact: 73, cooldown: 36 },
-        { id: 'focuspass', badge: 'Utility', icon: '🔕', name: 'Focus Pass', text: 'Silences non-match alerts for one hour.', qty: 'x5', rarity: 'Core', impact: 49, cooldown: 9 },
-      ],
-    };
-
-    let currentMode = 'ranked';
-    let currentKind = 'boosts';
-    let selectedItem = items.boosts[0];
-    let toastTimer;
-
-    const loadoutGrid = document.getElementById('loadoutGrid');
-    const inventoryGrid = document.getElementById('inventoryGrid');
-    const toast = document.getElementById('toast');
-
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
-    }
-
-    function renderLoadout() {
-      document.getElementById('heroMode').textContent = currentMode.charAt(0).toUpperCase() + currentMode.slice(1) + ' Set';
-      loadoutGrid.innerHTML = '';
-      loadouts[currentMode].forEach((slot, index) => {
-        const card = document.createElement('button');
-        card.className = 'loadout-slot' + (index === 0 ? ' active' : '');
-        card.innerHTML = '<div class="slot-icon">' + slot.icon + '</div><strong>' + slot.name + '</strong><span>' + slot.note + '</span>';
-        card.addEventListener('click', () => {
-          document.querySelectorAll('.loadout-slot').forEach((node) => node.classList.remove('active'));
-          card.classList.add('active');
-          showToast(slot.name + ' slotted for ' + currentMode + '.');
-        });
-        loadoutGrid.appendChild(card);
-      });
-    }
-
-    function renderInventory() {
-      inventoryGrid.innerHTML = '';
-      items[currentKind].forEach((item, index) => {
-        const card = document.createElement('button');
-        card.className = 'inventory-card' + (selectedItem.id === item.id ? ' active' : '');
-        card.innerHTML =
-          '<div class="card-badge">' + item.badge + '</div>' +
-          '<div class="inventory-icon">' + item.icon + '</div>' +
-          '<h3>' + item.name + '</h3>' +
-          '<p>' + item.text + '</p>' +
-          '<div class="meta-row"><div class="qty">' + item.qty + '</div><div class="rarity">' + item.rarity + '</div></div>';
-        card.addEventListener('click', () => {
-          selectedItem = item;
-          renderInventory();
-          renderDetail();
-          showToast(item.name + ' selected.');
-        });
-        inventoryGrid.appendChild(card);
-      });
-    }
-
-    function renderDetail() {
-      document.getElementById('detailIcon').textContent = selectedItem.icon;
-      document.getElementById('detailTitle').textContent = selectedItem.name;
-      document.getElementById('detailText').textContent = selectedItem.text;
-      document.getElementById('impactValue').textContent = selectedItem.impact + '%';
-      document.getElementById('cooldownValue').textContent = selectedItem.cooldown + '%';
-      document.getElementById('impactBar').style.width = selectedItem.impact + '%';
-      document.getElementById('cooldownBar').style.width = selectedItem.cooldown + '%';
-    }
-
-    function updateStats() {
-      document.getElementById('equippedCount').textContent = String(loadouts[currentMode].length).padStart(2, '0');
-      document.getElementById('stockCount').textContent = String(items[currentKind].length * 3).padStart(2, '0');
-      document.getElementById('rareCount').textContent = String(items[currentKind].filter((item) => item.rarity !== 'Core').length).padStart(2, '0');
-    }
-
-    document.querySelectorAll('#modeTabs .tab').forEach((button) => {
-      button.addEventListener('click', () => {
-        document.querySelectorAll('#modeTabs .tab').forEach((node) => node.classList.remove('active'));
-        button.classList.add('active');
-        currentMode = button.dataset.mode;
-        renderLoadout();
-        updateStats();
-        showToast(currentMode + ' loadout ready.');
-      });
-    });
-
-    document.querySelectorAll('#categoryTabs .tab').forEach((button) => {
-      button.addEventListener('click', () => {
-        document.querySelectorAll('#categoryTabs .tab').forEach((node) => node.classList.remove('active'));
-        button.classList.add('active');
-        currentKind = button.dataset.kind;
-        selectedItem = items[currentKind][0];
-        renderInventory();
-        renderDetail();
-        updateStats();
-        showToast(currentKind + ' inventory loaded.');
-      });
-    });
-
-    document.getElementById('equipBtn').addEventListener('click', () => {
-      showToast(selectedItem.name + ' equipped to active set.');
-    });
-
-    document.getElementById('useBtn').addEventListener('click', () => {
-      showToast(selectedItem.name + ' used instantly.');
-    });
-
-    document.getElementById('refreshBtn').addEventListener('click', () => {
-      items[currentKind].push(items[currentKind].shift());
-      selectedItem = items[currentKind][0];
-      renderInventory();
-      renderDetail();
-      showToast('Inventory order refreshed.');
-    });
-
-    renderLoadout();
-    renderInventory();
-    renderDetail();
-    updateStats();
-  </script>
+  <script src="items.js"></script>
 </body>
 </html>
