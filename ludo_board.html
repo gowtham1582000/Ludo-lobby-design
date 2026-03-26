@@ -1,473 +1,388 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Four Player Ludo Board</title>
+  <title>Ludo Board</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;900&display=swap');
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #050e1f;
-    }
-
+    * { box-sizing:border-box; margin:0; padding:0; }
+    html { background:#050e1f; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
     body {
-      background: radial-gradient(ellipse at center, #0f3460 0%, #0a1628 70%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 390px;
-      height: 844px;
-      overflow: hidden;
-      font-family: 'Fredoka One', cursive;
-      margin: 0 auto;
+      background:radial-gradient(ellipse at center,#0f3460 0%,#0a1628 70%);
+      display:flex; align-items:center; justify-content:center;
+      width:390px; height:844px;
     }
-
-    /*
-    STEP = 37px (block=34, gap=3)
-    
-    Rectangle: 25 cols × 13 rows
-      rect_left = 89, rect_top = 180
-      center col 12 → center_x = 89 + 12*37 = 89+444 = 533
-
-    TOP T-ARM (y = 180 - 37 = 143):
-      Center junction x = 533, y = 143
-      P1 arm: 6 blocks LEFT of junction
-        x = 533-37=496, 459, 422, 385, 348, 311  (6 blocks)
-        P1 circle at x = 311-37-30 = 244 (circle width=60, so left=244)
-      P2 arm: 6 blocks RIGHT of junction
-        x = 533+37=570, 607, 644, 681, 718, 755  (6 blocks)
-        P2 circle at x = 755+37 = 792
-
-    BOTTOM T-ARM (y = 180 + 12*37 + 37 = 180+444+37 = 661):
-      Same: P3 left 6, P4 right 6
-
-    After rotate(90deg): 1000px wide becomes height, 700px tall becomes width
-    To fit 390x844:
-      scale for width:  390 / 700 = 0.557
-      scale for height: 844 / 1000 = 0.844
-      Use min: 0.557, but let's use 0.46 to add breathing room
-  */
-
-    .wrap {
-      position: relative;
-      width: 1000px;
-      height: 700px;
-      left: 29px;
-      transform: rotate(90deg) scale(0.46);
-      transform-origin: center center;
-      flex-shrink: 0;
+    #clip {
+      width:390px; height:844px; overflow:hidden;
+      display:flex; align-items:center; justify-content:center;
+      background:radial-gradient(ellipse at center,#0f3460 0%,#0a1628 70%);
     }
+    #board { position:relative; transform:rotate(90deg) scale(0.513); transform-origin:center center; flex-shrink:0; }
 
-    .inner-bg {
-      position: absolute;
-      left: 126px;
-      top: 217px;
-      width: 850px;
-      height: 404px;
-      background: #1e3278;
-      border-radius: 4px;
-      z-index: 1;
+    /* Token animations */
+    @keyframes floatA { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-4px) scale(1.06)} }
+    @keyframes floatB { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-4px) scale(1.06)} }
+    @keyframes pulse  { 0%,100%{box-shadow:var(--ts)} 50%{box-shadow:var(--tp)} }
+
+    .tok-wrap {
+      position:absolute; cursor:pointer; z-index:25;
+      animation: floatA 2s ease-in-out infinite;
     }
-
-    .bl {
-      position: absolute;
-      width: 34px;
-      height: 34px;
-      border-radius: 5px;
-      background: linear-gradient(145deg, #f5e6c8, #e8d5a8);
-      border: 2px solid #c4a96a;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 2px 4px rgba(0, 0, 0, 0.2);
-      cursor: pointer;
-      z-index: 3;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 900;
-      color: #444;
-      transition: transform 0.1s;
+    .tok-wrap:nth-child(2) { animation-name:floatB; animation-delay:0.5s; }
+    .tok-wrap:nth-child(3) { animation-delay:1s; }
+    .tok-wrap:nth-child(4) { animation-delay:1.5s; }
+    .tok-wrap:hover .tok-coin {
+      transform: scale(1.35) translateY(-5px);
+      filter: brightness(1.45) drop-shadow(0 0 8px var(--tg));
     }
-
-    .bl:hover {
-      transform: scale(1.1);
-      z-index: 20;
+    .tok-wrap:active .tok-coin { transform: scale(0.85); }
+    .tok-coin {
+      width:100%; height:100%; border-radius:50%;
+      transition: transform 0.18s ease, filter 0.18s ease;
+      display:flex; align-items:center; justify-content:center;
+      position:relative; overflow:hidden;
     }
-
-    .arm-p1 {
-      background: linear-gradient(145deg, #ff7070, #e63946);
-      border-color: #a01020;
-      box-shadow: 0 0 7px #e6394655;
-      color: white;
+    /* shine overlay inside coin */
+    .tok-coin::before {
+      content:''; position:absolute;
+      top:10%; left:15%; width:38%; height:32%;
+      background:radial-gradient(ellipse,rgba(255,255,255,0.7) 0%,rgba(255,255,255,0) 100%);
+      border-radius:50%; pointer-events:none;
     }
-
-    .arm-p2 {
-      background: linear-gradient(145deg, #60e880, #2dc653);
-      border-color: #1a7a30;
-      box-shadow: 0 0 7px #2dc65355;
-      color: white;
-    }
-
-    .arm-p3 {
-      background: linear-gradient(145deg, #ffe570, #f4c430);
-      border-color: #c89010;
-      box-shadow: 0 0 7px #f4c43055;
-      color: #3a2a00;
-    }
-
-    .arm-p4 {
-      background: linear-gradient(145deg, #70b0ff, #3a86ff);
-      border-color: #1050b8;
-      box-shadow: 0 0 7px #3a86ff55;
-      color: white;
-    }
-
-    .safe {
-      background: linear-gradient(145deg, #ff6eb0, #e0206e);
-      border-color: #a0005a;
-      box-shadow: 0 0 6px #e0206e55;
-    }
-
-    .s {
-      position: absolute;
-      width: 34px;
-      height: 34px;
-      background: linear-gradient(145deg, #eaeaea, #ababab);
-      border: 2px solid #888;
-      border-radius: 5px;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 2px 4px rgba(0, 0, 0, 0.3);
-      z-index: 6;
-    }
-
-    .home {
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.62rem;
-      font-weight: 900;
-      font-family: 'Nunito', sans-serif;
-      color: white;
-      border: 3px solid rgba(255, 255, 255, 0.3);
-      z-index: 8;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .home .ico {
-      font-size: 1.3rem;
-      line-height: 1.1;
-    }
-
-    .h-red {
-      background: radial-gradient(circle, #ff6060, #e63946, #a01020);
-      box-shadow: 0 0 16px #e6394699;
-    }
-
-    .h-green {
-      background: radial-gradient(circle, #60e880, #2dc653, #1a7a30);
-      box-shadow: 0 0 16px #2dc65399;
-    }
-
-    .h-yellow {
-      background: radial-gradient(circle, #ffe570, #f4c430, #c89010);
-      box-shadow: 0 0 16px #f4c43099;
-      color: #3a2a00;
-    }
-
-    .h-blue {
-      background: radial-gradient(circle, #70b0ff, #3a86ff, #1050b8);
-      box-shadow: 0 0 16px #3a86ff99;
-    }
-
-    .barrel {
-      position: absolute;
-      border-radius: 14px;
-      display: flex;
-      overflow: hidden;
-      border: 3px solid rgba(0, 0, 0, 0.3);
-      z-index: 5;
-    }
-
-    .barrel.glow {
-      box-shadow: 0 0 22px 7px rgba(255, 215, 0, 0.6), 0 0 48px 14px rgba(255, 215, 0, 0.22);
-    }
-
-    .barrel.dim {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-      filter: brightness(0.88);
-    }
-
-    .bh {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-    }
-
-    .bh:first-child {
-      border-right: 2px solid rgba(0, 0, 0, 0.2);
-    }
-
-    .bh-red {
-      background: linear-gradient(160deg, #ff6060, #e63946, #a01020);
-    }
-
-    .bh-green {
-      background: linear-gradient(160deg, #50e870, #2dc653, #1a7a30);
-    }
-
-    .bh-yellow {
-      background: linear-gradient(160deg, #ffe566, #f4c430, #c89010);
-    }
-
-    .bh-blue {
-      background: linear-gradient(160deg, #60a8ff, #3a86ff, #1050b8);
-    }
-
-    .dots {
-      display: grid;
-      grid-template-columns: repeat(2, 10px);
-      grid-template-rows: repeat(2, 10px);
-      gap: 4px;
-    }
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: rgba(0, 0, 0, 0.52);
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6);
-    }
-
-    .bh-yellow .dot {
-      background: rgba(80, 50, 0, 0.42);
-    }
-
-    .blbl {
-      font-size: 0.5rem;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 900;
-      color: rgba(255, 255, 255, 0.95);
-      text-transform: uppercase;
-    }
-
-    .bh-yellow .blbl {
-      color: #3a2a00;
-    }
-
-    .gi {
-      position: absolute;
-      font-size: 0.85rem;
-      color: rgba(100, 230, 160, 0.95);
-      text-shadow: 0 0 8px rgba(80, 255, 140, 0.7);
-      z-index: 10;
+    /* bottom shadow inside coin */
+    .tok-coin::after {
+      content:''; position:absolute;
+      bottom:8%; right:12%; width:32%; height:26%;
+      background:radial-gradient(ellipse,rgba(0,0,0,0.35) 0%,rgba(0,0,0,0) 100%);
+      border-radius:50%; pointer-events:none;
     }
   </style>
 </head>
-
 <body>
-  <div class="wrap">
+<div id="clip"><div id="board"></div></div>
+<script>
+const BL   = 36;
+const GAP  = 4;
+const S    = BL + GAP;   // 40
+const CW   = 1645;
+const CH   = 760;
+const COLS = 25;
+const ROWS = 13;
+const RL   = 325;
+const RT   = 122;
 
-    <div class="inner-bg"></div>
-    <div id="rect-blocks"></div>
+const cx = c => RL + c * S;
+const ry = r => RT + r * S;
 
-    <!--
-    TOP T-ARM  (arm_y=143, center_x=533, rect_top=180)
+const CC_TOP = 11;   // 12th block — P1/P2 connector
+const CC_BOT = 13;   // 14th block — P3/P4 connector
+const CX_TOP = cx(CC_TOP);
+const CX_BOT = cx(CC_BOT);
 
-    P1 arm: 6 RED blocks LEFT of center
-      x = 496, 459, 422, 385, 348, 311   (6 blocks)
-    P1 home circle: left = 311-37-13 = 261, top = 126
+// Keep CC as alias for top (used in T-arm loops)
+const CC = CC_TOP;
+const CX = CX_TOP;
 
-    Center junction (silver): x=533, y=143
-    Silver stem down: x=533, y=180 (rect row 0)
+const ARM_N     = 7;
+const ARM_TOP_Y = 2;
+const ARM_BOT_Y = 722;
 
-    P2 arm: 6 GREEN blocks RIGHT of center
-      x = 570, 607, 644, 681, 718, 755   (6 blocks)
-    P2 home circle: left = 755+37-10 = 782, top = 126
-  -->
+const stemTopYs = [42, 82];
+const stemBotYs = [642, 682];
 
-    <!-- P1 HOME -->
-    <div class="home h-red" style="left:238px; top:46px;">
-      <div class="ico">♟</div>
-      <div>P1</div>
-    </div>
-    <!-- P1 ARM: 6 red blocks -->
-    <div class="bl arm-p1" style="left:311px; top:63px;"></div>
-    <div class="bl arm-p1" style="left:348px; top:63px;"></div>
-    <div class="bl arm-p1" style="left:385px; top:63px;"></div>
-    <div class="bl arm-p1" style="left:422px; top:63px;"></div>
-    <div class="bl arm-p1" style="left:459px; top:63px;"></div>
-    <div class="bl arm-p1" style="left:496px; top:63px;"></div>
+const HOME_D    = 70;
+const P1_HOME_X = cx(CC_TOP - ARM_N) - S - HOME_D;
+const P2_HOME_X = cx(CC_TOP + ARM_N) + S;
+const P3_HOME_X = cx(CC_BOT - ARM_N) - S - HOME_D;
+const P4_HOME_X = cx(CC_BOT + ARM_N) + S;
+const HOME_TOP_Y = Math.max(0, ARM_TOP_Y + BL/2 - HOME_D/2);
+const HOME_BOT_Y = Math.min(CH - HOME_D, ARM_BOT_Y + BL/2 - HOME_D/2);
 
-    <!-- CENTER JUNCTION (silver) -->
-    <div class="s" style="left:533px; top:63px;"></div>
-    <div class="gi" style="left:536px; top:66px;">🧍</div>
+// Top U-connector: 3 each side of CC_TOP (col11)
+const U_L_TOP = CC_TOP - 3;   // col8
+const U_R_TOP = CC_TOP + 3;   // col14
+const ULX_TOP = cx(U_L_TOP);
+const URX_TOP = cx(U_R_TOP);
 
-    <!-- P2 ARM: 6 green blocks -->
-    <div class="bl arm-p2" style="left:570px; top:63px;"></div>
-    <div class="bl arm-p2" style="left:607px; top:63px;"></div>
-    <div class="bl arm-p2" style="left:644px; top:63px;"></div>
-    <div class="bl arm-p2" style="left:681px; top:63px;"></div>
-    <div class="bl arm-p2" style="left:718px; top:63px;"></div>
-    <div class="bl arm-p2" style="left:755px; top:63px;"></div>
-    <!-- P2 HOME -->
-    <div class="home h-green" style="left:802px; top:46px;">
-      <div class="ico">♟</div>
-      <div>P2</div>
-    </div>
+// Bottom U-connector: 3 each side of CC_BOT (col13)
+const U_L_BOT = CC_BOT - 3;   // col10
+const U_R_BOT = CC_BOT + 3;   // col16
+const ULX_BOT = cx(U_L_BOT);
+const URX_BOT = cx(U_R_BOT);
 
-    <!-- SILVER STEM into rect (bridge gap) -->
-    <div class="s" style="left:533px; top:97px;"></div>
-    <div class="s" style="left:533px; top:134px;"></div>
-    <div class="s" style="left:533px; top:157px;"></div>
-    <div class="s" style="left:533px; top:180px;"></div>
+const TOP_ENTRY_Y = ry(0);
+const TOP_HBAR_Y  = ry(1);
+const TOP_LEGS_Y  = ry(2);
+const BOT_EXIT_Y  = ry(12);
+const BOT_HBAR_Y  = ry(11);
+const BOT_LEGS_Y  = ry(10);
 
-    <!-- ── U-CONNECTOR INSIDE ── -->
-    <div class="s" style="left:533px; top:217px;"></div>
-    <div class="s" style="left:422px; top:254px;"></div>
-    <div class="s" style="left:459px; top:254px;"></div>
-    <div class="s" style="left:496px; top:254px;"></div>
-    <div class="s" style="left:533px; top:254px;"></div>
-    <div class="s" style="left:570px; top:254px;"></div>
-    <div class="s" style="left:607px; top:254px;"></div>
-    <div class="s" style="left:644px; top:254px;"></div>
-    <div class="s" style="left:422px; top:291px;"></div>
-    <div class="s" style="left:644px; top:291px;"></div>
+// Barrel spans exactly from bottom of top legs to top of bottom legs
+const BARREL_TOP  = TOP_LEGS_Y + BL;   // flush no gap
+const BARREL_BOT  = BOT_LEGS_Y;        // flush
+const BARREL_SPAN = BARREL_BOT - BARREL_TOP;
 
-    <!-- TOP BARREL -->
-    <div class="barrel dim" style="left:348px; top:328px; width:370px; height:56px;">
-      <div class="bh bh-red">
-        <div class="dots">
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-        </div>
-        <div class="blbl">P1 · Red</div>
-      </div>
-      <div class="bh bh-green">
-        <div class="dots">
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-        </div>
-        <div class="blbl">P2 · Green</div>
-      </div>
-    </div>
+// Barrel spans exactly flush between top legs bottom and bottom legs top
+const BARREL_AVAIL = BOT_LEGS_Y - (TOP_LEGS_Y + BL);  // available space
+const HALF_GAP  = 8;
+const HALF_H    = Math.floor((BARREL_AVAIL - HALF_GAP) / 2);  // fill all available space
+const BARREL_TOTAL_H = HALF_H * 2 + HALF_GAP;
+// Flush: top barrel starts right at bottom of top legs
+const BARREL_T1 = TOP_LEGS_Y + BL;
+const BARREL_T2 = BARREL_T1 + HALF_H + HALF_GAP;
 
-    <!-- BOTTOM BARREL -->
-    <div class="barrel glow" style="left:348px; top:458px; width:370px; height:56px;">
-      <div class="bh bh-yellow">
-        <div class="dots">
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-        </div>
-        <div class="blbl" style="color:#3a2a00;">P3 · Yellow</div>
-      </div>
-      <div class="bh bh-blue">
-        <div class="dots">
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-        </div>
-        <div class="blbl">P4 · Blue</div>
-      </div>
-    </div>
+// Both barrels at same X position (aligned with U-connectors)
+const TOP_BARREL_LEFT = ULX_TOP;
+const TOP_BARREL_W    = URX_TOP + BL - ULX_TOP;
+const BOT_BARREL_LEFT = ULX_BOT;
+const BOT_BARREL_W    = URX_BOT + BL - ULX_BOT;
 
-    <!-- ── BOTTOM U-CONNECTOR ── -->
-    <div class="s" style="left:422px; top:517px;"></div>
-    <div class="s" style="left:644px; top:517px;"></div>
-    <div class="s" style="left:422px; top:554px;"></div>
-    <div class="s" style="left:459px; top:554px;"></div>
-    <div class="s" style="left:496px; top:554px;"></div>
-    <div class="s" style="left:533px; top:554px;"></div>
-    <div class="s" style="left:570px; top:554px;"></div>
-    <div class="s" style="left:607px; top:554px;"></div>
-    <div class="s" style="left:644px; top:554px;"></div>
-    <div class="s" style="left:533px; top:591px;"></div>
+/* ════ DOM ════ */
+const board = document.getElementById('board');
+board.style.cssText = `width:${CW}px;height:${CH}px;position:relative;`;
 
-    <!-- SILVER STEM out of rect bottom (bridge gap) -->
-    <div class="s" style="left:533px; top:624px;"></div>
-    <div class="s" style="left:533px; top:647px;"></div>
-    <div class="s" style="left:533px; top:684px;"></div>
+function mkEl(x, y, w, h, css) {
+  const d = document.createElement('div');
+  d.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:6px;${css}`;
+  board.appendChild(d); return d;
+}
 
-    <!--
-    BOTTOM T-ARM (arm_y = 661)
-    P3: 6 YELLOW blocks LEFT, P4: 6 BLUE blocks RIGHT
-  -->
-    <!-- P3 HOME -->
-    <div class="home h-yellow" style="left:238px; top:704px;">
-      <div class="ico">♟</div>
-      <div>P3</div>
-    </div>
-    <!-- P3 ARM: 6 yellow blocks -->
-    <div class="bl arm-p3" style="left:311px; top:721px;"></div>
-    <div class="bl arm-p3" style="left:348px; top:721px;"></div>
-    <div class="bl arm-p3" style="left:385px; top:721px;"></div>
-    <div class="bl arm-p3" style="left:422px; top:721px;"></div>
-    <div class="bl arm-p3" style="left:459px; top:721px;"></div>
-    <div class="bl arm-p3" style="left:496px; top:721px;"></div>
+const CREAM  = 'background:linear-gradient(145deg,#f5e6c8,#e8d5a8);border:2.5px solid #c4a96a;box-shadow:inset 0 2px 0 rgba(255,255,255,0.7),0 2px 5px rgba(0,0,0,0.22);z-index:3;';
+const SILVER = 'background:linear-gradient(145deg,#eaeaea,#ababab);border:2.5px solid #999;box-shadow:inset 0 2px 0 rgba(255,255,255,0.9),0 2px 5px rgba(0,0,0,0.3);z-index:6;';
+const PINK   = 'background:linear-gradient(145deg,#ff6eb0,#e0206e);border:2.5px solid #a0005a;box-shadow:0 0 8px #e0206e66;z-index:3;';
+const AP1    = 'background:linear-gradient(145deg,#ff7070,#e63946);border:2.5px solid #a01020;box-shadow:0 0 7px #e6394666;z-index:3;';
+const AP2    = 'background:linear-gradient(145deg,#60e880,#2dc653);border:2.5px solid #1a7a30;box-shadow:0 0 7px #2dc65366;z-index:3;';
+const AP3    = 'background:linear-gradient(145deg,#ffe570,#f4c430);border:2.5px solid #c89010;box-shadow:0 0 7px #f4c43066;z-index:3;';
+const AP4    = 'background:linear-gradient(145deg,#70b0ff,#3a86ff);border:2.5px solid #1050b8;box-shadow:0 0 7px #3a86ff66;z-index:3;';
 
-    <!-- CENTER JUNCTION BOTTOM (silver) -->
-    <div class="s" style="left:533px; top:721px;"></div>
-    <div class="gi" style="left:536px; top:724px;">🧍</div>
+const blk  = (x,y) => mkEl(x,y,BL,BL,CREAM);
+const slv  = (x,y) => mkEl(x,y,BL,BL,SILVER);
+const safe = (x,y) => mkEl(x,y,BL,BL,PINK);
+const ap1  = (x,y) => mkEl(x,y,BL,BL,AP1);
+const ap2  = (x,y) => mkEl(x,y,BL,BL,AP2);
+const ap3  = (x,y) => mkEl(x,y,BL,BL,AP3);
+const ap4  = (x,y) => mkEl(x,y,BL,BL,AP4);
 
-    <!-- P4 ARM: 6 blue blocks -->
-    <div class="bl arm-p4" style="left:570px; top:721px;"></div>
-    <div class="bl arm-p4" style="left:607px; top:721px;"></div>
-    <div class="bl arm-p4" style="left:644px; top:721px;"></div>
-    <div class="bl arm-p4" style="left:681px; top:721px;"></div>
-    <div class="bl arm-p4" style="left:718px; top:721px;"></div>
-    <div class="bl arm-p4" style="left:755px; top:721px;"></div>
-    <!-- P4 HOME -->
-    <div class="home h-blue" style="left:802px; top:704px;">
-      <div class="ico">♟</div>
-      <div>P4</div>
-    </div>
+function arrowSVG(x, y, dir) {
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${BL} ${BL}`);
+  svg.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:${BL}px;height:${BL}px;z-index:14;pointer-events:none;`;
+  const poly = document.createElementNS(ns, 'polygon');
+  const m=BL/2, p=8, e=BL-8;
+  const pts = { r:`${p},${p} ${e},${m} ${p},${e}`, l:`${e},${p} ${p},${m} ${e},${e}`, d:`${p},${p} ${e},${p} ${m},${e}`, u:`${p},${e} ${e},${e} ${m},${p}` }[dir];
+  poly.setAttribute('points', pts);
+  poly.setAttribute('fill', 'rgba(0,0,0,0.82)');
+  poly.setAttribute('stroke', 'rgba(255,255,255,0.35)');
+  poly.setAttribute('stroke-width', '1');
+  poly.setAttribute('stroke-linejoin', 'round');
+  svg.appendChild(poly); board.appendChild(svg);
+}
 
-  </div>
+// ── Home circle: plain coloured ring, tokens placed inside by placeTokensInHome ──
+function homeCircle(bg, sh, x, y) {
+  const d = document.createElement('div');
+  d.style.cssText = `
+    position:absolute;left:${x}px;top:${y}px;
+    width:${HOME_D}px;height:${HOME_D}px;border-radius:50%;
+    background:${bg};
+    box-shadow:${sh},inset 0 4px 8px rgba(255,255,255,0.2),inset 0 -4px 10px rgba(0,0,0,0.45);
+    border:4px solid rgba(255,255,255,0.72);z-index:9;`;
+  board.appendChild(d);
+}
 
-  <script>
-    const STEP = 37, RECT_LEFT = 89, RECT_TOP = 180, COLS = 25, ROWS = 13;
-    const pinkSafe = new Set(['0-6', '0-18', '12-6', '12-18', '3-0', '9-0', '3-24', '9-24']);
-    const rectEl = document.getElementById('rect-blocks');
+// ── Player label shown clearly BESIDE the home circle ──
+function homeLabel(lbl, color, shadow, x, y) {
+  const d = document.createElement('div');
+  // For top players (y near top) → label below; for bottom players → label above
+  const labelY = y < CH/2 ? y + HOME_D + 4 : y - 30;
+  d.style.cssText = `
+    position:absolute;
+    left:${x}px;top:${labelY}px;
+    width:${HOME_D}px;
+    font-family:'Nunito',sans-serif;font-weight:900;font-size:22px;
+    color:${color};text-align:center;letter-spacing:2px;
+    text-shadow:${shadow};
+    z-index:30;pointer-events:none;`;
+  d.textContent = lbl;
+  board.appendChild(d);
+}
 
-    for (let r = 0; r < ROWS; r++) {
-      for (let c = 0; c < COLS; c++) {
-        const isBorder = r === 0 || r === ROWS - 1 || c === 0 || c === COLS - 1;
-        if (!isBorder) continue;
-        if ((r === 0 || r === 12) && c === 12) continue; // silver handles center
-        const div = document.createElement('div');
-        div.className = 'bl' + (pinkSafe.has(`${r}-${c}`) ? ' safe' : '');
-        div.style.left = (RECT_LEFT + c * STEP) + 'px';
-        div.style.top = (RECT_TOP + r * STEP) + 'px';
-        rectEl.appendChild(div);
-      }
+// ── Barrel: two coloured halves with recessed token slots ──
+// Fixed compact size — centered in the available span, NOT stretched
+function barrel(bLeft, bW, bTop, bH, glow, bg1, bg2) {
+  const wrap = document.createElement('div');
+  wrap.style.cssText = `
+    position:absolute;left:${bLeft}px;top:${bTop}px;width:${bW}px;height:${bH}px;
+    border-radius:12px;overflow:hidden;display:flex;flex-direction:row;
+    border:3px solid rgba(0,0,0,0.5);z-index:5;
+    ${glow
+      ? 'box-shadow:0 0 22px 8px rgba(255,215,0,0.6),0 0 44px 14px rgba(255,215,0,0.18);'
+      : 'box-shadow:inset 0 2px 4px rgba(255,255,255,0.08),0 4px 14px rgba(0,0,0,0.6);'}`;
+
+  const makeHalf = (bg, borderRight) => {
+    const half = document.createElement('div');
+    half.style.cssText = `flex:1;background:${bg};display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6px;padding:10px;align-items:center;justify-items:center;
+      ${borderRight ? 'border-right:2px solid rgba(0,0,0,0.35);' : ''}`;
+    for (let i = 0; i < 4; i++) {
+      const slot = document.createElement('div');
+      slot.style.cssText = `
+        width:26px;height:26px;border-radius:50%;flex-shrink:0;
+        background:radial-gradient(circle at 38% 34%, rgba(255,255,255,0.07) 0%, rgba(0,0,0,0.78) 68%);
+        box-shadow:inset 0 3px 8px rgba(0,0,0,0.9),inset 0 1px 4px rgba(0,0,0,0.6);
+        border:1.5px solid rgba(0,0,0,0.65);`;
+      half.appendChild(slot);
     }
-  </script>
-</body>
+    return half;
+  };
 
+  wrap.appendChild(makeHalf(bg1, true));
+  wrap.appendChild(makeHalf(bg2, false));
+  board.appendChild(wrap);
+}
+
+/* ─────────────────── 1. Inner blue bg ─────────────────── */
+{
+  const d = document.createElement('div');
+  d.style.cssText = `position:absolute;
+    left:${cx(1)}px;top:${ry(1)}px;
+    width:${cx(COLS-2)+BL-cx(1)}px;height:${ry(ROWS-2)+BL-ry(1)}px;
+    background:#1e3278;border-radius:5px;z-index:1;`;
+  board.appendChild(d);
+}
+
+/* ─────────────────── 2. Outer rectangle ─────────────────── */
+const pinkSet = new Set(['0-6','0-18','12-6','12-18','3-0','9-0','3-24','9-24']);
+const arrMap  = {
+  '0-3':'r','0-4':'r','0-20':'r','0-21':'r',
+  '12-3':'l','12-4':'l','12-20':'l','12-21':'l',
+  '2-0':'u','3-0':'u','9-0':'u','10-0':'u',
+  '2-24':'d','3-24':'d','9-24':'d','10-24':'d',
+};
+for (let r=0; r<ROWS; r++) {
+  for (let c=0; c<COLS; c++) {
+    const onBorder = r===0||r===ROWS-1||c===0||c===COLS-1;
+    if (!onBorder) continue;
+    if (r===0      && c===CC_TOP) { slv(cx(c),ry(r)); continue; }
+    if (r===ROWS-1 && c===CC_BOT) { slv(cx(c),ry(r)); continue; }
+    const key = `${r}-${c}`;
+    pinkSet.has(key) ? safe(cx(c),ry(r)) : blk(cx(c),ry(r));
+    if (arrMap[key]) arrowSVG(cx(c),ry(r),arrMap[key]);
+  }
+}
+
+/* ─────────────────── 3. Top T-arm ─────────────────── */
+homeCircle('radial-gradient(circle,#ff6060,#e63946,#a01020)','0 0 20px #e6394699', P1_HOME_X, HOME_TOP_Y);
+homeLabel('P1','#fff','0 0 12px rgba(255,80,80,1), 0 2px 8px rgba(0,0,0,1)', P1_HOME_X, HOME_TOP_Y);
+for (let i=ARM_N; i>=1; i--) ap1(cx(CC-i), ARM_TOP_Y);
+slv(CX, ARM_TOP_Y);
+for (let i=1; i<=ARM_N; i++) ap2(cx(CC+i), ARM_TOP_Y);
+homeCircle('radial-gradient(circle,#60e880,#2dc653,#1a7a30)','0 0 20px #2dc65399', P2_HOME_X, HOME_TOP_Y);
+homeLabel('P2','#fff','0 0 12px rgba(45,198,83,1), 0 2px 8px rgba(0,0,0,1)', P2_HOME_X, HOME_TOP_Y);
+
+/* ─────────────────── 4. Top stem ─────────────────── */
+stemTopYs.forEach(y => slv(CX, y));
+arrowSVG(CX, stemTopYs[0], 'd');
+
+/* ─────────────────── 5. U-connector top ─────────────────── */
+slv(CX_TOP, TOP_ENTRY_Y);
+for (let c=U_L_TOP; c<=U_R_TOP; c++) slv(cx(c), TOP_HBAR_Y);
+slv(ULX_TOP, TOP_LEGS_Y);
+slv(URX_TOP, TOP_LEGS_Y);
+
+/* ─────────────────── 6. Barrels — FULL HEIGHT flush with legs ─────────────────── */
+// Top barrel (P1 red | P2 green) — from bottom of top legs to midpoint
+barrel(TOP_BARREL_LEFT, TOP_BARREL_W, BARREL_T1, HALF_H, false,
+  'linear-gradient(160deg,#c01020,#e63946)',
+  'linear-gradient(160deg,#1a7a30,#2dc653)');
+
+barrel(BOT_BARREL_LEFT, BOT_BARREL_W, BARREL_T2, HALF_H, true,
+  'linear-gradient(160deg,#c89010,#f4c430)',
+  'linear-gradient(160deg,#1050b8,#3a86ff)');
+
+/* ─────────────────── 7. U-connector bottom ─────────────────── */
+slv(ULX_BOT, BOT_LEGS_Y);
+slv(URX_BOT, BOT_LEGS_Y);
+for (let c=U_L_BOT; c<=U_R_BOT; c++) slv(cx(c), BOT_HBAR_Y);
+slv(CX_BOT, BOT_EXIT_Y);
+
+/* ─────────────────── 8. Bottom stem ─────────────────── */
+stemBotYs.forEach(y => slv(CX_BOT, y));
+arrowSVG(CX_BOT, stemBotYs[stemBotYs.length-1], 'u');
+
+/* ─────────────────── 9. Bottom T-arm ─────────────────── */
+homeCircle('radial-gradient(circle,#ffe570,#f4c430,#c89010)','0 0 20px #f4c43099', P3_HOME_X, HOME_BOT_Y);
+homeLabel('P3','#ffe04a','0 0 12px rgba(244,196,48,1), 0 2px 8px rgba(0,0,0,1)', P3_HOME_X, HOME_BOT_Y);
+for (let i=ARM_N; i>=1; i--) ap3(cx(CC_BOT-i), ARM_BOT_Y);
+slv(CX_BOT, ARM_BOT_Y);
+for (let i=1; i<=ARM_N; i++) ap4(cx(CC_BOT+i), ARM_BOT_Y);
+homeCircle('radial-gradient(circle,#70b0ff,#3a86ff,#1050b8)','0 0 20px #3a86ff99', P4_HOME_X, HOME_BOT_Y);
+homeLabel('P4','#fff','0 0 12px rgba(58,134,255,1), 0 2px 8px rgba(0,0,0,1)', P4_HOME_X, HOME_BOT_Y);
+
+/* ─────────────────── 10. Interactive tokens inside home circles ─────────────────── */
+// TOKEN diameter = 22px so 2×2 grid (22*2 + gap*1 = 50px) fits inside HOME_D=70 inner area ~62px
+const TD = 22;   // token diameter
+const TG = 6;    // gap between tokens
+
+const TCOLORS = {
+  p1: { outer:'#7a0c18', inner:'#e63946', shine:'rgba(255,190,190,0.8)', glow:'255,57,70' },
+  p2: { outer:'#0d4a1e', inner:'#2dc653', shine:'rgba(180,255,195,0.8)', glow:'45,198,83' },
+  p3: { outer:'#5a3a00', inner:'#f4c430', shine:'rgba(255,245,170,0.8)', glow:'244,196,48' },
+  p4: { outer:'#071e60', inner:'#3a86ff', shine:'rgba(160,205,255,0.8)', glow:'58,134,255' },
+};
+
+function makeToken(px, py, tc, idx) {
+  // Wrapper div handles animation + hover
+  const wrap = document.createElement('div');
+  wrap.className = 'tok-wrap';
+  wrap.style.cssText = `left:${px}px;top:${py}px;width:${TD}px;height:${TD}px;animation-delay:${idx*0.45}s;`;
+  wrap.style.setProperty('--tg', `rgba(${tc.glow},0.8)`);
+
+  // Coin div: outer rim → coloured face → shine via ::before
+  const coin = document.createElement('div');
+  coin.className = 'tok-coin';
+  coin.style.cssText = `
+    background:
+      radial-gradient(circle at 35% 30%, ${tc.shine} 0%, ${tc.inner} 35%, ${tc.outer} 100%);
+    box-shadow:
+      0 0 8px 3px rgba(${tc.glow},0.55),
+      0 3px 8px rgba(0,0,0,0.75),
+      inset 0 -3px 6px rgba(0,0,0,0.4),
+      inset 0 2px 4px rgba(255,255,255,0.25);
+    border: 2.5px solid ${tc.outer};`;
+
+  // Inner engraved ring via SVG overlay
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns,'svg');
+  svg.setAttribute('viewBox','0 0 22 22');
+  svg.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;';
+  const ring = document.createElementNS(ns,'circle');
+  ring.setAttribute('cx','11'); ring.setAttribute('cy','11'); ring.setAttribute('r','6');
+  ring.setAttribute('fill','none'); ring.setAttribute('stroke','rgba(0,0,0,0.3)'); ring.setAttribute('stroke-width','1.5');
+  svg.appendChild(ring);
+  coin.appendChild(svg);
+
+  wrap.appendChild(coin);
+  board.appendChild(wrap);
+}
+
+function placeTokensInHome(homeX, homeY, tc) {
+  // Inner usable area (minus border 4px each side) = 70-8=62px
+  // Grid = 2*TD + TG = 50px, center offset = (62-50)/2 = 6px
+  const offset = 4 + Math.round((HOME_D - 8 - (2*TD + TG)) / 2);
+  let i = 0;
+  for (let row=0; row<2; row++) {
+    for (let col=0; col<2; col++) {
+      makeToken(homeX + offset + col*(TD+TG), homeY + offset + row*(TD+TG), tc, i++);
+    }
+  }
+}
+
+placeTokensInHome(P1_HOME_X, HOME_TOP_Y, TCOLORS.p1);
+placeTokensInHome(P2_HOME_X, HOME_TOP_Y, TCOLORS.p2);
+placeTokensInHome(P3_HOME_X, HOME_BOT_Y, TCOLORS.p3);
+placeTokensInHome(P4_HOME_X, HOME_BOT_Y, TCOLORS.p4);
+</script>
+</body>
 </html>
