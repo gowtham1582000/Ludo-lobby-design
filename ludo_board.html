@@ -239,6 +239,98 @@ function barrel(bLeft, bW, bTop, bH, glow, bg1, bg2) {
 
   wrap.appendChild(makeHalf(bg1, true));
   wrap.appendChild(makeHalf(bg2, false));
+  board.appendChild(wrap);
+}
+
+/* ─────────────────── 1. Inner blue bg ─────────────────── */
+{
+  const d = document.createElement('div');
+  d.style.cssText = `position:absolute;
+    left:${cx(1)}px;top:${ry(1)}px;
+    width:${cx(COLS-2)+BL-cx(1)}px;height:${ry(ROWS-2)+BL-ry(1)}px;
+    background:#1e3278;border-radius:5px;z-index:1;`;
+  board.appendChild(d);
+}
+
+/* ─────────────────── 2. Outer rectangle ─────────────────── */
+const pinkSet = new Set(['0-6','0-18','12-6','12-18','3-0','9-0','3-24','9-24']);
+const arrMap  = {
+  '0-3':'r','0-4':'r','0-20':'r','0-21':'r',
+  '12-3':'l','12-4':'l','12-20':'l','12-21':'l',
+  '2-0':'u','3-0':'u','9-0':'u','10-0':'u',
+  '2-24':'d','3-24':'d','9-24':'d','10-24':'d',
+};
+for (let r=0; r<ROWS; r++) {
+  for (let c=0; c<COLS; c++) {
+    const onBorder = r===0||r===ROWS-1||c===0||c===COLS-1;
+    if (!onBorder) continue;
+    if (r===0      && c===CC_TOP) { slv(cx(c),ry(r)); continue; }
+    if (r===ROWS-1 && c===CC_BOT) { slv(cx(c),ry(r)); continue; }
+    const key = `${r}-${c}`;
+    pinkSet.has(key) ? safe(cx(c),ry(r)) : blk(cx(c),ry(r));
+    if (arrMap[key]) arrowSVG(cx(c),ry(r),arrMap[key]);
+  }
+}
+
+/* ─────────────────── 3. Top T-arm ─────────────────── */
+homeCircle('radial-gradient(circle,#ff6060,#e63946,#a01020)','0 0 20px #e6394699', P1_HOME_X, HOME_TOP_Y);
+homeLabel('P1','#fff','0 0 12px rgba(255,80,80,1), 0 2px 8px rgba(0,0,0,1)', P1_HOME_X, HOME_TOP_Y);
+for (let i=ARM_N; i>=1; i--) ap1(cx(CC-i), ARM_TOP_Y);
+slv(CX, ARM_TOP_Y);
+for (let i=1; i<=ARM_N; i++) ap2(cx(CC+i), ARM_TOP_Y);
+homeCircle('radial-gradient(circle,#60e880,#2dc653,#1a7a30)','0 0 20px #2dc65399', P2_HOME_X, HOME_TOP_Y);
+homeLabel('P2','#fff','0 0 12px rgba(45,198,83,1), 0 2px 8px rgba(0,0,0,1)', P2_HOME_X, HOME_TOP_Y);
+
+/* ─────────────────── 4. Top stem ─────────────────── */
+stemTopYs.forEach(y => slv(CX, y));
+arrowSVG(CX, stemTopYs[0], 'd');
+
+/* ─────────────────── 5. U-connector top ─────────────────── */
+slv(CX_TOP, TOP_ENTRY_Y);
+for (let c=U_L_TOP; c<=U_R_TOP; c++) slv(cx(c), TOP_HBAR_Y);
+slv(ULX_TOP, TOP_LEGS_Y);
+slv(URX_TOP, TOP_LEGS_Y);
+
+/* ─────────────────── 6. Barrels — FULL HEIGHT flush with legs ─────────────────── */
+// Top barrel (P1 red | P2 green) — from bottom of top legs to midpoint
+barrel(TOP_BARREL_LEFT, TOP_BARREL_W, BARREL_T1, HALF_H, false,
+  'linear-gradient(160deg,#c01020,#e63946)',
+  'linear-gradient(160deg,#1a7a30,#2dc653)');
+
+barrel(BOT_BARREL_LEFT, BOT_BARREL_W, BARREL_T2, HALF_H, true,
+  'linear-gradient(160deg,#c89010,#f4c430)',
+  'linear-gradient(160deg,#1050b8,#3a86ff)');
+
+/* ─────────────────── 7. U-connector bottom ─────────────────── */
+slv(ULX_BOT, BOT_LEGS_Y);
+slv(URX_BOT, BOT_LEGS_Y);
+for (let c=U_L_BOT; c<=U_R_BOT; c++) slv(cx(c), BOT_HBAR_Y);
+slv(CX_BOT, BOT_EXIT_Y);
+
+/* ─────────────────── 8. Bottom stem ─────────────────── */
+stemBotYs.forEach(y => slv(CX_BOT, y));
+arrowSVG(CX_BOT, stemBotYs[stemBotYs.length-1], 'u');
+
+/* ─────────────────── 9. Bottom T-arm ─────────────────── */
+homeCircle('radial-gradient(circle,#ffe570,#f4c430,#c89010)','0 0 20px #f4c43099', P3_HOME_X, HOME_BOT_Y);
+homeLabel('P3','#ffe04a','0 0 12px rgba(244,196,48,1), 0 2px 8px rgba(0,0,0,1)', P3_HOME_X, HOME_BOT_Y);
+for (let i=ARM_N; i>=1; i--) ap3(cx(CC_BOT-i), ARM_BOT_Y);
+slv(CX_BOT, ARM_BOT_Y);
+for (let i=1; i<=ARM_N; i++) ap4(cx(CC_BOT+i), ARM_BOT_Y);
+homeCircle('radial-gradient(circle,#70b0ff,#3a86ff,#1050b8)','0 0 20px #3a86ff99', P4_HOME_X, HOME_BOT_Y);
+homeLabel('P4','#fff','0 0 12px rgba(58,134,255,1), 0 2px 8px rgba(0,0,0,1)', P4_HOME_X, HOME_BOT_Y);
+
+/* ─────────────────── 10. Interactive tokens inside home circles ─────────────────── */
+// TOKEN diameter = 22px so 2×2 grid (22*2 + gap*1 = 50px) fits inside HOME_D=70 inner area ~62px
+const TD = 22;   // token diameter
+const TG = 6;    // gap between tokens
+
+const TCOLORS = {
+  p1: { outer:'#7a0c18', inner:'#e63946', shine:'rgba(255,190,190,0.8)', glow:'255,57,70' },
+  p2: { outer:'#0d4a1e', inner:'#2dc653', shine:'rgba(180,255,195,0.8)', glow:'45,198,83' },
+  p3: { outer:'#5a3a00', inner:'#f4c430', shine:'rgba(255,245,170,0.8)', glow:'244,196,48' },
+  p4: { outer:'#071e60', inner:'#3a86ff', shine:'rgba(160,205,255,0.8)', glow:'58,134,255' },
+};
 
 function makeToken(px, py, tc, idx) {
   // Wrapper div handles animation + hover
