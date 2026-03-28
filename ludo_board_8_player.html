@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Ludo Board — 8 Players</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;900&display=swap');
+    * { box-sizing:border-box; margin:0; padding:0; }
+    html, body {
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      background:#050e1f;
+    }
+    body {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    #clip {
+      width:min(390px, 100vw);
+      height:min(844px, 100vh);
+      aspect-ratio:390 / 844;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:radial-gradient(ellipse at center,#0f3460 0%,#0a1628 70%);
+    }
+    #board {
+      position:relative;
+      transform:rotate(90deg) scale(0.513);
+      transform-origin:center center;
+      flex-shrink:0;
+    }
+    @keyframes floatA { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-4px) scale(1.06)} }
+    @keyframes floatB { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-4px) scale(1.06)} }
+    .tok-wrap { position:absolute; cursor:pointer; z-index:25; animation:floatA 2s ease-in-out infinite; }
+    .tok-wrap:nth-child(2){animation-name:floatB;animation-delay:.5s}
+    .tok-wrap:nth-child(3){animation-delay:1s}
+    .tok-wrap:nth-child(4){animation-delay:1.5s}
+    .tok-wrap:hover .tok-coin { transform:scale(1.35) translateY(-5px); filter:brightness(1.45) drop-shadow(0 0 8px var(--tg)); }
+    .tok-wrap:active .tok-coin { transform:scale(0.85); }
+    .tok-coin {
+      width:100%; height:100%; border-radius:50%;
+      transition:transform .18s ease, filter .18s ease;
+      display:flex; align-items:center; justify-content:center;
+      position:relative; overflow:hidden;
+    }
+    .tok-coin::before { content:''; position:absolute; top:10%; left:15%; width:38%; height:32%;
+      background:radial-gradient(ellipse,rgba(255,255,255,0.7) 0%,rgba(255,255,255,0) 100%);
+      border-radius:50%; pointer-events:none; }
+    .tok-coin::after { content:''; position:absolute; bottom:8%; right:12%; width:32%; height:26%;
+      background:radial-gradient(ellipse,rgba(0,0,0,0.35) 0%,rgba(0,0,0,0) 100%);
+      border-radius:50%; pointer-events:none; }
+    .back-home {
+      position:fixed;
+      top:18px;
+      left:18px;
+      z-index:100;
+      width:44px;
+      height:44px;
+      border:none;
+      border-radius:50%;
+      background:rgba(6,18,38,0.82);
+      color:#fff;
+      font:900 22px/1 'Nunito',sans-serif;
+      box-shadow:0 8px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.18);
+      cursor:pointer;
+      backdrop-filter:blur(8px);
+    }
+  </style>
+</head>
+<body>
+<button class="back-home" type="button" aria-label="Back to main page" onclick="window.location.href='index.html'">‹</button>
+<div id="clip"><div id="board"></div></div>
+<script>
+/* ════════════════════════════════════════════════════════
+   8-PLAYER LUDO — 390×844 mobile (portrait)
+   Pre-rotation canvas: CW=1645 × CH=760
+   rotate(90deg) scale(0.513) → visual 390×844 ✓
+
+   GRID: BL=36  GAP=4  S=40
+   RECT: 25 cols × 13 rows
+   RL=325  RT=122
+   col c → x=325+c*40   row r → y=122+r*40
+
+   PLAYERS:
+   P1/P2 → TOP arm   (above rect, horizontal, y=2)
+   P3/P4 → BOTTOM arm (below rect, horizontal, y=722)
+   P5/P6 → LEFT arm  (left of rect, vertical, x=205)
+   P7/P8 → RIGHT arm (right of rect, vertical, x=1405)
+════════════════════════════════════════════════════════ */
+
+const BL=36, GAP=4, S=40;
+const CW=1645, CH=760;
+const COLS=25, ROWS=13;
+const RL=325, RT=122;
+const cx=c=>RL+c*S, ry=r=>RT+r*S;
+
+/* ── Center columns for top/bottom connectors ── */
+const CC_TOP=11, CC_BOT=13;
+const CX_TOP=cx(CC_TOP), CX_BOT=cx(CC_BOT);
+
+/* ── Center rows for left/right connectors ── */
+const CENTER_ROW_L=7;   // P5/P6 — 8th block (0-indexed=7)
+const CENTER_ROW_R=5;   // P7/P8 — 6th block (0-indexed=5)
+const CY_L=ry(CENTER_ROW_L);
+const CY_R=ry(CENTER_ROW_R);
+
+/* ── Arm sizes ── */
+const ARM_N_TB=5;   // blocks each side — top/bottom arms
+const ARM_N_LR=5;   // blocks each side — left/right arms (shorter to fit)
+
+/* ── Top/Bottom arm Y positions ── */
+const ARM_TOP_Y=2, ARM_BOT_Y=722;
+const stemTopYs=[42,82], stemBotYs=[642,682];
+
+/* ── Left/Right arm X positions ── */
+const L_ARM_X=cx(0)-3*S;  // 205 — left arm column x
+const R_ARM_X=cx(24)+BL+GAP+2*S; // 1405 — right arm column x
+const L_STEM_XS=[cx(0)-2*S, cx(0)-S]; // [245,285]
+const R_STEM_XS=[cx(24)+BL+GAP, cx(24)+BL+GAP+S]; // [1325,1365]
+
+/* ── Home circles ── */
+const HOME_D=55;
+
+// Top/Bottom homes — flush against last arm block
+const P1_HOME_X=cx(CC_TOP-ARM_N_TB)-GAP-HOME_D;
+const P2_HOME_X=cx(CC_TOP+ARM_N_TB)+BL+GAP;
+const P3_HOME_X=cx(CC_BOT-ARM_N_TB)-GAP-HOME_D;
+const P4_HOME_X=cx(CC_BOT+ARM_N_TB)+BL+GAP;
+const HOME_TOP_Y=Math.max(0, ARM_TOP_Y+BL/2-HOME_D/2);
+const HOME_BOT_Y=Math.min(CH-HOME_D, ARM_BOT_Y+BL/2-HOME_D/2);
+
+// Left homes — flush against last arm block
+const LH_X=L_ARM_X+BL/2-HOME_D/2;
+const P5_HOME_Y=CY_L-ARM_N_LR*S-GAP-HOME_D;
+const P6_HOME_Y=CY_L+ARM_N_LR*S+BL+GAP;
+
+// Right homes — flush against last arm block
+const RH_X=R_ARM_X+BL/2-HOME_D/2;
+const P7_HOME_Y=CY_R-ARM_N_LR*S-GAP-HOME_D;
+const P8_HOME_Y=CY_R+ARM_N_LR*S+BL+GAP;
+
+/* ── Top/Bottom U-connectors ── */
+const U_L_TOP=CC_TOP-3, U_R_TOP=CC_TOP+3;
+const ULX_TOP=cx(U_L_TOP), URX_TOP=cx(U_R_TOP);
+const U_L_BOT=CC_BOT-3, U_R_BOT=CC_BOT+3;
+const ULX_BOT=cx(U_L_BOT), URX_BOT=cx(U_R_BOT);
+
+const TOP_ENTRY_Y=ry(0), TOP_HBAR_Y=ry(1), TOP_LEGS_Y=ry(2);
+const BOT_EXIT_Y=ry(12), BOT_HBAR_Y=ry(11), BOT_LEGS_Y=ry(10);
+
+// Top/bottom barrels
+const TB_AVAIL=BOT_LEGS_Y-(TOP_LEGS_Y+BL);
+const TB_HALF_H=Math.floor((TB_AVAIL-GAP)/2);
+const TB_T1=TOP_LEGS_Y+BL, TB_T2=TB_T1+TB_HALF_H+GAP;
+const TOP_BW=URX_TOP+BL-ULX_TOP, BOT_BW=URX_BOT+BL-ULX_BOT;
+
+/* ── Left U-connector: mirrors P1/P2 — entry at outer rect col0, V-bar col1, legs col2 ── */
+const LU_VBAR_COL=1, LU_LEG_COL=2;
+const LU_TOP_ROW=CENTER_ROW_L-3, LU_BOT_ROW=CENTER_ROW_L+3;
+const LU_TOP_Y=ry(LU_TOP_ROW), LU_BOT_Y=ry(LU_BOT_ROW);
+
+const LB_LEFT=cx(LU_LEG_COL)+BL+GAP;
+const LB_W=3*S-GAP;
+const LB_TOP_Y=LU_TOP_Y+BL+GAP;
+const LB_BOT_Y=LU_BOT_Y;
+const LB_HALF_H=Math.floor((LB_BOT_Y-LB_TOP_Y-GAP)/2);
+
+/* ── Right U-connector: mirrors P1/P2 — entry at outer rect col24, V-bar col23, legs col22 ── */
+const RU_VBAR_COL=23, RU_LEG_COL=22;
+const RU_TOP_ROW=CENTER_ROW_R-3, RU_BOT_ROW=CENTER_ROW_R+3;
+const RU_TOP_Y=ry(RU_TOP_ROW), RU_BOT_Y=ry(RU_BOT_ROW);
+
+const RB_RIGHT=cx(RU_LEG_COL)-GAP;  // ends just before the leg col, no overlap
+const RB_W=LB_W;
+const RB_LEFT=RB_RIGHT-RB_W;
+const RB_TOP_Y=RU_TOP_Y+BL+GAP;
+const RB_BOT_Y=RU_BOT_Y;
+
+/* ════ DOM HELPERS ════ */
+const board=document.getElementById('board');
+const clip=document.getElementById('clip');
+board.style.cssText=`width:${CW}px;height:${CH}px;position:relative;`;
+
+function fitBoardToViewport(){
+  const scale=Math.min(clip.clientWidth/390, clip.clientHeight/844);
+  board.style.transform=`rotate(90deg) scale(${0.513 * scale})`;
+}
+
+fitBoardToViewport();
+window.addEventListener('resize', fitBoardToViewport);
+
+const mkEl=(x,y,w,h,css)=>{
+  const d=document.createElement('div');
+  d.style.cssText=`position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:6px;${css}`;
+  board.appendChild(d); return d;
+};
+
+const CREAM ='background:linear-gradient(145deg,#f5e6c8,#e8d5a8);border:2.5px solid #c4a96a;box-shadow:inset 0 2px 0 rgba(255,255,255,0.7),0 2px 5px rgba(0,0,0,0.22);z-index:3;';
+const SILVER='background:linear-gradient(145deg,#eaeaea,#ababab);border:2.5px solid #999;box-shadow:inset 0 2px 0 rgba(255,255,255,0.9),0 2px 5px rgba(0,0,0,0.3);z-index:6;';
+const PINK  ='background:linear-gradient(145deg,#ff6eb0,#e0206e);border:2.5px solid #a0005a;box-shadow:0 0 8px #e0206e66;z-index:3;';
+
+// Player arm block styles
+const armStyle={
+  p1:'background:linear-gradient(145deg,#ff7070,#e63946);border:2.5px solid #a01020;box-shadow:0 0 7px #e6394666;z-index:3;',
+  p2:'background:linear-gradient(145deg,#60e880,#2dc653);border:2.5px solid #1a7a30;box-shadow:0 0 7px #2dc65366;z-index:3;',
+  p3:'background:linear-gradient(145deg,#ffe570,#f4c430);border:2.5px solid #c89010;box-shadow:0 0 7px #f4c43066;z-index:3;',
+  p4:'background:linear-gradient(145deg,#70b0ff,#3a86ff);border:2.5px solid #1050b8;box-shadow:0 0 7px #3a86ff66;z-index:3;',
+  p5:'background:linear-gradient(145deg,#ffb347,#ff7c00);border:2.5px solid #c45000;box-shadow:0 0 7px #ff7c0066;z-index:3;',
+  p6:'background:linear-gradient(145deg,#40e8e8,#00b8b8);border:2.5px solid #006666;box-shadow:0 0 7px #00b8b866;z-index:3;',
+  p7:'background:linear-gradient(145deg,#c084fc,#7c3aed);border:2.5px solid #4c1d95;box-shadow:0 0 7px #7c3aed66;z-index:3;',
+  p8:'background:linear-gradient(145deg,#c8ff60,#80d800);border:2.5px solid #3a6a00;box-shadow:0 0 7px #80d80066;z-index:3;',
+};
+
+const blk=(x,y)=>mkEl(x,y,BL,BL,CREAM);
+const slv=(x,y)=>mkEl(x,y,BL,BL,SILVER);
+const safe=(x,y)=>mkEl(x,y,BL,BL,PINK);
+const arm=(p,x,y)=>mkEl(x,y,BL,BL,armStyle[p]);
+
+function arrowSVG(x,y,dir){
+  const ns='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(ns,'svg');
+  svg.setAttribute('viewBox',`0 0 ${BL} ${BL}`);
+  svg.style.cssText=`position:absolute;left:${x}px;top:${y}px;width:${BL}px;height:${BL}px;z-index:14;pointer-events:none;`;
+  const poly=document.createElementNS(ns,'polygon');
+  const m=BL/2,p=8,e=BL-8;
+  const pts={r:`${p},${p} ${e},${m} ${p},${e}`,l:`${e},${p} ${p},${m} ${e},${e}`,d:`${p},${p} ${e},${p} ${m},${e}`,u:`${p},${e} ${e},${e} ${m},${p}`}[dir];
+  poly.setAttribute('points',pts);
+  poly.setAttribute('fill','rgba(0,0,0,0.82)');
+  poly.setAttribute('stroke','rgba(255,255,255,0.35)');
+  poly.setAttribute('stroke-width','1');
+  poly.setAttribute('stroke-linejoin','round');
+  svg.appendChild(poly); board.appendChild(svg);
+}
+
+function homeCircle(bg,sh,x,y){
+  const d=document.createElement('div');
+  d.style.cssText=`position:absolute;left:${x}px;top:${y}px;width:${HOME_D}px;height:${HOME_D}px;border-radius:50%;
+    background:${bg};box-shadow:${sh},inset 0 4px 8px rgba(255,255,255,0.2),inset 0 -4px 10px rgba(0,0,0,0.45);
+    border:4px solid rgba(255,255,255,0.72);z-index:9;`;
+  board.appendChild(d);
+}
+
+function homeLabel(lbl,color,shadow,x,y,offsetX,offsetY){
+  const d=document.createElement('div');
+  d.style.cssText=`position:absolute;left:${x+(offsetX||0)}px;top:${y+(offsetY||0)}px;width:${HOME_D}px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Nunito',sans-serif;font-weight:900;font-size:18px;
+    color:${color};text-align:center;letter-spacing:2px;
+    text-shadow:${shadow};z-index:30;pointer-events:none;`;
+  d.textContent=lbl;
+  board.appendChild(d);
+}
+
+// Barrel H — card spans EXACTLY leg-to-leg, flush on all sides
+function barrelH(left,top,w,h,glow,bg1,bg2){
+  const wrap=document.createElement('div');
+  wrap.style.cssText=`position:absolute;left:${left}px;top:${top}px;width:${w}px;height:${h}px;
+    border-radius:10px;overflow:hidden;display:flex;flex-direction:row;z-index:5;
+    border:3px solid rgba(0,0,0,0.55);
+    ${glow?'box-shadow:0 0 22px 8px rgba(255,215,0,0.6),0 0 44px 14px rgba(255,215,0,0.18);'
+          :'box-shadow:0 4px 18px rgba(0,0,0,0.75),inset 0 1px 0 rgba(255,255,255,0.1);'}`;
+  const makeHalf=(bg,br)=>{
+    const h2=document.createElement('div');
+    h2.style.cssText=`flex:1;background:${bg};display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;padding:12px;align-items:center;justify-items:center;
+      ${br?'border-right:2.5px solid rgba(0,0,0,0.4);':''}`;
+    for(let i=0;i<4;i++){
+      const s=document.createElement('div');
+      s.style.cssText=`width:26px;height:26px;border-radius:50%;
+        background:radial-gradient(circle at 36% 32%,rgba(255,255,255,0.05) 0%,rgba(0,0,0,0.9) 72%);
+        box-shadow:inset 0 4px 10px rgba(0,0,0,0.98),inset 0 2px 4px rgba(0,0,0,0.7);
+        border:2px solid rgba(0,0,0,0.75);`;
+      h2.appendChild(s);
+    }
+    return h2;
+  };
+  wrap.appendChild(makeHalf(bg1,true));
+  wrap.appendChild(makeHalf(bg2,false));
+  board.appendChild(wrap);
+}
+
+// Barrel V — card spans EXACTLY leg-to-leg, flush on all sides
+function barrelV(left,top,w,h,glow,bg1,bg2){
+  const wrap=document.createElement('div');
+  wrap.style.cssText=`position:absolute;left:${left}px;top:${top}px;width:${w}px;height:${h}px;
+    border-radius:10px;overflow:hidden;display:flex;flex-direction:column;z-index:5;
+    border:3px solid rgba(0,0,0,0.55);
+    ${glow?'box-shadow:0 0 22px 8px rgba(255,215,0,0.6),0 0 44px 14px rgba(255,215,0,0.18);'
+          :'box-shadow:0 4px 18px rgba(0,0,0,0.75),inset 0 1px 0 rgba(255,255,255,0.1);'}`;
+  const makeHalf=(bg,bb)=>{
+    const h2=document.createElement('div');
+    h2.style.cssText=`flex:1;background:${bg};display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;padding:12px;align-items:center;justify-items:center;
+      ${bb?'border-bottom:2.5px solid rgba(0,0,0,0.4);':''}`;
+    for(let i=0;i<4;i++){
+      const s=document.createElement('div');
+      s.style.cssText=`width:22px;height:22px;border-radius:50%;
+        background:radial-gradient(circle at 36% 32%,rgba(255,255,255,0.05) 0%,rgba(0,0,0,0.9) 72%);
+        box-shadow:inset 0 4px 10px rgba(0,0,0,0.98),inset 0 2px 4px rgba(0,0,0,0.7);
+        border:2px solid rgba(0,0,0,0.75);`;
+      h2.appendChild(s);
+    }
+    return h2;
+  };
+  wrap.appendChild(makeHalf(bg1,true));
+  wrap.appendChild(makeHalf(bg2,false));
+  board.appendChild(wrap);
+}
+
+const TCOLORS={
+  p1:{outer:'#7a0c18',inner:'#e63946',shine:'rgba(255,190,190,0.8)',glow:'255,57,70'},
+  p2:{outer:'#0d4a1e',inner:'#2dc653',shine:'rgba(180,255,195,0.8)',glow:'45,198,83'},
+  p3:{outer:'#5a3a00',inner:'#f4c430',shine:'rgba(255,245,170,0.8)',glow:'244,196,48'},
+  p4:{outer:'#071e60',inner:'#3a86ff',shine:'rgba(160,205,255,0.8)',glow:'58,134,255'},
+  p5:{outer:'#7a3000',inner:'#ff7c00',shine:'rgba(255,210,160,0.8)',glow:'255,124,0'},
+  p6:{outer:'#004444',inner:'#00b8b8',shine:'rgba(160,255,255,0.8)',glow:'0,184,184'},
+  p7:{outer:'#2e0060',inner:'#7c3aed',shine:'rgba(210,180,255,0.8)',glow:'124,58,237'},
+  p8:{outer:'#1e3600',inner:'#80d800',shine:'rgba(220,255,140,0.8)',glow:'128,216,0'},
+};
+const TD=18, TG=5;
+
+function makeToken(px,py,tc,idx){
+  const wrap=document.createElement('div');
+  wrap.className='tok-wrap';
+  wrap.style.cssText=`left:${px}px;top:${py}px;width:${TD}px;height:${TD}px;animation-delay:${idx*0.45}s;`;
+  wrap.style.setProperty('--tg',`rgba(${tc.glow},0.8)`);
+  const coin=document.createElement('div');
+  coin.className='tok-coin';
+  coin.style.cssText=`background:radial-gradient(circle at 35% 30%,${tc.shine} 0%,${tc.inner} 35%,${tc.outer} 100%);
+    box-shadow:0 0 6px 2px rgba(${tc.glow},0.55),0 2px 6px rgba(0,0,0,0.75),inset 0 -2px 4px rgba(0,0,0,0.4),inset 0 1px 3px rgba(255,255,255,0.25);
+    border:2px solid ${tc.outer};`;
+  const ns='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(ns,'svg');
+  svg.setAttribute('viewBox','0 0 18 18');
+  svg.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;';
+  const ring=document.createElementNS(ns,'circle');
+  ring.setAttribute('cx','9');ring.setAttribute('cy','9');ring.setAttribute('r','4.5');
+  ring.setAttribute('fill','none');ring.setAttribute('stroke','rgba(0,0,0,0.3)');ring.setAttribute('stroke-width','1.2');
+  svg.appendChild(ring);coin.appendChild(svg);
+  wrap.appendChild(coin);board.appendChild(wrap);
+}
+
+function placeTokens(homeX,homeY,tc){
+  const offset=4+Math.round((HOME_D-8-(2*TD+TG))/2);
+  let i=0;
+  for(let row=0;row<2;row++) for(let col=0;col<2;col++)
+    makeToken(homeX+offset+col*(TD+TG),homeY+offset+row*(TD+TG),tc,i++);
+}
+
+/* ══════════════════════════════════════════════════════
+   1. INNER BLUE BACKGROUND
+══════════════════════════════════════════════════════ */
+{
+  const d=document.createElement('div');
+  d.style.cssText=`position:absolute;left:${cx(1)}px;top:${ry(1)}px;
+    width:${cx(COLS-2)+BL-cx(1)}px;height:${ry(ROWS-2)+BL-ry(1)}px;
+    background:#1e3278;border-radius:5px;z-index:1;`;
+  board.appendChild(d);
+}
+
+/* ══════════════════════════════════════════════════════
+   2. OUTER RECTANGLE
+══════════════════════════════════════════════════════ */
+const pinkSet=new Set(['0-6','0-18','12-6','12-18','3-0','9-0','3-24','9-24']);
+const arrMap={
+  '0-3':'r','0-4':'r','0-20':'r','0-21':'r',
+  '12-3':'l','12-4':'l','12-20':'l','12-21':'l',
+  '2-0':'u','3-0':'u','9-0':'u','10-0':'u',
+  '2-24':'d','3-24':'d','9-24':'d','10-24':'d',
+};
+for(let r=0;r<ROWS;r++){
+  for(let c=0;c<COLS;c++){
+    const onBorder=r===0||r===ROWS-1||c===0||c===COLS-1;
+    if(!onBorder) continue;
+    // Silver junction blocks for all 4 connectors
+    if(r===0      && c===CC_TOP){slv(cx(c),ry(r));continue;}
+    if(r===ROWS-1 && c===CC_BOT){slv(cx(c),ry(r));continue;}
+    if(c===0      && r===CENTER_ROW_L){slv(cx(c),ry(r));continue;}
+    if(c===COLS-1 && r===CENTER_ROW_R){slv(cx(c),ry(r));continue;}
+    const key=`${r}-${c}`;
+    pinkSet.has(key)?safe(cx(c),ry(r)):blk(cx(c),ry(r));
+    if(arrMap[key]) arrowSVG(cx(c),ry(r),arrMap[key]);
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   3. TOP T-ARM  — P1 (red) left, P2 (green) right
+══════════════════════════════════════════════════════ */
+homeCircle('radial-gradient(circle,#ff6060,#e63946,#a01020)','0 0 18px #e6394699',P1_HOME_X,HOME_TOP_Y);
+homeLabel('P1','#fff','0 0 10px rgba(255,80,80,1),0 2px 6px rgba(0,0,0,1)',P1_HOME_X,HOME_TOP_Y, 0, HOME_D+4);
+for(let i=ARM_N_TB;i>=1;i--) arm('p1',cx(CC_TOP-i),ARM_TOP_Y);
+slv(CX_TOP,ARM_TOP_Y);
+for(let i=1;i<=ARM_N_TB;i++) arm('p2',cx(CC_TOP+i),ARM_TOP_Y);
+homeCircle('radial-gradient(circle,#60e880,#2dc653,#1a7a30)','0 0 18px #2dc65399',P2_HOME_X,HOME_TOP_Y);
+homeLabel('P2','#fff','0 0 10px rgba(45,198,83,1),0 2px 6px rgba(0,0,0,1)',P2_HOME_X,HOME_TOP_Y, 0, HOME_D+4);
+
+/* ── Top stem ── */
+stemTopYs.forEach(y=>slv(CX_TOP,y));
+arrowSVG(CX_TOP,stemTopYs[0],'d');
+
+/* ── Top U-connector ── */
+slv(CX_TOP,TOP_ENTRY_Y);
+for(let c=U_L_TOP;c<=U_R_TOP;c++) slv(cx(c),TOP_HBAR_Y);
+slv(ULX_TOP,TOP_LEGS_Y); slv(URX_TOP,TOP_LEGS_Y);
+
+/* ── Top barrels: P1|P2 ── */
+barrelH(ULX_TOP, TB_T1, TOP_BW, TB_HALF_H, false, 'linear-gradient(160deg,#c01020,#e63946)', 'linear-gradient(160deg,#1a7a30,#2dc653)');
+
+/* ══════════════════════════════════════════════════════
+   4. BOTTOM T-ARM  — P3 (yellow) left, P4 (blue) right
+══════════════════════════════════════════════════════ */
+homeCircle('radial-gradient(circle,#ffe570,#f4c430,#c89010)','0 0 18px #f4c43099',P3_HOME_X,HOME_BOT_Y);
+homeLabel('P3','#ffe04a','0 0 10px rgba(244,196,48,1),0 2px 6px rgba(0,0,0,1)',P3_HOME_X,HOME_BOT_Y, 0, -26);
+for(let i=ARM_N_TB;i>=1;i--) arm('p3',cx(CC_BOT-i),ARM_BOT_Y);
+slv(CX_BOT,ARM_BOT_Y);
+for(let i=1;i<=ARM_N_TB;i++) arm('p4',cx(CC_BOT+i),ARM_BOT_Y);
+homeCircle('radial-gradient(circle,#70b0ff,#3a86ff,#1050b8)','0 0 18px #3a86ff99',P4_HOME_X,HOME_BOT_Y);
+homeLabel('P4','#fff','0 0 10px rgba(58,134,255,1),0 2px 6px rgba(0,0,0,1)',P4_HOME_X,HOME_BOT_Y, 0, -26);
+
+/* ── Bottom stem ── */
+stemBotYs.forEach(y=>slv(CX_BOT,y));
+arrowSVG(CX_BOT,stemBotYs[stemBotYs.length-1],'u');
+
+/* ── Bottom U-connector ── */
+slv(ULX_BOT,BOT_LEGS_Y); slv(URX_BOT,BOT_LEGS_Y);
+for(let c=U_L_BOT;c<=U_R_BOT;c++) slv(cx(c),BOT_HBAR_Y);
+slv(CX_BOT,BOT_EXIT_Y);
+
+/* ── Bottom barrels: P3|P4 ── */
+barrelH(ULX_BOT, TB_T2, BOT_BW, TB_HALF_H, true, 'linear-gradient(160deg,#c89010,#f4c430)', 'linear-gradient(160deg,#1050b8,#3a86ff)');
+
+/* ══════════════════════════════════════════════════════
+   5. LEFT ARM  — P5 (orange) up, P6 (cyan) down
+   Connects from 8th block (CENTER_ROW_L=7)
+══════════════════════════════════════════════════════ */
+homeCircle('radial-gradient(circle,#ffb347,#ff7c00,#c45000)','0 0 18px #ff7c0099',LH_X,P5_HOME_Y);
+homeLabel('P5','#fff','0 0 10px rgba(255,124,0,1),0 2px 6px rgba(0,0,0,1)',LH_X,P5_HOME_Y, HOME_D+4, 0);
+
+for(let i=ARM_N_LR;i>=1;i--) arm('p5',L_ARM_X, CY_L-i*S);
+slv(L_ARM_X,CY_L);
+for(let i=1;i<=ARM_N_LR;i++) arm('p6',L_ARM_X, CY_L+i*S);
+
+homeCircle('radial-gradient(circle,#40e8e8,#00b8b8,#006666)','0 0 18px #00b8b899',LH_X,P6_HOME_Y);
+homeLabel('P6','#fff','0 0 10px rgba(0,184,184,1),0 2px 6px rgba(0,0,0,1)',LH_X,P6_HOME_Y, HOME_D+4, 0);
+
+/* ── Left stem ── */
+L_STEM_XS.forEach(x=>slv(x,CY_L));
+arrowSVG(L_STEM_XS[0],CY_L,'r');
+
+/* ── Left U-connector: entry already at outer rect col0, V-bar col1, legs col2 ── */
+for(let r=LU_TOP_ROW;r<=LU_BOT_ROW;r++) slv(cx(LU_VBAR_COL),ry(r));
+slv(cx(LU_LEG_COL),LU_TOP_Y);
+slv(cx(LU_LEG_COL),LU_BOT_Y);
+
+/* ── Left barrels: P5(top)|P6(bot) ── */
+barrelV(LB_LEFT, LU_TOP_Y, LB_W, LU_BOT_Y+BL-LU_TOP_Y, false, 'linear-gradient(135deg,#7a3000,#c45000,#ff7c00)', 'linear-gradient(135deg,#004444,#006666,#00b8b8)');
+
+/* ══════════════════════════════════════════════════════
+   6. RIGHT ARM  — P7 (pink) up, P8 (lime) down
+   Connects from 6th block (CENTER_ROW_R=5)
+══════════════════════════════════════════════════════ */
+homeCircle('radial-gradient(circle,#c084fc,#7c3aed,#4c1d95)','0 0 18px #7c3aed99',RH_X,P7_HOME_Y);
+homeLabel('P7','#fff','0 0 10px rgba(124,58,237,1),0 2px 6px rgba(0,0,0,1)',RH_X,P7_HOME_Y, -(HOME_D+4), 0);
+
+for(let i=ARM_N_LR;i>=1;i--) arm('p7',R_ARM_X, CY_R-i*S);
+slv(R_ARM_X,CY_R);
+for(let i=1;i<=ARM_N_LR;i++) arm('p8',R_ARM_X, CY_R+i*S);
+
+homeCircle('radial-gradient(circle,#c8ff60,#80d800,#3a6a00)','0 0 18px #80d80099',RH_X,P8_HOME_Y);
+homeLabel('P8','#fff','0 0 10px rgba(128,216,0,1),0 2px 6px rgba(0,0,0,1)',RH_X,P8_HOME_Y, -(HOME_D+4), 0);
+
+/* ── Right stem ── */
+R_STEM_XS.forEach(x=>slv(x,CY_R));
+arrowSVG(R_STEM_XS[R_STEM_XS.length-1],CY_R,'l');
+
+/* ── Right U-connector: entry already at outer rect col24, V-bar col23, legs col22 ── */
+for(let r=RU_TOP_ROW;r<=RU_BOT_ROW;r++) slv(cx(RU_VBAR_COL),ry(r));
+slv(cx(RU_LEG_COL),RU_TOP_Y);
+slv(cx(RU_LEG_COL),RU_BOT_Y);
+
+/* ── Right barrels: P7(top)|P8(bot) ── */
+barrelV(RB_LEFT, RU_TOP_Y, RB_W, RU_BOT_Y+BL-RU_TOP_Y, false, 'linear-gradient(135deg,#2e0060,#4c1d95,#7c3aed)', 'linear-gradient(135deg,#1e3600,#3a6a00,#80d800)');
+
+/* ══════════════════════════════════════════════════════
+   7. TOKENS
+══════════════════════════════════════════════════════ */
+placeTokens(P1_HOME_X,HOME_TOP_Y,TCOLORS.p1);
+placeTokens(P2_HOME_X,HOME_TOP_Y,TCOLORS.p2);
+placeTokens(P3_HOME_X,HOME_BOT_Y,TCOLORS.p3);
+placeTokens(P4_HOME_X,HOME_BOT_Y,TCOLORS.p4);
+placeTokens(LH_X,P5_HOME_Y,TCOLORS.p5);
+placeTokens(LH_X,P6_HOME_Y,TCOLORS.p6);
+placeTokens(RH_X,P7_HOME_Y,TCOLORS.p7);
+placeTokens(RH_X,P8_HOME_Y,TCOLORS.p8);
+</script>
+</body>
+</html>

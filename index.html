@@ -3687,7 +3687,7 @@
               </div>
             </div>
           </div>
-          <div class="map-card rip" data-mv="neon" data-ml="Neon City" onclick="selMap(this);ripple(event,this)">
+          <div class="map-card rip" data-mv="neon" data-ml="8 Player Layout" onclick="selMap(this);ripple(event,this)">
             <div class="map-thumb mp-ne">
               <div class="map-mini">
                 <div class="mz-r"></div>
@@ -3705,7 +3705,7 @@
             <div class="map-info2">
               <div>
                 <div class="map-name-row">
-                  <div class="map-name">Neon City</div>
+                  <div class="map-name">8 Player Layout</div>
                   <div class="map-chk"></div>
                 </div>
                 <div class="map-desc">Futuristic board art with glowing lanes and high-contrast corners.</div>
@@ -4305,7 +4305,11 @@
     function enterMap() {
       localStorage.setItem('ludoMap', JSON.stringify(selMapData));
       showToast('🗺️ Loading ' + selMapData.l + '...');
-      setTimeout(() => window.location.href = `ludo_board.html?layout=${encodeURIComponent(selMapData.v)}`, 600);
+      let player8Layout = false;
+      if(selMapData.l === '8 Player Layout'){
+        player8Layout = true
+      }
+      setTimeout(() => window.location.href = !player8Layout ? `ludo_board.html?layout=${encodeURIComponent(selMapData.v)}`: `ludo_board_8_player.html?layout=classic`, 600);
     }
     function joinMode(code, name) {
       const btns = document.querySelectorAll('.join-btn2');
