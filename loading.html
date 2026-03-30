@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Limat Studio Presents</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#04070f;
+      --text:#ebf3ff;
+      --soft:rgba(235,243,255,.62);
+      --green:#00e5a0;
+      --gold:#ffb800;
+      --blue:#47b8ff;
+      --border:rgba(255,255,255,.1);
+    }
+    * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+    html, body {
+      width:100%;
+      min-height:100vh;
+      background:#02040a;
+      display:flex;
+      justify-content:center;
+      font-family:'Rajdhani', sans-serif;
+      color:var(--text);
+    }
+    .phone {
+      position:relative;
+      width:390px;
+      height:690px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(0,229,160,.18), transparent 20%),
+        radial-gradient(circle at 50% 76%, rgba(71,184,255,.16), transparent 28%),
+        linear-gradient(180deg, #060b14 0%, #08111d 45%, #04070f 100%);
+      box-shadow:0 0 0 1px rgba(0,229,160,.08), 0 40px 120px rgba(0,0,0,.9);
+    }
+    .phone::before {
+      content:"";
+      position:absolute;
+      inset:-16%;
+      background:
+        repeating-linear-gradient(60deg, rgba(0,229,160,.06) 0 1px, transparent 1px 26px),
+        repeating-linear-gradient(-60deg, rgba(71,184,255,.04) 0 1px, transparent 1px 26px);
+      transform:perspective(900px) rotateX(66deg) translateY(170px) scale(1.2);
+      opacity:.75;
+    }
+    .shell {
+      position:relative;
+      z-index:1;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:22px;
+      padding:32px;
+      text-align:center;
+    }
+    .brand-mark {
+      position:relative;
+      width:164px;
+      height:164px;
+      display:grid;
+      place-items:center;
+    }
+    .ring, .ring-b, .ring-c {
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .ring {
+      animation:spin 8s linear infinite;
+      box-shadow:0 0 36px rgba(0,229,160,.12);
+    }
+    .ring-b {
+      inset:16px;
+      border-color:rgba(0,229,160,.26);
+      animation:spin-rev 5s linear infinite;
+    }
+    .ring-c {
+      inset:34px;
+      border-color:rgba(255,184,0,.22);
+      animation:spin 4s linear infinite;
+    }
+    .core {
+      position:relative;
+      width:74px;
+      height:74px;
+      border-radius:24px;
+      background:linear-gradient(145deg, rgba(0,229,160,.95), rgba(71,184,255,.85));
+      box-shadow:0 0 28px rgba(0,229,160,.35);
+      transform:rotate(45deg);
+    }
+    .core::before {
+      content:"";
+      position:absolute;
+      inset:12px;
+      border-radius:18px;
+      background:linear-gradient(145deg, rgba(6,11,20,.9), rgba(11,22,38,.65));
+    }
+    .title-top {
+      font-family:'Orbitron', sans-serif;
+      font-size:12px;
+      letter-spacing:3.8px;
+      text-transform:uppercase;
+      color:var(--soft);
+    }
+    .title-main {
+      font-family:'Bebas Neue', sans-serif;
+      font-size:58px;
+      line-height:.9;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      text-shadow:0 0 24px rgba(0,229,160,.16);
+    }
+    .loading-rail {
+      width:220px;
+      height:10px;
+      border-radius:999px;
+      overflow:hidden;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.05);
+    }
+    .loading-fill {
+      width:0;
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(90deg, var(--green), var(--gold), var(--blue));
+      animation:load 3.2s ease forwards;
+    }
+    .progress-copy {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:6px;
+    }
+    .percent {
+      font-family:'Orbitron', sans-serif;
+      font-size:24px;
+      font-weight:800;
+      letter-spacing:1px;
+      color:var(--text);
+    }
+    .hint {
+      font-size:11px;
+      letter-spacing:1.8px;
+      text-transform:uppercase;
+      color:rgba(235,243,255,.38);
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    @keyframes spin-rev { to { transform:rotate(-360deg); } }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="shell">
+      <div class="brand-mark">
+        <div class="ring"></div>
+        <div class="ring-b"></div>
+        <div class="ring-c"></div>
+        <div class="core"></div>
+      </div>
+      <div class="title-top">Limat Studio Presents</div>
+      <div class="title-main">Daya Pass Arena</div>
+      <div class="loading-rail"><div class="loading-fill" id="loadingFill"></div></div>
+      <div class="progress-copy">
+        <div class="percent" id="loadingPercent">0%</div>
+        <div class="hint">Loading Arena</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let progress = 0;
+    const loadingPercent = document.getElementById('loadingPercent');
+    const loadingFill = document.getElementById('loadingFill');
+
+    function renderProgress(value) {
+      loadingPercent.textContent = value + '%';
+      loadingFill.style.width = value + '%';
+    }
+
+    function enterLobby() {
+      try {
+        sessionStorage.setItem('dayaLoadingSeen', '1');
+      } catch (e) {}
+      window.location.href = 'index.html';
+    }
+
+    const progressTimer = setInterval(() => {
+      progress += Math.floor(Math.random() * 8) + 4;
+      if (progress >= 100) {
+        progress = 100;
+        renderProgress(progress);
+        clearInterval(progressTimer);
+        setTimeout(enterLobby, 250);
+        return;
+      }
+      renderProgress(progress);
+    }, 180);
+
+    renderProgress(0);
+  </script>
+</body>
+</html>

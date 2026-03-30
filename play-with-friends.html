@@ -4,49 +4,393 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=390, initial-scale=1.0">
   <title>Daya Pass Arena - With Friends</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root { --green:#00e5a0; --blue:#3b82f6; --gold:#ffb800; --text:#e8f0ff; --soft:rgba(232,240,255,.72); --muted:rgba(232,240,255,.42); --border:rgba(255,255,255,.09); --border2:rgba(255,255,255,.14); --fast:.15s ease; --med:.25s ease; }
+    :root {
+      --bg:#050812;
+      --text:#e8f0ff;
+      --soft:rgba(232,240,255,.72);
+      --muted:rgba(232,240,255,.42);
+      --green:#00e5a0;
+      --blue:#47b8ff;
+      --gold:#ffb800;
+      --border:rgba(255,255,255,.09);
+      --border-2:rgba(255,255,255,.14);
+      --fast:.16s ease;
+      --med:.28s ease;
+    }
     * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
-    html,body { width:100%; min-height:100vh; background:#04060c; color:var(--text); font-family:'Rajdhani',sans-serif; display:flex; justify-content:center; }
-    .phone { position:relative; width:390px; height:690px; overflow:hidden; background:linear-gradient(180deg, rgba(6,9,18,.96), rgba(10,15,24,.98)); box-shadow:0 0 0 1px rgba(0,229,160,.08), 0 40px 120px rgba(0,0,0,.9); }
-    .bg { position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at 18% 14%, rgba(0,229,160,.14), transparent 24%), radial-gradient(circle at 84% 18%, rgba(255,184,0,.14), transparent 24%), linear-gradient(145deg, #101325 0%, #0d1726 40%, #060b14 100%); }
-    .shell { position:relative; z-index:1; height:690px; overflow-y:auto; padding:0 14px 104px; scrollbar-width:none; }
+    html, body {
+      width:100%;
+      min-height:100vh;
+      background:#04060c;
+      color:var(--text);
+      font-family:'Rajdhani', sans-serif;
+      display:flex;
+      justify-content:center;
+    }
+    .phone {
+      position:relative;
+      width:390px;
+      height:690px;
+      overflow:hidden;
+      background:linear-gradient(180deg, rgba(6,10,18,.98), rgba(8,14,22,.99));
+      box-shadow:0 0 0 1px rgba(0,229,160,.08), 0 40px 120px rgba(0,0,0,.9);
+    }
+    .bg {
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 18% 14%, rgba(0,229,160,.16), transparent 24%),
+        radial-gradient(circle at 82% 18%, rgba(71,184,255,.16), transparent 24%),
+        radial-gradient(circle at 50% 76%, rgba(255,184,0,.08), transparent 30%),
+        linear-gradient(145deg, #08111d 0%, #0c1728 42%, #050912 100%);
+    }
+    .bg::before {
+      content:"";
+      position:absolute;
+      inset:-18%;
+      background:
+        repeating-linear-gradient(60deg, rgba(0,229,160,.08) 0 1px, transparent 1px 26px),
+        repeating-linear-gradient(-60deg, rgba(71,184,255,.05) 0 1px, transparent 1px 26px);
+      transform:perspective(900px) rotateX(62deg) translateY(148px) scale(1.2);
+      opacity:.72;
+    }
+    .shell {
+      position:relative;
+      z-index:1;
+      height:690px;
+      overflow-y:auto;
+      padding:0 14px 118px;
+      scrollbar-width:none;
+    }
     .shell::-webkit-scrollbar { display:none; }
-    .hdr,.hdr-side,.hdr-copy,.section-title,.row { display:flex; align-items:center; gap:10px; }
-    .hdr { position:sticky; top:0; z-index:5; justify-content:space-between; margin:0 -14px; padding:14px; background:linear-gradient(180deg, rgba(8,12,20,.96), rgba(8,12,20,.72)); border-bottom:1px solid rgba(255,255,255,.05); backdrop-filter:blur(12px); }
-    .hdr-copy { flex-direction:column; align-items:flex-start; gap:2px; }
-    .eyebrow { font-size:11px; letter-spacing:1.8px; text-transform:uppercase; color:var(--muted); }
-    .hdr-title { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1.3px; line-height:.9; }
-    .icon-btn,.mini-btn,.panel-btn,.friend-card,.nav-btn { border:1px solid var(--border2); background:rgba(255,255,255,.05); color:var(--text); font:inherit; cursor:pointer; transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast), background var(--fast); }
-    .icon-btn:hover,.mini-btn:hover,.panel-btn:hover,.friend-card:hover,.nav-btn:hover,.panel:hover { transform:translateY(-2px); border-color:rgba(0,229,160,.32); box-shadow:0 12px 28px rgba(0,229,160,.12); }
-    .icon-btn { width:40px; height:40px; border-radius:14px; display:grid; place-items:center; }
-    .mini-btn,.panel-btn { border-radius:999px; font-weight:700; }
-    .mini-btn { height:38px; padding:0 14px; color:var(--green); }
-    .panel-btn { height:42px; padding:0 18px; color:var(--green); }
-    .ico { width:16px; height:16px; position:relative; display:inline-block; color:currentColor; }
-    .ico::before,.ico::after { content:""; position:absolute; }
+    .hdr, .hdr-left, .hdr-copy, .section-head, .room-row, .friend-top, .toggle-row {
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .hdr {
+      position:sticky;
+      top:0;
+      z-index:8;
+      justify-content:space-between;
+      margin:0 -14px;
+      padding:14px;
+      background:linear-gradient(180deg, rgba(8,12,20,.96), rgba(8,12,20,.74));
+      border-bottom:1px solid rgba(255,255,255,.05);
+      backdrop-filter:blur(14px);
+    }
+    .hdr-copy {
+      flex-direction:column;
+      align-items:flex-start;
+      gap:2px;
+    }
+    .eyebrow {
+      font-size:11px;
+      letter-spacing:1.8px;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+    .hdr-title {
+      font-family:'Bebas Neue', sans-serif;
+      font-size:28px;
+      line-height:.92;
+      letter-spacing:1.3px;
+    }
+    .icon-btn, .mini-btn, .room-btn, .friend-card, .nav-btn, .toggle-pill {
+      border:1px solid var(--border-2);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      font:inherit;
+      cursor:pointer;
+      transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast), background var(--fast);
+    }
+    .icon-btn:hover, .mini-btn:hover, .room-btn:hover, .friend-card:hover, .nav-btn:hover, .toggle-pill:hover {
+      transform:translateY(-2px);
+      border-color:rgba(0,229,160,.34);
+      box-shadow:0 14px 30px rgba(0,229,160,.12);
+    }
+    .icon-btn {
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+    }
+    .mini-btn {
+      min-width:92px;
+      height:38px;
+      padding:0 14px;
+      border-radius:999px;
+      color:var(--green);
+      font-weight:700;
+    }
+    .ico {
+      width:16px;
+      height:16px;
+      position:relative;
+      display:inline-block;
+      color:currentColor;
+    }
+    .ico::before, .ico::after { content:""; position:absolute; }
     .ico.back::before { width:10px; height:10px; border-left:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg); left:4px; top:3px; }
+    .ico.spark::before { inset:1px 5px; background:currentColor; clip-path:polygon(55% 0,100% 0,55% 50%,100% 50%,20% 100%,42% 56%,0 56%); }
     .section { margin-top:14px; }
-    .panel { border:1px solid var(--border); border-radius:24px; padding:14px; background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)), rgba(13,18,32,.9); transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast); }
-    .hero h2 { font-family:'Bebas Neue',sans-serif; font-size:31px; line-height:.9; letter-spacing:1.2px; }
-    .hero p { margin-top:6px; color:var(--soft); font-size:13px; line-height:1.3; }
-    .code-box { margin-top:14px; display:flex; align-items:center; justify-content:space-between; gap:10px; border:1px solid rgba(0,229,160,.18); border-radius:18px; padding:12px; background:rgba(0,229,160,.08); }
-    .code-box strong { font-family:'Orbitron',sans-serif; font-size:18px; letter-spacing:1px; }
-    .section-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
-    .section-title { font-family:'Orbitron',sans-serif; font-size:13px; letter-spacing:.9px; text-transform:uppercase; color:var(--soft); }
-    .friend-list { display:grid; gap:10px; }
-    .friend-card { border-radius:20px; padding:12px; text-align:left; }
-    .row { justify-content:space-between; }
-    .friend-meta { display:flex; align-items:center; gap:10px; }
-    .avatar { width:44px; height:44px; border-radius:14px; display:grid; place-items:center; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); font-size:20px; }
-    .friend-meta strong { display:block; font-size:15px; }
-    .friend-meta span { display:block; margin-top:3px; color:var(--muted); font-size:12px; }
-    .status { min-width:70px; height:30px; border-radius:999px; display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--green); border:1px solid rgba(0,229,160,.22); background:rgba(0,229,160,.1); }
-    .footer-nav { position:absolute; left:0; right:0; bottom:0; z-index:8; display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:10px 12px 12px; background:linear-gradient(180deg, rgba(8,12,20,.2), rgba(8,12,20,.96)); border-top:1px solid rgba(255,255,255,.06); backdrop-filter:blur(12px); }
-    .nav-btn { min-height:56px; border-radius:18px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
-    .nav-btn.act { color:var(--green); border-color:rgba(0,229,160,.3); background:linear-gradient(180deg, rgba(0,229,160,.12), rgba(255,255,255,.03)); }
-    .toast { position:fixed; left:50%; bottom:20px; transform:translateX(-50%) translateY(24px); min-width:180px; max-width:280px; padding:10px 14px; border-radius:14px; background:rgba(7,10,18,.92); border:1px solid rgba(255,255,255,.08); font-size:13px; text-align:center; opacity:0; pointer-events:none; transition:opacity var(--med), transform var(--med); z-index:20; }
+    .panel {
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:14px;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)), rgba(13,18,32,.9);
+    }
+    .hero {
+      position:relative;
+      overflow:hidden;
+    }
+    .hero::before {
+      content:"";
+      position:absolute;
+      width:200px;
+      height:200px;
+      right:-54px;
+      top:-48px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(0,229,160,.18), transparent 70%);
+      filter:blur(10px);
+    }
+    .hero h2 {
+      position:relative;
+      z-index:1;
+      font-family:'Bebas Neue', sans-serif;
+      font-size:34px;
+      line-height:.92;
+      letter-spacing:1.2px;
+      max-width:230px;
+    }
+    .hero p {
+      position:relative;
+      z-index:1;
+      margin-top:8px;
+      max-width:250px;
+      color:var(--soft);
+      font-size:13px;
+      line-height:1.3;
+    }
+    .room-card {
+      position:relative;
+      z-index:1;
+      margin-top:16px;
+      border-radius:22px;
+      padding:14px;
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    }
+    .room-row {
+      justify-content:space-between;
+    }
+    .room-code {
+      font-family:'Orbitron', sans-serif;
+      font-size:22px;
+      letter-spacing:2px;
+    }
+    .room-sub {
+      margin-top:6px;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .room-actions {
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:10px;
+      margin-top:12px;
+    }
+    .room-btn {
+      height:42px;
+      border-radius:16px;
+      font-weight:700;
+    }
+    .room-btn.primary {
+      color:#06131a;
+      border-color:rgba(0,229,160,.4);
+      background:linear-gradient(135deg, var(--green), var(--blue));
+    }
+    .section-head {
+      justify-content:space-between;
+      margin-bottom:12px;
+    }
+    .section-title {
+      font-family:'Orbitron', sans-serif;
+      font-size:13px;
+      letter-spacing:.9px;
+      text-transform:uppercase;
+      color:var(--soft);
+    }
+    .toggle-row {
+      gap:8px;
+    }
+    .toggle-pill {
+      height:32px;
+      padding:0 12px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:700;
+      color:var(--soft);
+    }
+    .toggle-pill.active {
+      color:#07131a;
+      border-color:rgba(0,229,160,.42);
+      background:linear-gradient(135deg, var(--green), var(--blue));
+      box-shadow:0 12px 24px rgba(0,229,160,.16);
+    }
+    .friend-list {
+      display:grid;
+      gap:10px;
+    }
+    .friend-card {
+      border-radius:20px;
+      padding:12px;
+      text-align:left;
+    }
+    .friend-top {
+      justify-content:space-between;
+      align-items:flex-start;
+    }
+    .friend-main {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .avatar {
+      width:46px;
+      height:46px;
+      border-radius:15px;
+      display:grid;
+      place-items:center;
+      flex:0 0 auto;
+      font-size:18px;
+      border:1px solid rgba(255,255,255,.1);
+      background:linear-gradient(145deg, rgba(0,229,160,.16), rgba(71,184,255,.08));
+    }
+    .friend-name {
+      font-size:15px;
+      font-weight:700;
+      line-height:1.05;
+    }
+    .friend-meta {
+      margin-top:4px;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .friend-badge {
+      min-width:76px;
+      height:30px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(0,229,160,.22);
+      background:rgba(0,229,160,.1);
+      color:var(--green);
+      font-size:11px;
+      font-weight:700;
+    }
+    .friend-actions {
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:8px;
+      margin-top:10px;
+    }
+    .friend-btn {
+      height:36px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      font:700 12px 'Rajdhani', sans-serif;
+      cursor:pointer;
+      transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast);
+    }
+    .friend-btn:hover {
+      transform:translateY(-2px);
+      border-color:rgba(0,229,160,.32);
+      box-shadow:0 12px 24px rgba(0,229,160,.1);
+    }
+    .grid-two {
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:10px;
+    }
+    .mini-stat {
+      border-radius:18px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.035);
+      text-align:center;
+    }
+    .mini-stat strong {
+      display:block;
+      font-size:20px;
+      line-height:1;
+    }
+    .mini-stat span {
+      display:block;
+      margin-top:4px;
+      color:var(--muted);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.7px;
+    }
+    .footer-nav {
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:8;
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:8px;
+      padding:10px 12px 12px;
+      background:linear-gradient(180deg, rgba(8,12,20,.2), rgba(8,12,20,.96));
+      border-top:1px solid rgba(255,255,255,.06);
+      backdrop-filter:blur(12px);
+    }
+    .nav-btn {
+      min-height:56px;
+      border-radius:18px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      font-size:11px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+    }
+    .nav-btn.act {
+      color:var(--green);
+      border-color:rgba(0,229,160,.3);
+      background:linear-gradient(180deg, rgba(0,229,160,.12), rgba(255,255,255,.03));
+    }
+    .toast {
+      position:fixed;
+      left:50%;
+      bottom:20px;
+      transform:translateX(-50%) translateY(24px);
+      min-width:180px;
+      max-width:280px;
+      padding:10px 14px;
+      border-radius:14px;
+      background:rgba(7,10,18,.92);
+      border:1px solid rgba(255,255,255,.08);
+      font-size:13px;
+      text-align:center;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity var(--med), transform var(--med);
+      z-index:20;
+    }
     .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
   </style>
 </head>
@@ -55,30 +399,133 @@
     <div class="bg"></div>
     <div class="shell">
       <div class="hdr">
-        <div class="hdr-side"><button class="icon-btn" onclick="window.location.href='index.html'"><span class="ico back"></span></button><div class="hdr-copy"><div class="eyebrow">Private Lobby</div><div class="hdr-title">With Friends</div></div></div>
-        <button class="mini-btn" onclick="window.location.href='friends.html'">Friends</button>
+        <div class="hdr-left">
+          <button class="icon-btn" onclick="window.location.href='index.html'" aria-label="Back to lobby"><span class="ico back"></span></button>
+          <div class="hdr-copy">
+            <div class="eyebrow">Private Squad Room</div>
+            <div class="hdr-title">With Friends</div>
+          </div>
+        </div>
+        <button class="mini-btn" onclick="window.location.href='friends.html'"><span class="ico spark"></span>Roster</button>
       </div>
+
       <div class="section">
         <div class="panel hero">
-          <h2>Create A Room And Pull Your Squad In</h2>
-          <p>Share a room code, invite online friends, and launch custom matches with your own pace.</p>
-          <div class="code-box">
-            <div><div class="eyebrow">Room Code</div><strong>DAYA-4421</strong></div>
-            <button class="panel-btn" onclick="showToast('Room code copied.')">Copy</button>
+          <h2>Build A Custom Room And Pull The Squad In</h2>
+          <p>Create a private lobby, switch room rules, and send fast invites without leaving the play flow.</p>
+          <div class="room-card">
+            <div class="room-row">
+              <div>
+                <div class="eyebrow">Room Code</div>
+                <div class="room-code" id="roomCode">DAYA-4421</div>
+              </div>
+              <div class="friend-badge" id="roomModeBadge">2v2</div>
+            </div>
+            <div class="room-sub">Share this code or send direct invites to online friends.</div>
+            <div class="room-actions">
+              <button class="room-btn primary" onclick="copyRoomCode()">Copy Code</button>
+              <button class="room-btn" onclick="shuffleRoomCode()">New Code</button>
+            </div>
           </div>
         </div>
       </div>
+
       <div class="section">
         <div class="panel">
-          <div class="section-head"><div class="section-title">Ready Friends</div><button class="mini-btn" onclick="showToast('Invites sent to your online squad.')">Invite All</button></div>
+          <div class="section-head">
+            <div class="section-title">Room Setup</div>
+            <div class="toggle-row">
+              <button class="toggle-pill" onclick="setRoomMode('1v1', this)">1v1</button>
+              <button class="toggle-pill active" onclick="setRoomMode('2v2', this)">2v2</button>
+              <button class="toggle-pill" onclick="setRoomMode('4v4', this)">4v4</button>
+            </div>
+          </div>
+          <div class="grid-two">
+            <div class="mini-stat"><strong id="slotCount">4</strong><span>Seats Open</span></div>
+            <div class="mini-stat"><strong>Private</strong><span>Room Type</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="panel">
+          <div class="section-head">
+            <div class="section-title">Online Friends</div>
+            <button class="mini-btn" onclick="inviteAll()">Invite All</button>
+          </div>
           <div class="friend-list">
-            <button class="friend-card" onclick="showToast('Invite sent to KING_R.')"><div class="row"><div class="friend-meta"><div class="avatar">🦁</div><div><strong>KING_R</strong><span>Online now · 79% win rate</span></div></div><div class="status">Invite</div></div></button>
-            <button class="friend-card" onclick="showToast('Invite sent to NOVA_X.')"><div class="row"><div class="friend-meta"><div class="avatar">🎯</div><div><strong>NOVA_X</strong><span>Lobby idle · Chennai</span></div></div><div class="status">Invite</div></div></button>
-            <button class="friend-card" onclick="showToast('Invite sent to QUEEN_V.')"><div class="row"><div class="friend-meta"><div class="avatar">👑</div><div><strong>QUEEN_V</strong><span>Party leader · S tier</span></div></div><div class="status">Invite</div></div></button>
+            <div class="friend-card">
+              <div class="friend-top">
+                <div class="friend-main">
+                  <div class="avatar">KR</div>
+                  <div>
+                    <div class="friend-name">KING_R</div>
+                    <div class="friend-meta">Online now • Fast finisher • Chennai</div>
+                  </div>
+                </div>
+                <div class="friend-badge">Ready</div>
+              </div>
+              <div class="friend-actions">
+                <button class="friend-btn" onclick="sendInvite('KING_R')">Invite</button>
+                <button class="friend-btn" onclick="showToast('Opening KING_R profile.')">Profile</button>
+              </div>
+            </div>
+
+            <div class="friend-card">
+              <div class="friend-top">
+                <div class="friend-main">
+                  <div class="avatar">NX</div>
+                  <div>
+                    <div class="friend-name">NOVA_X</div>
+                    <div class="friend-meta">Lobby idle • Looking for duo • Madurai</div>
+                  </div>
+                </div>
+                <div class="friend-badge">Online</div>
+              </div>
+              <div class="friend-actions">
+                <button class="friend-btn" onclick="sendInvite('NOVA_X')">Invite</button>
+                <button class="friend-btn" onclick="showToast('Opening NOVA_X profile.')">Profile</button>
+              </div>
+            </div>
+
+            <div class="friend-card">
+              <div class="friend-top">
+                <div class="friend-main">
+                  <div class="avatar">QV</div>
+                  <div>
+                    <div class="friend-name">QUEEN_V</div>
+                    <div class="friend-meta">Party leader • Strong support play • Coimbatore</div>
+                  </div>
+                </div>
+                <div class="friend-badge">Hot</div>
+              </div>
+              <div class="friend-actions">
+                <button class="friend-btn" onclick="sendInvite('QUEEN_V')">Invite</button>
+                <button class="friend-btn" onclick="showToast('Opening QUEEN_V profile.')">Profile</button>
+              </div>
+            </div>
+
+            <div class="friend-card">
+              <div class="friend-top">
+                <div class="friend-main">
+                  <div class="avatar">ZX</div>
+                  <div>
+                    <div class="friend-name">ZEN_X</div>
+                    <div class="friend-meta">In menu • Calm player • Bengaluru</div>
+                  </div>
+                </div>
+                <div class="friend-badge">Open</div>
+              </div>
+              <div class="friend-actions">
+                <button class="friend-btn" onclick="sendInvite('ZEN_X')">Invite</button>
+                <button class="friend-btn" onclick="showToast('Opening ZEN_X profile.')">Profile</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
     <div class="footer-nav">
       <button class="nav-btn" onclick="window.location.href='index.html'">Home</button>
       <button class="nav-btn" onclick="window.location.href='play-online.html'">Online</button>
@@ -86,11 +533,53 @@
       <button class="nav-btn" onclick="window.location.href='vs-computer.html'">AI</button>
     </div>
   </div>
+
   <div class="toast" id="toast"></div>
+
   <script>
-    let toastTimer = null;
     const toast = document.getElementById('toast');
-    function showToast(message){ toast.textContent = message; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 1800); }
+    const roomCode = document.getElementById('roomCode');
+    const roomModeBadge = document.getElementById('roomModeBadge');
+    const slotCount = document.getElementById('slotCount');
+    let toastTimer = null;
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+    }
+
+    function copyRoomCode() {
+      const value = roomCode.textContent;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).then(() => showToast('Room code copied.')).catch(() => showToast('Room code ready to share.'));
+      } else {
+        showToast('Room code ready to share.');
+      }
+    }
+
+    function shuffleRoomCode() {
+      const code = 'DAYA-' + Math.floor(1000 + Math.random() * 9000);
+      roomCode.textContent = code;
+      showToast('Fresh room code created.');
+    }
+
+    function setRoomMode(mode, button) {
+      document.querySelectorAll('.toggle-pill').forEach((pill) => pill.classList.remove('active'));
+      button.classList.add('active');
+      roomModeBadge.textContent = mode;
+      slotCount.textContent = mode === '1v1' ? '2' : mode === '2v2' ? '4' : '8';
+      showToast(mode + ' room selected.');
+    }
+
+    function sendInvite(name) {
+      showToast('Invite sent to ' + name + '.');
+    }
+
+    function inviteAll() {
+      showToast('Invites sent to your full online squad.');
+    }
   </script>
 </body>
 </html>

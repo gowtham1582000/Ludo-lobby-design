@@ -6,124 +6,930 @@
   <title>Daya Pass Arena - Play Online</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
   <style>
-    :root { --green:#00e5a0; --blue:#3b82f6; --gold:#ffb800; --text:#e8f0ff; --soft:rgba(232,240,255,.72); --muted:rgba(232,240,255,.42); --border:rgba(255,255,255,.09); --border2:rgba(255,255,255,.14); --fast:.15s ease; --med:.25s ease; }
-    * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
-    html,body { width:100%; min-height:100vh; background:#04060c; color:var(--text); font-family:'Rajdhani',sans-serif; display:flex; justify-content:center; }
-    .phone { position:relative; width:390px; height:690px; overflow:hidden; background:linear-gradient(180deg, rgba(6,9,18,.96), rgba(10,15,24,.98)); box-shadow:0 0 0 1px rgba(0,229,160,.08), 0 40px 120px rgba(0,0,0,.9); }
-    .bg { position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at 20% 14%, rgba(0,229,160,.16), transparent 24%), radial-gradient(circle at 82% 18%, rgba(59,130,246,.16), transparent 24%), radial-gradient(circle at 50% 82%, rgba(255,184,0,.10), transparent 30%), linear-gradient(145deg, #091221 0%, #0c1728 40%, #060b14 100%); }
-    .shell { position:relative; z-index:1; height:690px; overflow-y:auto; padding:0 14px 104px; scrollbar-width:none; }
+    :root {
+      --c-bg:#080c14;
+      --c-panel:#0d1220;
+      --c-surface:#111928;
+      --c-lift:#16202e;
+      --c-border:rgba(255,255,255,.07);
+      --c-border2:rgba(255,255,255,.13);
+      --c-green:#00e5a0;
+      --c-green2:#00ff66;
+      --c-gold:#ffb800;
+      --c-blue:#3b82f6;
+      --c-purple:#a855f7;
+      --c-rose:#f43f5e;
+      --c-text:#e8f0ff;
+      --c-soft:rgba(232,240,255,.62);
+      --c-muted:rgba(232,240,255,.35);
+      --r2:12px;
+      --r3:16px;
+      --r4:20px;
+      --fast:.12s ease;
+      --med:.22s ease;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    button {
+      font:inherit;
+      color:inherit;
+      appearance:none;
+      -webkit-appearance:none;
+      border:none;
+      background:none;
+    }
+    html, body {
+      width:100%;
+      min-height:100vh;
+      background:#04060c;
+      color:var(--c-text);
+      font-family:'Rajdhani', sans-serif;
+      display:flex;
+      justify-content:center;
+      overflow-x:hidden;
+    }
+    .phone {
+      position:relative;
+      width:390px;
+      height:690px;
+      overflow:hidden;
+      box-shadow:0 0 0 1px rgba(0,229,160,.08), 0 40px 120px rgba(0,0,0,.9);
+    }
+    .bg {
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255,184,0,.08) 0 28%, transparent 55%),
+        linear-gradient(140deg, #0b1528 0%, #0b1222 45%, #060b14 100%);
+      overflow:hidden;
+      pointer-events:none;
+    }
+    .bg::before {
+      content:"";
+      position:absolute;
+      inset:-12%;
+      background:
+        repeating-linear-gradient(60deg, rgba(0,229,160,.10) 0 1px, transparent 1px 24px),
+        repeating-linear-gradient(-60deg, rgba(59,130,246,.08) 0 1px, transparent 1px 24px);
+      opacity:.55;
+      transform:skewY(-6deg);
+    }
+    .bg::after {
+      content:"";
+      position:absolute;
+      inset:-20%;
+      background:
+        radial-gradient(ellipse at 20% 25%, rgba(0,229,160,.25), transparent 46%),
+        radial-gradient(ellipse at 80% 30%, rgba(255,184,0,.18), transparent 42%),
+        radial-gradient(ellipse at 50% 78%, rgba(59,130,246,.20), transparent 48%);
+      filter:blur(28px);
+      mix-blend-mode:screen;
+    }
+    .shell {
+      position:relative;
+      z-index:1;
+      width:100%;
+      height:690px;
+      overflow-y:auto;
+      overflow-x:hidden;
+      display:flex;
+      flex-direction:column;
+      scrollbar-width:none;
+    }
     .shell::-webkit-scrollbar { display:none; }
-    .hdr,.hdr-side,.hdr-copy,.section-title,.meta-row { display:flex; align-items:center; gap:10px; }
-    .hdr { position:sticky; top:0; z-index:5; justify-content:space-between; margin:0 -14px; padding:14px; background:linear-gradient(180deg, rgba(8,12,20,.96), rgba(8,12,20,.72)); border-bottom:1px solid rgba(255,255,255,.05); backdrop-filter:blur(12px); }
-    .hdr-copy { flex-direction:column; align-items:flex-start; gap:2px; }
-    .eyebrow { font-size:11px; letter-spacing:1.8px; text-transform:uppercase; color:var(--muted); }
-    .hdr-title { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1.3px; line-height:.9; }
-    .icon-btn,.mini-btn,.mode-card,.nav-btn { border:1px solid var(--border2); background:rgba(255,255,255,.05); color:var(--text); font:inherit; cursor:pointer; transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast), background var(--fast); }
-    .icon-btn:hover,.mini-btn:hover,.mode-card:hover,.nav-btn:hover,.panel:hover { transform:translateY(-2px); border-color:rgba(0,229,160,.32); box-shadow:0 12px 28px rgba(0,229,160,.12); }
-    .icon-btn { width:40px; height:40px; border-radius:14px; display:grid; place-items:center; }
-    .mini-btn { height:38px; padding:0 14px; border-radius:999px; font-weight:700; color:var(--green); }
-    .ico { width:16px; height:16px; position:relative; display:inline-block; color:currentColor; }
-    .ico::before,.ico::after { content:""; position:absolute; }
-    .ico.back::before { width:10px; height:10px; border-left:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg); left:4px; top:3px; }
-    .ico.spark::before { inset:1px 5px; background:currentColor; clip-path:polygon(55% 0,100% 0,55% 50%,100% 50%,20% 100%,42% 56%,0 56%); }
-    .section { margin-top:14px; }
-    .panel { border:1px solid var(--border); border-radius:24px; padding:14px; background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)), rgba(13,18,32,.9); transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast); }
-    .hero h2 { font-family:'Bebas Neue',sans-serif; font-size:32px; line-height:.9; letter-spacing:1.2px; }
-    .hero p { margin-top:6px; color:var(--soft); font-size:13px; line-height:1.3; }
-    .hero-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px; }
-    .stat { border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:10px; background:rgba(255,255,255,.035); }
-    .stat b { display:block; font-size:20px; }
-    .stat span { display:block; margin-top:4px; color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.7px; }
-    .section-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
-    .section-title { font-family:'Orbitron',sans-serif; font-size:13px; letter-spacing:.9px; text-transform:uppercase; color:var(--soft); }
-    .mode-list { display:grid; gap:10px; }
-    .mode-card { border-radius:20px; padding:14px; text-align:left; }
-    .meta-row { justify-content:space-between; }
-    .mode-type { font-family:'Orbitron',sans-serif; font-size:13px; color:var(--green); }
-    .mode-badge { min-width:68px; height:30px; border-radius:999px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,.1); font-size:11px; color:var(--soft); }
-    .mode-card strong { display:block; font-size:18px; margin-top:8px; }
-    .mode-card span { display:block; margin-top:5px; color:var(--muted); font-size:12px; line-height:1.2; }
-    .bar { height:10px; margin-top:12px; border-radius:999px; overflow:hidden; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.08); }
-    .bar-fill { height:100%; border-radius:999px; background:linear-gradient(90deg, var(--green), var(--blue)); }
-    .queue-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
-    .queue-chip { border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:12px; text-align:center; background:rgba(255,255,255,.035); }
-    .queue-chip b { display:block; font-size:18px; }
-    .queue-chip span { display:block; margin-top:4px; color:var(--muted); font-size:11px; text-transform:uppercase; }
-    .footer-nav { position:absolute; left:0; right:0; bottom:0; z-index:8; display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:10px 12px 12px; background:linear-gradient(180deg, rgba(8,12,20,.2), rgba(8,12,20,.96)); border-top:1px solid rgba(255,255,255,.06); backdrop-filter:blur(12px); }
-    .nav-btn { min-height:56px; border-radius:18px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
-    .nav-btn.act { color:var(--green); border-color:rgba(0,229,160,.3); background:linear-gradient(180deg, rgba(0,229,160,.12), rgba(255,255,255,.03)); }
-    .toast { position:fixed; left:50%; bottom:20px; transform:translateX(-50%) translateY(24px); min-width:180px; max-width:280px; padding:10px 14px; border-radius:14px; background:rgba(7,10,18,.92); border:1px solid rgba(255,255,255,.08); font-size:13px; text-align:center; opacity:0; pointer-events:none; transition:opacity var(--med), transform var(--med); z-index:20; }
-    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+    .hdr {
+      flex-shrink:0;
+      display:grid;
+      grid-template-columns:30px minmax(0, 1fr) auto;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px 8px;
+      background:linear-gradient(180deg, rgba(8,12,20,.98) 0%, rgba(8,12,20,0) 100%);
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter:blur(20px);
+    }
+    .hdr-copy {
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:1px;
+    }
+    .eyebrow {
+      font-family:'Orbitron', monospace;
+      font-size:7px;
+      font-weight:700;
+      letter-spacing:2px;
+      color:var(--c-muted);
+      text-transform:uppercase;
+    }
+    .hdr-title {
+      font-family:'Bebas Neue', sans-serif;
+      font-size:22px;
+      line-height:.92;
+      letter-spacing:2px;
+      color:var(--c-text);
+    }
+    .ico-btn, .mini-pill, .mode-card, .map-card, .bet-chip, .cta-btn, .nav-it {
+      transition:var(--med);
+      cursor:pointer;
+    }
+    .ico-btn {
+      width:30px;
+      height:30px;
+      border-radius:9px;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--c-border2);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--c-text);
+    }
+    .ico-btn:hover {
+      background:rgba(0,229,160,.08);
+      border-color:rgba(0,229,160,.32);
+      transform:scale(1.06);
+    }
+    .back-ico {
+      width:10px;
+      height:10px;
+      border-left:2px solid currentColor;
+      border-bottom:2px solid currentColor;
+      transform:rotate(45deg);
+      margin-left:3px;
+    }
+    .mini-pill {
+      min-width:74px;
+      height:30px;
+      padding:0 12px;
+      border-radius:999px;
+      border:1px solid rgba(0,229,160,.22);
+      background:rgba(0,229,160,.08);
+      color:var(--c-green);
+      font-family:'Orbitron', monospace;
+      font-size:8px;
+      font-weight:700;
+      letter-spacing:1px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-transform:uppercase;
+    }
+    .mini-pill:hover {
+      box-shadow:0 0 12px rgba(0,229,160,.24);
+      transform:translateY(-1px);
+    }
+    .section {
+      flex-shrink:0;
+      padding:0 12px;
+      margin-top:10px;
+    }
+    .sec-head {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:7px;
+    }
+    .sec-title {
+      flex:1;
+      min-width:0;
+      font-family:'Orbitron', monospace;
+      font-size:9px;
+      font-weight:700;
+      letter-spacing:2px;
+      color:var(--c-soft);
+      text-transform:uppercase;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .sec-title::before, .sec-title::after {
+      content:"";
+      flex:1;
+      height:1px;
+      background:linear-gradient(90deg, rgba(0,229,160,.3), transparent);
+    }
+    .sec-title::after {
+      background:linear-gradient(270deg, rgba(0,229,160,.3), transparent);
+    }
+    .sec-state {
+      flex-shrink:0;
+      text-align:right;
+      font-size:8px;
+      font-weight:700;
+      color:var(--c-muted);
+      letter-spacing:.8px;
+      text-transform:uppercase;
+    }
+    .hero-card {
+      position:relative;
+      overflow:hidden;
+      border-radius:var(--r4);
+      border:1px solid var(--c-border);
+      background:
+        radial-gradient(circle at 85% 20%, rgba(0,229,160,.14), transparent 24%),
+        radial-gradient(circle at 14% 14%, rgba(255,184,0,.10), transparent 22%),
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
+        rgba(13,18,32,.92);
+      padding:14px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+    }
+    .hero-card h2 {
+      font-family:'Bebas Neue', sans-serif;
+      font-size:29px;
+      line-height:.92;
+      letter-spacing:1.4px;
+      max-width:215px;
+    }
+    .hero-card p {
+      margin-top:7px;
+      max-width:240px;
+      font-size:12px;
+      line-height:1.3;
+      color:var(--c-soft);
+    }
+    .hero-stats {
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:7px;
+      margin-top:12px;
+    }
+    .hero-stat {
+      border-radius:14px;
+      padding:9px 8px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      text-align:center;
+    }
+    .hero-stat b {
+      display:block;
+      font-family:'Orbitron', monospace;
+      font-size:12px;
+      color:var(--c-text);
+    }
+    .hero-stat span {
+      display:block;
+      margin-top:3px;
+      font-size:8px;
+      color:var(--c-muted);
+      letter-spacing:.7px;
+      text-transform:uppercase;
+    }
+    .list {
+      display:flex;
+      flex-direction:column;
+      gap:7px;
+    }
+    .mode-card, .map-card, .summary-card {
+      width:100%;
+      border-radius:var(--r3);
+      background:var(--c-surface);
+      border:1px solid var(--c-border);
+      position:relative;
+      overflow:hidden;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+    }
+    .mode-card::before, .map-card::before, .summary-card::before {
+      content:"";
+      position:absolute;
+      top:0;
+      left:-120%;
+      width:55%;
+      height:100%;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.05), transparent);
+      transition:left .5s;
+    }
+    .mode-card:hover::before, .map-card:hover::before, .summary-card:hover::before {
+      left:150%;
+    }
+    .mode-card:hover, .map-card:hover, .summary-card:hover {
+      border-color:rgba(0,229,160,.24);
+      box-shadow:0 8px 24px rgba(0,229,160,.12);
+      transform:translateY(-1px);
+    }
+    .mode-card.active, .map-card.active {
+      border-color:rgba(0,229,160,.35);
+      box-shadow:0 8px 28px rgba(0,229,160,.18);
+    }
+    .mode-card {
+      display:block;
+      text-align:left;
+      padding:10px 11px;
+    }
+    .mode-top, .map-top {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+    }
+    .mode-type, .map-name {
+      font-family:'Orbitron', monospace;
+      font-size:9px;
+      font-weight:700;
+      letter-spacing:.7px;
+      text-transform:uppercase;
+    }
+    .mode-type { color:var(--c-green); }
+    .map-name { color:#93c5fd; }
+    .mode-badge, .map-badge {
+      min-width:58px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.09);
+      background:rgba(255,255,255,.04);
+      font-size:7px;
+      font-weight:700;
+      text-align:center;
+      color:var(--c-soft);
+      letter-spacing:.7px;
+      text-transform:uppercase;
+    }
+    .mode-main, .map-main {
+      margin-top:7px;
+      display:grid;
+      grid-template-columns:minmax(0, 1fr) 76px;
+      align-items:flex-start;
+      gap:10px;
+    }
+    .mode-copy, .map-copy {
+      flex:1;
+      min-width:0;
+    }
+    .mode-copy strong, .map-copy strong {
+      display:block;
+      font-size:16px;
+      line-height:1.05;
+    }
+    .mode-copy span, .map-copy span {
+      display:block;
+      margin-top:4px;
+      font-size:11px;
+      line-height:1.22;
+      color:var(--c-muted);
+    }
+    .mode-meter {
+      width:76px;
+      flex-shrink:0;
+    }
+    .mode-meter-label {
+      font-family:'Orbitron', monospace;
+      font-size:7px;
+      color:var(--c-muted);
+      text-transform:uppercase;
+      letter-spacing:.8px;
+      text-align:right;
+    }
+    .mode-meter-track {
+      margin-top:6px;
+      height:6px;
+      background:rgba(255,255,255,.07);
+      border-radius:999px;
+      overflow:hidden;
+    }
+    .mode-meter-fill {
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(90deg, var(--c-green), var(--c-blue));
+    }
+    .map-card {
+      display:block;
+      width:100%;
+      text-align:left;
+      padding:10px 11px 11px;
+    }
+    .map-thumb {
+      margin-top:10px;
+      height:82px;
+      border-radius:14px;
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(135deg, rgba(0,229,160,.15), rgba(59,130,246,.08));
+      background-size:22px 22px, 22px 22px, cover;
+    }
+    .map-thumb.temple {
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(135deg, rgba(255,184,0,.18), rgba(120,72,0,.12));
+      background-size:22px 22px, 22px 22px, cover;
+    }
+    .map-thumb.frost {
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(135deg, rgba(34,211,238,.16), rgba(59,130,246,.11));
+      background-size:22px 22px, 22px 22px, cover;
+    }
+    .map-thumb.volcano {
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(135deg, rgba(244,63,94,.17), rgba(255,184,0,.12));
+      background-size:22px 22px, 22px 22px, cover;
+    }
+    .corner {
+      position:absolute;
+      width:22px;
+      height:22px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,.16);
+    }
+    .corner.a { left:8px; top:8px; background:#fb7185; }
+    .corner.b { right:8px; top:8px; background:#facc15; }
+    .corner.c { left:8px; bottom:8px; background:#00e5a0; }
+    .corner.d { right:8px; bottom:8px; background:#60a5fa; }
+    .mid-ring {
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:24px;
+      height:24px;
+      border-radius:50%;
+      border:2px solid rgba(255,255,255,.65);
+      transform:translate(-50%, -50%);
+    }
+    .bet-row {
+      display:flex;
+      gap:6px;
+      margin-top:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .bet-chip {
+      min-width:58px;
+      height:28px;
+      padding:0 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.09);
+      background:rgba(255,255,255,.04);
+      font-family:'Orbitron', monospace;
+      font-size:8px;
+      font-weight:700;
+      color:var(--c-soft);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      letter-spacing:.8px;
+      text-transform:uppercase;
+    }
+    .bet-chip.active {
+      color:#06131a;
+      border-color:rgba(0,229,160,.32);
+      background:linear-gradient(135deg, var(--c-green), #4dd5ff);
+      box-shadow:0 8px 20px rgba(0,229,160,.18);
+    }
+    .bet-line {
+      margin-top:8px;
+      font-size:10px;
+      color:var(--c-soft);
+      letter-spacing:.2px;
+    }
+    .bet-line b {
+      color:var(--c-gold);
+      font-family:'Orbitron', monospace;
+      font-size:10px;
+    }
+    .summary-card {
+      padding:11px;
+    }
+    .summary-grid {
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:7px;
+      margin-top:8px;
+    }
+    .sum-box {
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.035);
+      padding:8px 6px;
+      text-align:center;
+    }
+    .sum-box b {
+      display:block;
+      font-family:'Orbitron', monospace;
+      font-size:8px;
+      color:var(--c-text);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      text-transform:uppercase;
+    }
+    .sum-box span {
+      display:block;
+      margin-top:4px;
+      font-size:7px;
+      letter-spacing:.8px;
+      color:var(--c-muted);
+      text-transform:uppercase;
+    }
+    .cta-btn {
+      margin-top:10px;
+      width:100%;
+      height:42px;
+      border:none;
+      border-radius:14px;
+      background:linear-gradient(135deg, #009f6f, var(--c-green), #67e8f9);
+      color:#06131a;
+      font-family:'Orbitron', monospace;
+      font-size:10px;
+      font-weight:800;
+      letter-spacing:1.1px;
+      text-transform:uppercase;
+      box-shadow:0 10px 28px rgba(0,229,160,.18);
+    }
+    .cta-btn:hover {
+      transform:translateY(-1px);
+      box-shadow:0 14px 32px rgba(0,229,160,.24);
+    }
+    .helper {
+      margin-top:7px;
+      text-align:center;
+      font-size:9px;
+      color:var(--c-muted);
+    }
+    .bottom-nav {
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:10;
+      height:74px;
+      padding:8px 10px 10px;
+      background:linear-gradient(180deg, rgba(8,12,20,0) 0%, rgba(8,12,20,.96) 35%);
+      backdrop-filter:blur(14px);
+    }
+    .nav-row {
+      height:100%;
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:8px;
+    }
+    .nav-it {
+      min-width:0;
+      border-radius:16px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:5px;
+    }
+    .nav-it.act {
+      border-color:rgba(0,229,160,.28);
+      background:linear-gradient(180deg, rgba(0,229,160,.12), rgba(255,255,255,.03));
+      box-shadow:0 0 18px rgba(0,229,160,.15);
+    }
+    .nav-ico {
+      font-size:15px;
+      line-height:1;
+    }
+    .nav-lbl {
+      font-size:8px;
+      font-weight:700;
+      letter-spacing:.6px;
+      color:var(--c-soft);
+      text-transform:uppercase;
+      text-align:center;
+    }
+    .nav-it.act .nav-lbl {
+      color:var(--c-green);
+    }
+    .toast {
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%) translateY(24px);
+      min-width:180px;
+      max-width:280px;
+      padding:10px 14px;
+      border-radius:14px;
+      background:rgba(7,10,18,.94);
+      border:1px solid rgba(255,255,255,.08);
+      font-size:12px;
+      text-align:center;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity var(--med), transform var(--med);
+      z-index:40;
+    }
+    .toast.show {
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
   </style>
 </head>
 <body>
   <div class="phone">
     <div class="bg"></div>
+
     <div class="shell">
       <div class="hdr">
-        <div class="hdr-side"><button class="icon-btn" onclick="window.location.href='index.html'"><span class="ico back"></span></button><div class="hdr-copy"><div class="eyebrow">Live Queue</div><div class="hdr-title">Play Online</div></div></div>
-        <button class="mini-btn" onclick="showToast('Matchmaking priorities refreshed.')"><span class="ico spark"></span>Refresh</button>
+        <button class="ico-btn" onclick="window.location.href='index.html'" aria-label="Back to lobby">
+          <span class="back-ico"></span>
+        </button>
+        <div class="hdr-copy">
+          <div class="eyebrow">Ranked Matchmaking</div>
+          <div class="hdr-title">Play Online</div>
+        </div>
+        <button class="mini-pill" onclick="randomizePick()">Shuffle</button>
       </div>
+
       <div class="section">
-        <div class="panel hero">
-          <h2>Queue Into Real-Time Arena Battles</h2>
-          <p>Choose the pace, party size, and reward lane you want before matchmaking starts.</p>
+        <div class="hero-card">
+          <h2>Stake In. Lock Table. Enter Arena.</h2>
+          <p>Choose the queue, select the board, then confirm the bet before matchmaking starts.</p>
           <div class="hero-stats">
-            <div class="stat"><b>12.4K</b><span>Players Live</span></div>
-            <div class="stat"><b>14s</b><span>Avg Queue</span></div>
-            <div class="stat"><b>2x</b><span>XP Window</span></div>
+            <div class="hero-stat"><b>12.4K</b><span>Players</span></div>
+            <div class="hero-stat"><b>14s</b><span>Queue</span></div>
+            <div class="hero-stat"><b>4</b><span>Maps</span></div>
           </div>
         </div>
       </div>
+
       <div class="section">
-        <div class="panel">
-          <div class="section-head"><div class="section-title">Queue Picks</div><button class="mini-btn" onclick="showToast('Ranked filters enabled.')">Ranked</button></div>
-          <div class="mode-list">
-            <button class="mode-card" onclick="launchQueue('Quick Duel')">
-              <div class="meta-row"><div class="mode-type">1v1 Duel</div><div class="mode-badge">Fast</div></div>
-              <strong>Quick Duel</strong>
-              <span>Short queue, direct pressure, and trophy-safe warmup rounds.</span>
-              <div class="bar"><div class="bar-fill" style="width:78%"></div></div>
-            </button>
-            <button class="mode-card" onclick="launchQueue('Duo Battle')">
-              <div class="meta-row"><div class="mode-type">2v2 Squad</div><div class="mode-badge">Team</div></div>
-              <strong>Duo Battle</strong>
-              <span>Queue with a partner or let matchmaking pair you into coordinated tempo play.</span>
-              <div class="bar"><div class="bar-fill" style="width:64%"></div></div>
-            </button>
-            <button class="mode-card" onclick="launchQueue('Crown Clash')">
-              <div class="meta-row"><div class="mode-type">4 Player</div><div class="mode-badge">Hot</div></div>
-              <strong>Crown Clash</strong>
-              <span>Classic all-player table with the biggest reward bursts and event missions.</span>
-              <div class="bar"><div class="bar-fill" style="width:88%"></div></div>
-            </button>
-          </div>
+        <div class="sec-head">
+          <div class="sec-title">Choose Mode</div>
+          <div class="sec-state" id="modeState">1v1 Active</div>
+        </div>
+        <div class="list" id="modeList">
+          <button class="mode-card active" data-mode="1v1" onclick="selectMode('1v1', this)">
+            <div class="mode-top">
+              <div class="mode-type">1v1 Duel</div>
+              <div class="mode-badge">Fast</div>
+            </div>
+            <div class="mode-main">
+              <div class="mode-copy">
+                <strong>Quick Stake Match</strong>
+                <span>Direct pressure, shortest queue, and clean one-on-one betting.</span>
+              </div>
+              <div class="mode-meter">
+                <div class="mode-meter-label">Live</div>
+                <div class="mode-meter-track"><div class="mode-meter-fill" style="width:84%"></div></div>
+              </div>
+            </div>
+          </button>
+
+          <button class="mode-card" data-mode="2v2" onclick="selectMode('2v2', this)">
+            <div class="mode-top">
+              <div class="mode-type">2v2 Team</div>
+              <div class="mode-badge">Squad</div>
+            </div>
+            <div class="mode-main">
+              <div class="mode-copy">
+                <strong>Partner Pot</strong>
+                <span>Queue with shared pressure and coordinated mid-stake play.</span>
+              </div>
+              <div class="mode-meter">
+                <div class="mode-meter-label">Live</div>
+                <div class="mode-meter-track"><div class="mode-meter-fill" style="width:70%"></div></div>
+              </div>
+            </div>
+          </button>
+
+          <button class="mode-card" data-mode="4v4" onclick="selectMode('4v4', this)">
+            <div class="mode-top">
+              <div class="mode-type">4v4 Clash</div>
+              <div class="mode-badge">Hot</div>
+            </div>
+            <div class="mode-main">
+              <div class="mode-copy">
+                <strong>Big Table Rush</strong>
+                <span>Large room energy with the biggest pots and highest chaos.</span>
+              </div>
+              <div class="mode-meter">
+                <div class="mode-meter-label">Live</div>
+                <div class="mode-meter-track"><div class="mode-meter-fill" style="width:92%"></div></div>
+              </div>
+            </div>
+          </button>
         </div>
       </div>
+
       <div class="section">
-        <div class="panel">
-          <div class="section-head"><div class="section-title">Queue Snapshot</div><button class="mini-btn" onclick="showToast('Queue balance updated.')">Update</button></div>
-          <div class="queue-row">
-            <div class="queue-chip"><b>Gold</b><span>Rank Lane</span></div>
-            <div class="queue-chip"><b>Classic</b><span>Map Pool</span></div>
-            <div class="queue-chip"><b>+80</b><span>Peak Bonus</span></div>
-          </div>
+        <div class="sec-head">
+          <div class="sec-title">Select Map And Bet</div>
+          <div class="sec-state" id="mapState">Royal Classic</div>
+        </div>
+        <div class="list" id="mapList">
+          <button class="map-card active" data-map="Royal Classic" onclick="selectMap('Royal Classic', this)">
+            <div class="map-top">
+              <div class="map-name">Royal Classic</div>
+              <div class="map-badge">Balanced</div>
+            </div>
+            <div class="map-thumb">
+              <span class="corner a"></span><span class="corner b"></span><span class="corner c"></span><span class="corner d"></span><span class="mid-ring"></span>
+            </div>
+            <div class="map-copy">
+              <strong>Standard board, safer pacing.</strong>
+              <span>Best for clean reads and lower volatility.</span>
+            </div>
+            <div class="bet-row">
+              <button class="bet-chip active" data-bet="500" onclick="selectBet(event, '500', this)">500</button>
+              <button class="bet-chip" data-bet="1000" onclick="selectBet(event, '1000', this)">1K</button>
+              <button class="bet-chip" data-bet="2000" onclick="selectBet(event, '2000', this)">2K</button>
+            </div>
+            <div class="bet-line">Table Pot <b>1,000 Coins</b></div>
+          </button>
+
+          <button class="map-card" data-map="Temple Gold" onclick="selectMap('Temple Gold', this)">
+            <div class="map-top">
+              <div class="map-name">Temple Gold</div>
+              <div class="map-badge">Premium</div>
+            </div>
+            <div class="map-thumb temple">
+              <span class="corner a"></span><span class="corner b"></span><span class="corner c"></span><span class="corner d"></span><span class="mid-ring"></span>
+            </div>
+            <div class="map-copy">
+              <strong>Brighter rewards, sharper tension.</strong>
+              <span>Built for confident players and mid-range stakes.</span>
+            </div>
+            <div class="bet-row">
+              <button class="bet-chip" data-bet="1000" onclick="selectBet(event, '1000', this)">1K</button>
+              <button class="bet-chip" data-bet="2500" onclick="selectBet(event, '2500', this)">2.5K</button>
+              <button class="bet-chip" data-bet="5000" onclick="selectBet(event, '5000', this)">5K</button>
+            </div>
+            <div class="bet-line">Table Pot <b>2,000 Coins</b></div>
+          </button>
+
+          <button class="map-card" data-map="Frost Ring" onclick="selectMap('Frost Ring', this)">
+            <div class="map-top">
+              <div class="map-name">Frost Ring</div>
+              <div class="map-badge">Control</div>
+            </div>
+            <div class="map-thumb frost">
+              <span class="corner a"></span><span class="corner b"></span><span class="corner c"></span><span class="corner d"></span><span class="mid-ring"></span>
+            </div>
+            <div class="map-copy">
+              <strong>Cool visual lane for patient play.</strong>
+              <span>Works well for slower tempo and measured stakes.</span>
+            </div>
+            <div class="bet-row">
+              <button class="bet-chip" data-bet="750" onclick="selectBet(event, '750', this)">750</button>
+              <button class="bet-chip" data-bet="1500" onclick="selectBet(event, '1500', this)">1.5K</button>
+              <button class="bet-chip" data-bet="3000" onclick="selectBet(event, '3000', this)">3K</button>
+            </div>
+            <div class="bet-line">Table Pot <b>1,500 Coins</b></div>
+          </button>
+
+          <button class="map-card" data-map="Volcano Vault" onclick="selectMap('Volcano Vault', this)">
+            <div class="map-top">
+              <div class="map-name">Volcano Vault</div>
+              <div class="map-badge">Risk</div>
+            </div>
+            <div class="map-thumb volcano">
+              <span class="corner a"></span><span class="corner b"></span><span class="corner c"></span><span class="corner d"></span><span class="mid-ring"></span>
+            </div>
+            <div class="map-copy">
+              <strong>Hot arena for aggressive entries.</strong>
+              <span>Best suited for premium stakes and faster momentum.</span>
+            </div>
+            <div class="bet-row">
+              <button class="bet-chip" data-bet="2000" onclick="selectBet(event, '2000', this)">2K</button>
+              <button class="bet-chip" data-bet="5000" onclick="selectBet(event, '5000', this)">5K</button>
+              <button class="bet-chip" data-bet="10000" onclick="selectBet(event, '10000', this)">10K</button>
+            </div>
+            <div class="bet-line">Table Pot <b>4,000 Coins</b></div>
+          </button>
         </div>
       </div>
+
+      <div class="section">
+        <div class="sec-head">
+          <div class="sec-title">Confirm Entry</div>
+          <div class="sec-state" id="readyState">500 Coins</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-grid">
+            <div class="sum-box"><b id="summaryMode">1V1</b><span>Mode</span></div>
+            <div class="sum-box"><b id="summaryMap">ROYAL CLASSIC</b><span>Map</span></div>
+            <div class="sum-box"><b id="summaryBet">500</b><span>Bet</span></div>
+          </div>
+          <button class="cta-btn" onclick="startMatch()">Start Match</button>
+          <div class="helper">Bet value updates instantly when you switch maps or tables.</div>
+        </div>
+      </div>
+
+      <div style="flex-shrink:0;height:78px;"></div>
     </div>
-    <div class="footer-nav">
-      <button class="nav-btn" onclick="window.location.href='index.html'">Home</button>
-      <button class="nav-btn act">Online</button>
-      <button class="nav-btn" onclick="window.location.href='play-with-friends.html'">Friends</button>
-      <button class="nav-btn" onclick="window.location.href='vs-computer.html'">AI</button>
+
+    <div class="bottom-nav">
+      <div class="nav-row">
+        <div class="nav-it" onclick="window.location.href='index.html'">
+          <div class="nav-ico">🏠</div>
+          <div class="nav-lbl">Home</div>
+        </div>
+        <div class="nav-it act">
+          <div class="nav-ico">🌐</div>
+          <div class="nav-lbl">Online</div>
+        </div>
+        <div class="nav-it" onclick="window.location.href='play-with-friends.html'">
+          <div class="nav-ico">👥</div>
+          <div class="nav-lbl">Friends</div>
+        </div>
+        <div class="nav-it" onclick="window.location.href='vs-computer.html'">
+          <div class="nav-ico">🤖</div>
+          <div class="nav-lbl">AI</div>
+        </div>
+      </div>
     </div>
   </div>
+
   <div class="toast" id="toast"></div>
+
   <script>
-    let toastTimer = null;
+    const modeState = document.getElementById('modeState');
+    const mapState = document.getElementById('mapState');
+    const readyState = document.getElementById('readyState');
+    const summaryMode = document.getElementById('summaryMode');
+    const summaryMap = document.getElementById('summaryMap');
+    const summaryBet = document.getElementById('summaryBet');
     const toast = document.getElementById('toast');
-    function showToast(message){ toast.textContent = message; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 1800); }
-    function launchQueue(name){ showToast('Joining ' + name + '...'); }
+
+    let toastTimer = null;
+    let selectedMode = '1v1';
+    let selectedMap = 'Royal Classic';
+    let selectedBet = '500';
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+    }
+
+    function refreshSummary() {
+      summaryMode.textContent = selectedMode.toUpperCase();
+      summaryMap.textContent = selectedMap.toUpperCase();
+      summaryBet.textContent = selectedBet.toUpperCase();
+      modeState.textContent = selectedMode + ' Active';
+      mapState.textContent = selectedMap;
+      readyState.textContent = selectedBet + ' Coins';
+    }
+
+    function clearBetSelection(card) {
+      card.querySelectorAll('.bet-chip').forEach((chip) => chip.classList.remove('active'));
+    }
+
+    function selectMode(mode, button) {
+      selectedMode = mode;
+      document.querySelectorAll('.mode-card').forEach((card) => card.classList.remove('active'));
+      button.classList.add('active');
+      refreshSummary();
+      showToast(mode + ' selected.');
+    }
+
+    function selectMap(name, card) {
+      document.querySelectorAll('.map-card').forEach((item) => item.classList.remove('active'));
+      card.classList.add('active');
+      selectedMap = name;
+      const firstBet = card.querySelector('.bet-chip');
+      if (firstBet) {
+        clearBetSelection(card);
+        firstBet.classList.add('active');
+        selectedBet = firstBet.dataset.bet;
+      }
+      refreshSummary();
+      showToast(name + ' selected.');
+    }
+
+    function selectBet(event, amount, chip) {
+      event.stopPropagation();
+      const card = chip.closest('.map-card');
+      document.querySelectorAll('.map-card').forEach((item) => item.classList.remove('active'));
+      card.classList.add('active');
+      clearBetSelection(card);
+      chip.classList.add('active');
+      selectedMap = card.dataset.map;
+      selectedBet = amount;
+      refreshSummary();
+      showToast('Bet set to ' + amount + ' coins.');
+    }
+
+    function randomizePick() {
+      const modeCards = Array.from(document.querySelectorAll('.mode-card'));
+      const mapCards = Array.from(document.querySelectorAll('.map-card'));
+      const modeCard = modeCards[Math.floor(Math.random() * modeCards.length)];
+      const mapCard = mapCards[Math.floor(Math.random() * mapCards.length)];
+      const betChips = mapCard.querySelectorAll('.bet-chip');
+      const betChip = betChips[Math.floor(Math.random() * betChips.length)];
+      selectMode(modeCard.dataset.mode, modeCard);
+      selectMap(mapCard.dataset.map, mapCard);
+      selectBet({ stopPropagation() {} }, betChip.dataset.bet, betChip);
+      showToast('Live combo loaded.');
+    }
+
+    function startMatch() {
+      showToast('Joining ' + selectedMode + ' on ' + selectedMap + ' for ' + selectedBet + ' coins.');
+    }
+
+    refreshSummary();
   </script>
 </body>
 </html>
