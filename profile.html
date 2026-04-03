@@ -739,7 +739,7 @@
             </div>
             <div class="hero-actions">
               <button class="action-tile" onclick="toggleStatus()"><span class="ico pulse"></span><strong>Status</strong><span>Switch presence live</span></button>
-              <button class="action-tile" onclick="addXP()"><span class="ico add"></span><strong>Boost XP</strong><span>Simulate rank gain</span></button>
+              <button class="action-tile" onclick="window.location.href='help.html'"><span class="ico link"></span><strong>Help</strong><span>Get support and guides</span></button>
               <button class="action-tile" onclick="shuffleMatches()"><span class="ico grid"></span><strong>Refresh</strong><span>Load fresh battle log</span></button>
             </div>
           </div>
@@ -763,7 +763,6 @@
               <span class="tiny-pill">Live</span>
             </div>
             <div class="stat-grid">
-              <button class="stat-box" onclick="window.location.href='trophies.html'"><b id="trophies">1240</b><span>Trophies</span></button>
               <button class="stat-box" onclick="window.location.href='win-rate.html'"><b id="winRate">58%</b><span>Win Rate</span></button>
               <button class="stat-box" onclick="window.location.href='streak.html'"><b id="streak">6</b><span>Current Streak</span></button>
               <button class="stat-box" onclick="window.location.href='s-plus-rank.html'"><b>S+</b><span>Rank Status</span></button>
@@ -1032,5 +1031,5 @@
     renderMatches();
     renderFriends();
   </script>
-</body>
+  <script src="js/global-nav.js"></script></body>
 </html>

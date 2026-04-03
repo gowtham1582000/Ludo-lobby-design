@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -11,9 +11,9 @@
       <link rel="stylesheet" href="shop.html">
 
   <style>
-    /* ════════════════════════════════════════════════════════
+    /* --------------------------------------------------------
      ROOT TOKENS
-  ════════════════════════════════════════════════════════ */
+  -------------------------------------------------------- */
     :root {
       --c-bg: #080C14;
       --c-panel: #0D1220;
@@ -64,7 +64,7 @@
       overflow-x: hidden;
     }
 
-    /* ── PHONE SHELL ── */
+    /* -- PHONE SHELL -- */
     .phone {
       position: relative;
       width: 390px;
@@ -74,7 +74,7 @@
       box-shadow: 0 0 0 1px rgba(0, 229, 160, 0.08), 0 40px 120px rgba(0, 0, 0, 0.9);
     }
 
-    /* ════ BG SYSTEM — AURORA ARENA ════ */
+    /* ---- BG SYSTEM � AURORA ARENA ---- */
     .bg {
       position: absolute; inset: 0;
       pointer-events: none; z-index: 0; overflow: hidden;
@@ -209,17 +209,16 @@
     }
     @keyframes sweep { to { transform: translateX(30px) translateY(-10px) scale(1.05); } }
 
-    /* ── SCROLL SHELL ── */
+    /* -- SCROLL SHELL -- */
     .shell {
       position: relative;
       z-index: 1;
       width: 100%;
       height: 690px;
-      overflow-y: auto;
+      overflow-y: hidden;
       overflow-x: hidden;
       display: flex;
       flex-direction: column;
-      padding-bottom: 84px;
       scrollbar-width: none;
     }
 
@@ -227,13 +226,7 @@
       display: none;
     }
 
-    .section {
-      flex-shrink: 0;
-      padding: 0 12px;
-      margin-top: 10px;
-    }
-
-    /* ════ RIPPLE ════ */
+    /* ---- RIPPLE ---- */
     .rip {
       position: relative;
       overflow: hidden;
@@ -255,9 +248,9 @@
       }
     }
 
-    /* ════════════════════════════════════════════════════════
+    /* --------------------------------------------------------
      HEADER
-  ════════════════════════════════════════════════════════ */
+  -------------------------------------------------------- */
     .hdr {
       flex-shrink: 0;
       display: grid;
@@ -383,8 +376,6 @@
     /* Currency row */
     .cur-row {
       display: flex;
-      flex-direction: column;
-      align-items: flex-start;
       gap: 4px;
     }
 
@@ -502,6 +493,7 @@
       flex-direction: column;
       align-items: flex-end;
       gap: 4px;
+      min-width: 118px;
     }
 
     .icon-row {
@@ -593,7 +585,8 @@
       display: flex;
       align-items: center;
       gap: 5px;
-      padding: 4px 8px;
+      min-width: 110px;
+      padding: 5px 9px;
       border-radius: 8px;
       cursor: pointer;
       background: rgba(255, 184, 0, 0.06);
@@ -620,11 +613,11 @@
     }
 
     .map-btn-val {
-      font-size: 8px;
+      font-size: 8.5px;
       font-weight: 700;
       color: var(--c-text);
       white-space: nowrap;
-      max-width: 72px;
+      max-width: 88px;
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -639,235 +632,50 @@
       transform: translateX(2px);
     }
 
-    /* ════════════════════════════════════════════════════════
-     HERO — player showcase strip
-  ════════════════════════════════════════════════════════ */
+    .hero-nav {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      right: 10px;
+      z-index: 12;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      transform: translateY(-50%);
+    }
+
+    .hero-arrow {
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      background: rgba(8, 12, 20, 0.62);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: transform var(--fast), border-color var(--fast), background var(--fast);
+    }
+
+    .hero-arrow:hover {
+      transform: scale(1.06);
+      border-color: rgba(0, 229, 160, 0.3);
+      background: rgba(8, 12, 20, 0.82);
+    }
+
+    /* --------------------------------------------------------
+     HERO � player showcase strip
+  -------------------------------------------------------- */
     .hero {
       flex-shrink: 0;
       position: relative;
-      height: 186px;
+      height: 188px;
       overflow: hidden;
       background: linear-gradient(180deg, transparent 0%, rgba(8, 12, 20, 0.4) 100%);
-    }
-    .hero-simple {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      height: auto;
-      min-height: 0;
-      background: none;
-    }
-    .hero-focus {
-      position: relative;
-      width: 100%;
-      min-height: 148px;
-      border-radius: 28px;
-      padding: 18px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background:
-        radial-gradient(circle at 20% 18%, rgba(0, 229, 160, 0.18), transparent 28%),
-        radial-gradient(circle at 82% 26%, rgba(255, 184, 0, 0.14), transparent 24%),
-        linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
-      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.32);
-    }
-    .hero-focus::before {
-      content: "";
-      position: absolute;
-      inset: auto -30% -35% 10%;
-      height: 120px;
-      background: radial-gradient(circle, rgba(59, 130, 246, 0.24), transparent 70%);
-      filter: blur(18px);
-    }
-    .hero-kicker {
-      position: relative;
-      z-index: 1;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(0, 229, 160, 0.28);
-      background: rgba(0, 229, 160, 0.08);
-      font-family: 'Orbitron', monospace;
-      font-size: 8px;
-      letter-spacing: 1.5px;
-      color: var(--c-green);
-    }
-    .hero-title {
-      position: relative;
-      z-index: 1;
-      margin-top: 12px;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 34px;
-      line-height: 0.95;
-      letter-spacing: 1.2px;
-    }
-    .hero-sub {
-      position: relative;
-      z-index: 1;
-      margin-top: 8px;
-      max-width: 230px;
-      color: var(--c-soft);
-      font-size: 13px;
-      line-height: 1.28;
-    }
-    .hero-actions-row {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 16px;
-    }
-    .hero-cta {
-      min-width: 132px;
-      height: 42px;
-      border: 0;
-      border-radius: 14px;
-      background: linear-gradient(135deg, var(--c-green), #3dd9ff);
-      color: #04121b;
-      font-family: 'Orbitron', monospace;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      cursor: pointer;
-      box-shadow: 0 14px 32px rgba(0, 229, 160, 0.24);
-      transition: transform var(--med), box-shadow var(--med);
-    }
-    .hero-cta:hover {
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 18px 36px rgba(0, 229, 160, 0.32);
-    }
-    .hero-cta:active {
-      transform: scale(0.96);
-    }
-    .hero-note {
-      font-size: 11px;
-      color: var(--c-muted);
-      letter-spacing: .4px;
-    }
-    .boot-screen {
-      position: absolute;
-      inset: 0;
-      z-index: 120;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 26px;
-      background:
-        radial-gradient(circle at 50% 24%, rgba(0, 229, 160, 0.18), transparent 26%),
-        radial-gradient(circle at 50% 70%, rgba(59, 130, 246, 0.16), transparent 34%),
-        linear-gradient(180deg, rgba(3, 7, 14, 0.98), rgba(6, 10, 18, 0.99));
-      transition: opacity .7s ease, visibility .7s ease;
-      overflow: hidden;
-    }
-    .boot-screen.hide {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-    .boot-screen::before,
-    .boot-screen::after {
-      content: "";
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(18px);
-      opacity: 0.85;
-    }
-    .boot-screen::before {
-      width: 180px;
-      height: 180px;
-      background: radial-gradient(circle, rgba(0, 229, 160, 0.26), transparent 70%);
-      top: 12%;
-      left: 50%;
-      transform: translateX(-50%);
-      animation: boot-float 5s ease-in-out infinite;
-    }
-    .boot-screen::after {
-      width: 240px;
-      height: 120px;
-      background: radial-gradient(circle, rgba(255, 184, 0, 0.14), transparent 72%);
-      bottom: 12%;
-      left: 50%;
-      transform: translateX(-50%);
-      animation: boot-float 4s ease-in-out infinite reverse;
-    }
-    @keyframes boot-float {
-      0%, 100% { transform: translateX(-50%) scale(1); }
-      50% { transform: translateX(-50%) scale(1.08); }
-    }
-    .boot-shell {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      text-align: center;
-    }
-    .boot-orbit {
-      position: relative;
-      width: 118px;
-      height: 118px;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: radial-gradient(circle, rgba(255,255,255,0.06), rgba(255,255,255,0.01));
-      box-shadow: inset 0 0 24px rgba(255,255,255,0.04), 0 0 30px rgba(0, 229, 160, 0.08);
-    }
-    .boot-orbit::before,
-    .boot-orbit::after {
-      content: "";
-      position: absolute;
-      inset: 10px;
-      border-radius: 50%;
-      border: 1px solid rgba(0, 229, 160, 0.22);
-      animation: boot-spin 6s linear infinite;
-    }
-    .boot-orbit::after {
-      inset: 24px;
-      border-color: rgba(255, 184, 0, 0.22);
-      animation-direction: reverse;
-      animation-duration: 4s;
-    }
-    @keyframes boot-spin {
-      to { transform: rotate(360deg); }
-    }
-    .boot-core {
-      position: absolute;
-      inset: 33px;
-      border-radius: 50%;
-      background: linear-gradient(145deg, rgba(0, 229, 160, 0.95), rgba(59, 130, 246, 0.78));
-      box-shadow: 0 0 24px rgba(0, 229, 160, 0.45);
-    }
-    .boot-title {
-      font-family: 'Orbitron', monospace;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 3.6px;
-      text-transform: uppercase;
-      color: rgba(232, 240, 255, 0.75);
-    }
-    .boot-brand {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 44px;
-      line-height: .9;
-      letter-spacing: 2px;
-      color: var(--c-text);
-      text-shadow: 0 0 24px rgba(0, 229, 160, 0.16);
-    }
-    .boot-hint {
-      font-size: 11px;
-      letter-spacing: 1.4px;
-      color: rgba(232, 240, 255, 0.36);
-      text-transform: uppercase;
-    }
-    .shell > .hero:first-of-type {
-      display: none;
-    }
-    .stats-strip {
-      display: none !important;
     }
 
     .hero-ticker {
@@ -1085,9 +893,9 @@
       border: 1px solid rgba(100, 116, 139, 0.2);
     }
 
-    /* ════════════════════════════════════════════════════════
-     STATS STRIP — game-hud style
-  ════════════════════════════════════════════════════════ */
+    /* --------------------------------------------------------
+     STATS STRIP � game-hud style
+  -------------------------------------------------------- */
     .stats-strip {
       flex-shrink: 0;
       display: flex;
@@ -1201,9 +1009,9 @@
       background: var(--c-purple);
     }
 
-    /* ════════════════════════════════════════════════════════
+    /* --------------------------------------------------------
      SKILL BARS (from reference img 1)
-  ════════════════════════════════════════════════════════ */
+  -------------------------------------------------------- */
     .skills-section {
       flex-shrink: 0;
       padding: 2px 12px 6px;
@@ -1401,264 +1209,326 @@
 
     .sk-green .sk-lvl {
       color: var(--c-green);
-    }
-
-    /* ════════════════════════════════════════════════════════
-     PLAY MODES — 3-col premium cards
-  ════════════════════════════════════════════════════════ */
+    }    /* --------------------------------------------------------
+     MODE DECK
+  -------------------------------------------------------- */
     .modes-section {
       flex-shrink: 0;
-      padding: 2px 12px 6px;
-      margin-top: 10px;
+      padding: 0 12px 5px;
     }
 
-    .mode-grid-3 {
+    .mode-deck {
+      margin-top: 12px;
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 7px;
-    }
-
-    .mode-card-3 {
-      position: relative;
-      border-radius: var(--r3);
-      overflow: hidden;
-      cursor: pointer;
-      border: none;
-      outline: none;
-      transition: transform var(--med), box-shadow var(--med);
-      animation: card-up .45s ease backwards;
-    }
-
-    .mode-card-3:nth-child(1) {
-      animation-delay: .04s
-    }
-
-    .mode-card-3:nth-child(2) {
-      animation-delay: .1s
-    }
-
-    .mode-card-3:nth-child(3) {
-      animation-delay: .16s
-    }
-
-    @keyframes card-up {
-      from {
-        opacity: 0;
-        transform: translateY(18px) scale(.9)
-      }
-
-      to {
-        opacity: 1;
-        transform: none
-      }
-    }
-
-    .mode-card-3:hover {
-      transform: translateY(-4px) scale(1.03);
-    }
-
-    .mode-card-3:active {
-      transform: scale(0.95) !important;
-    }
-
-    .mc3-body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 12px 6px 10px;
       gap: 6px;
-      background: var(--c-surface);
-      border: 1px solid var(--c-border);
-      border-radius: var(--r3);
-      position: relative;
-      backdrop-filter: blur(18px);
-      overflow: hidden;
     }
 
-    /* Sheen */
-    .mc3-body::before {
+    .mode-hero-card {
+      position: relative;
+      overflow: visible;
+      border: 1px solid rgba(255, 184, 0, 0.28);
+      border-radius: 24px;
+      padding: 10px 11px 12px;
+      background:
+        radial-gradient(circle at 50% 100%, rgba(255, 184, 0, 0.28), transparent 38%),
+        radial-gradient(circle at 14% 18%, rgba(0, 229, 160, 0.14), transparent 24%),
+        linear-gradient(180deg, rgba(32, 10, 62, 0.96), rgba(66, 20, 118, 0.96) 58%, rgba(55, 12, 104, 0.98));
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 16px 34px rgba(34, 4, 72, 0.45),
+        0 0 0 1px rgba(255, 184, 0, 0.08);
+    }
+
+    .mode-hero-card::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: -120%;
-      width: 55%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
-      transition: left .5s;
-    }
-
-    .mode-card-3:hover .mc3-body::before {
-      left: 160%;
-    }
-
-    /* Inner glow bottom */
-    .mc3-glow {
-      position: absolute;
-      bottom: -16px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 64px;
-      height: 44px;
-      border-radius: 50%;
-      filter: blur(18px);
-      opacity: .2;
-      transition: opacity .3s, transform .3s;
+      inset: 8px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.07);
       pointer-events: none;
     }
 
-    .mode-card-3:hover .mc3-glow {
-      opacity: .55;
-      transform: translateX(-50%) scale(1.3);
-    }
-
-    .mc3-icon-wrap {
-      width: 46px;
-      height: 46px;
-      border-radius: 13px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
+    .mode-hero-top {
       position: relative;
-      transition: transform .3s cubic-bezier(.34, 1.56, .64, 1);
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
     }
 
-    .mode-card-3:hover .mc3-icon-wrap {
-      transform: scale(1.22) translateY(-3px);
-    }
-
-    .mc3-label {
+    .mode-hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px;
+      border-radius: 999px;
       font-family: 'Orbitron', monospace;
       font-size: 7px;
       font-weight: 700;
-      letter-spacing: .6px;
-      text-align: center;
-      line-height: 1.3;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #FFE7A4;
+      background: rgba(255, 184, 0, 0.12);
+      border: 1px solid rgba(255, 184, 0, 0.24);
+    }
+
+    .mode-hero-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'Orbitron', monospace;
+      font-size: 6.5px;
+      font-weight: 700;
+      color: rgba(232, 240, 255, 0.72);
+      letter-spacing: .7px;
       text-transform: uppercase;
     }
 
-    .mc3-players {
-      font-size: 7.5px;
+    .mode-hero-status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #00E5A0;
+      box-shadow: 0 0 10px rgba(0, 229, 160, 0.8);
+    }
+
+    .mode-hero-main {
+      position: relative;
+      z-index: 1;
+      margin-top: 8px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .mode-hero-copy {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .mode-hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      line-height: .92;
+      letter-spacing: 1.2px;
+      color: #FFF3CB;
+      text-shadow: 0 3px 16px rgba(0, 0, 0, 0.26);
+    }
+
+    .mode-hero-sub {
+      margin-top: 5px;
+      max-width: 200px;
+      font-size: 8px;
+      line-height: 1.32;
       font-weight: 600;
-      color: var(--c-muted);
+      color: rgba(232, 240, 255, 0.76);
     }
 
-    /* per-mode colour tokens */
-    .mc3-online .mc3-body {
-      border-color: rgba(0, 229, 160, 0.25);
+    .mode-hero-side {
+      width: 84px;
+      border-radius: 18px;
+      padding: 8px 9px 9px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
     }
 
-    .mc3-online .mc3-icon-wrap {
-      background: rgba(0, 229, 160, 0.1);
-      border: 1px solid rgba(0, 229, 160, 0.22);
+    .mode-hero-side-label {
+      font-family: 'Orbitron', monospace;
+      font-size: 6px;
+      font-weight: 700;
+      letter-spacing: .8px;
+      color: rgba(232, 240, 255, 0.56);
+      text-transform: uppercase;
     }
 
-    .mc3-online .mc3-glow {
-      background: var(--c-green);
+    .mode-hero-side-value {
+      font-family: 'Orbitron', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      color: #FFF3CB;
+      line-height: 1.2;
     }
 
-    .mc3-online .mc3-label {
-      color: var(--c-green);
+    .mode-hero-side-line {
+      height: 1px;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.06), rgba(255, 184, 0, 0.3), rgba(255, 255, 255, 0.06));
     }
 
-    .mc3-online {
-      box-shadow: 0 4px 16px rgba(0, 229, 160, 0.14);
+    .mode-hero-side-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 6px;
+      border-radius: 999px;
+      font-family: 'Orbitron', monospace;
+      font-size: 6px;
+      font-weight: 700;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      color: #FFE7A4;
+      background: rgba(255, 184, 0, 0.1);
+      border: 1px solid rgba(255, 184, 0, 0.22);
     }
 
-    .mc3-online:hover {
-      box-shadow: 0 8px 28px rgba(0, 229, 160, 0.32);
+    .mode-hero-controls {
+      position: relative;
+      z-index: 2;
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 116px;
+      gap: 8px;
+      align-items: stretch;
     }
 
-    .mc3-friends .mc3-body {
-      border-color: rgba(168, 85, 247, 0.25);
+    .mode-battle-btn {
+      min-height: 52px;
+      border: 0;
+      border-radius: 18px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      color: #6B3300;
+      background: linear-gradient(180deg, #FFE98E 0%, #FFC535 46%, #F39A00 100%);
+      box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -4px 0 rgba(142, 76, 0, 0.34),
+        0 10px 22px rgba(255, 184, 0, 0.26);
+      transition: transform var(--med), box-shadow var(--med);
     }
 
-    .mc3-friends .mc3-icon-wrap {
-      background: rgba(168, 85, 247, 0.1);
-      border: 1px solid rgba(168, 85, 247, 0.22);
+    .mode-battle-btn:hover {
+      transform: translateY(-2px) scale(1.01);
+      box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.58),
+        inset 0 -4px 0 rgba(142, 76, 0, 0.34),
+        0 14px 28px rgba(255, 184, 0, 0.34);
     }
 
-    .mc3-friends .mc3-glow {
-      background: var(--c-purple);
+    .mode-battle-btn:active {
+      transform: scale(0.98);
     }
 
-    .mc3-friends .mc3-label {
-      color: #C084FC;
-    }
-
-    .mc3-friends {
-      box-shadow: 0 4px 16px rgba(168, 85, 247, 0.12);
-    }
-
-    .mc3-friends:hover {
-      box-shadow: 0 8px 28px rgba(168, 85, 247, 0.3);
-    }
-
-    .mc3-bot .mc3-body {
-      border-color: rgba(59, 130, 246, 0.25);
-    }
-
-    .mc3-bot .mc3-icon-wrap {
-      background: rgba(59, 130, 246, 0.1);
-      border: 1px solid rgba(59, 130, 246, 0.22);
-    }
-
-    .mc3-bot .mc3-glow {
-      background: var(--c-blue);
-    }
-
-    .mc3-bot .mc3-label {
-      color: #93C5FD;
-    }
-
-    .mc3-bot {
-      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.12);
-    }
-
-    .mc3-bot:hover {
-      box-shadow: 0 8px 28px rgba(59, 130, 246, 0.3);
-    }
-
-    /* Featured shimmer border */
-    .mc3-feat::after {
+    .mode-battle-btn::before {
       content: '';
       position: absolute;
-      inset: -1px;
-      border-radius: var(--r3);
-      background: linear-gradient(135deg, rgba(0, 229, 160, 0.6), rgba(255, 255, 255, 0.1), rgba(0, 229, 160, 0.4));
-      background-size: 200% 200%;
-      animation: border-run 2.6s linear infinite;
-      z-index: 0;
+      inset: 4px;
+      border-radius: 14px;
+      border: 2px solid rgba(133, 67, 0, 0.22);
+      pointer-events: none;
     }
 
-    @keyframes border-run {
-      0% {
-        background-position: 0% 0%
-      }
-
-      100% {
-        background-position: 200% 200%
-      }
+    .mode-battle-btn::after {
+      content: '';
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      top: 5px;
+      height: 20px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0));
+      pointer-events: none;
     }
 
-    .mc3-feat .mc3-body {
+    .mode-battle-label {
+      position: relative;
       z-index: 1;
+      display: block;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      line-height: 1;
+      letter-spacing: 1px;
+      text-align: center;
+      color: #7A3400;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
     }
 
-    /* ════════════════════════════════════════════════════════
+    .mode-battle-meta {
+      position: relative;
+      z-index: 1;
+      margin-top: 2px;
+      display: block;
+      font-family: 'Orbitron', monospace;
+      font-size: 6px;
+      font-weight: 700;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      text-align: center;
+      color: rgba(122, 52, 0, 0.88);
+    }
+
+    .mode-dropdown {
+      width: 100%;
+    }
+
+    .mode-select {
+      width: 100%;
+      height: 52px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(10, 14, 28, 0.44);
+      color: var(--c-text);
+      padding: 10px 34px 10px 12px;
+      cursor: pointer;
+      transition: transform var(--med), border-color var(--med), background var(--med);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .mode-select:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 184, 0, 0.24);
+      background: rgba(15, 21, 40, 0.58);
+    }
+
+    .mode-select-wrap {
+      position: relative;
+    }
+
+    .mode-dropdown-label {
+      display: block;
+      font-family: 'Orbitron', monospace;
+      font-size: 6.5px;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      color: rgba(232, 240, 255, 0.54);
+      margin-bottom: 5px;
+    }
+
+    .mode-select-wrap::after {
+      content: '\25BE';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(2px);
+      font-size: 12px;
+      color: #FFCD57;
+      pointer-events: none;
+    }
+
+    /* --------------------------------------------------------
      TOURNAMENT BANNER
-  ════════════════════════════════════════════════════════ */
+  -------------------------------------------------------- */
     .tourn-wrap {
       flex-shrink: 0;
-      padding: 0 12px 6px;
-      margin-top: 10px;
+      padding: 0 12px 4px;
     }
 
     .tourn-card {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 9px 12px;
+      padding: 8px 11px;
       border-radius: var(--r3);
       cursor: pointer;
       background: linear-gradient(135deg, rgba(255, 184, 0, 0.08), rgba(20, 28, 44, 0.9));
@@ -1783,22 +1653,21 @@
       transform: scale(0.96);
     }
 
-    /* ════════════════════════════════════════════════════════
+    /* --------------------------------------------------------
      REWARDS ROW
-  ════════════════════════════════════════════════════════ */
+  -------------------------------------------------------- */
     .rewards-row {
       flex-shrink: 0;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 7px;
-      padding: 0 12px 5px;
-      margin-top: 10px;
+      padding: 0 12px 4px;
       align-items: stretch;
     }
 
     .rw-card {
       border-radius: var(--r3);
-      padding: 9px 10px;
+      padding: 8px 9px;
       cursor: pointer;
       position: relative;
       overflow: hidden;
@@ -1913,9 +1782,9 @@
       }
     }
 
-    /* ════════════════════════════════════════════════════════
-     PROGRESS CARD (from reference — win % chart)
-  ════════════════════════════════════════════════════════ */
+    /* --------------------------------------------------------
+     PROGRESS CARD (from reference � win % chart)
+  -------------------------------------------------------- */
     .progress-card {
       margin: 0 12px 5px;
       border-radius: var(--r3);
@@ -1997,9 +1866,9 @@
       margin-top: 2px;
     }
 
-    /* ════════════════════════════════════════════════════════
+    /* --------------------------------------------------------
      BOTTOM NAV
-  ════════════════════════════════════════════════════════ */
+  -------------------------------------------------------- */
     .bottom-nav {
       position: absolute;
       bottom: 0;
@@ -2158,9 +2027,9 @@
       letter-spacing: .5px;
     }
 
-    /* ════════════════════════════════════════════════════════
+    /* --------------------------------------------------------
      POPUPS
-  ════════════════════════════════════════════════════════ */
+  -------------------------------------------------------- */
     .overlay {
       position: absolute;
       inset: 0;
@@ -2316,7 +2185,7 @@
       background: rgba(168, 85, 247, 0.07);
     }
 
-    /* Mode cards 2×2 */
+    /* Mode cards 2�2 */
     .mode-2x2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -2684,16 +2553,15 @@
 
     .map-card {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       border-radius: 14px;
       background: rgba(8, 12, 20, 0.9);
       border: 1.5px solid var(--c-border);
-      padding: 10px;
+      padding: 8px;
       cursor: pointer;
       position: relative;
       overflow: hidden;
       transition: transform var(--med), border-color var(--med), box-shadow var(--med);
-      align-items: center;
     }
 
     .map-card:active {
@@ -2711,57 +2579,91 @@
     }
 
     .map-thumb {
-      width: 96px;
-      min-width: 96px;
-      height: 96px;
+      width: 88px;
+      min-width: 88px;
+      height: 78px;
       border-radius: 10px;
       position: relative;
       overflow: hidden;
       flex-shrink: 0;
       z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .mp-cl {
-      background: #F0EDE8;
-      border: 1.5px solid rgba(200,168,0,0.4);
+      background: linear-gradient(135deg, #080C14, #101830);
     }
 
     .mp-ne {
-      background: #0C0820;
-      border: 1.5px solid rgba(147,70,255,0.4);
+      background: linear-gradient(135deg, #12084A, #081830);
     }
 
     .mp-vo {
-      background: #1A0800;
-      border: 1.5px solid rgba(208,64,0,0.4);
+      background: linear-gradient(135deg, #1A0800, #300A00);
     }
 
     .mp-ic {
-      background: #E8F4FF;
-      border: 1.5px solid rgba(32,168,208,0.4);
+      background: linear-gradient(135deg, #001830, #002840);
     }
 
     .mp-te {
-      background: #F0E0C0;
-      border: 1.5px solid rgba(176,128,32,0.4);
+      background: linear-gradient(135deg, #1A1000, #2A1800);
     }
 
     .map-mini {
       position: absolute;
-      inset: 5px;
-      border-radius: 5px;
+      inset: 7px;
+      display: grid;
+      grid-template-columns: 38% 24% 38%;
+      grid-template-rows: 38% 24% 38%;
+      border-radius: 4px;
       overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
-    .map-mini svg {
-      width: 100%;
-      height: 100%;
-      display: block;
+
+    .mz-r {
+      background: rgba(255, 20, 60, 0.55);
+      grid-column: 1;
+      grid-row: 1;
     }
-    /* hide old css pieces */
-    .mz-r,.mz-b,.mz-g,.mz-y,.mz-ph,.mz-pv,.mz-c { display: none; }
+
+    .mz-b {
+      background: rgba(20, 80, 255, 0.55);
+      grid-column: 3;
+      grid-row: 1;
+    }
+
+    .mz-g {
+      background: rgba(0, 200, 60, 0.55);
+      grid-column: 1;
+      grid-row: 3;
+    }
+
+    .mz-y {
+      background: rgba(255, 200, 0, 0.55);
+      grid-column: 3;
+      grid-row: 3;
+    }
+
+    .mz-c {
+      background: radial-gradient(circle, #FFD700, #7B2FFF);
+      grid-column: 2;
+      grid-row: 2;
+      z-index: 2;
+    }
+
+    .mz-ph {
+      background: rgba(14, 20, 36, 0.8);
+      grid-column: 1/4;
+      grid-row: 2;
+      z-index: 1;
+    }
+
+    .mz-pv {
+      background: rgba(14, 20, 36, 0.8);
+      grid-column: 2;
+      grid-row: 1/4;
+      z-index: 1;
+    }
 
     .map-tag {
       position: absolute;
@@ -3327,7 +3229,7 @@
       filter: brightness(1.08);
     }
 
-    /* ════ TOAST ════ */
+    /* ---- TOAST ---- */
     #toast {
       position: absolute;
       bottom: 82px;
@@ -3366,801 +3268,12 @@
       transition: opacity .08s;
     }
 
-    /* ══════════════════════════════════════════════
-       ARENA LAUNCH — INNOVATIVE PLAY SECTION
-    ══════════════════════════════════════════════ */
-    .arena-launch-section {
-      margin: 14px 12px 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .als-header {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 0 2px;
-    }
-    .als-label {
-      font-family: 'Orbitron', monospace;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 2.5px;
-      color: var(--c-soft);
+    .settings-ico svg {
+      transition: transform .55s cubic-bezier(.34, 1.56, .64, 1);
     }
 
-    /* BIG HERO CARD */
-    .als-hero-card {
-      position: relative;
-      border-radius: 22px;
-      overflow: hidden;
-      min-height: 148px;
-      cursor: pointer;
-      border: 1.5px solid rgba(0,229,160,0.25);
-      box-shadow: 0 0 0 1px rgba(0,229,160,0.06), 0 8px 32px rgba(0,229,160,0.12);
-      transition: transform var(--med), box-shadow var(--med);
-    }
-    .als-hero-card:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgba(0,229,160,0.12), 0 12px 40px rgba(0,229,160,0.2); }
-    .als-hero-card:active { transform: scale(0.97); }
-    .als-hero-bg {
-      position: absolute; inset: 0;
-      background: linear-gradient(120deg, #041C10 0%, #062814 30%, #091F30 65%, #080C20 100%);
-    }
-    .als-hero-bg::before {
-      content:'';
-      position: absolute; inset: 0;
-      background:
-        radial-gradient(ellipse 70% 80% at 85% 50%, rgba(0,229,160,0.18) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 60% at 15% 50%, rgba(59,130,246,0.10) 0%, transparent 55%);
-    }
-    .als-hero-glow {
-      position: absolute;
-      right: -10px; top: -10px;
-      width: 140px; height: 140px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,229,160,0.14) 0%, transparent 65%);
-      animation: orb-throb 3s ease-in-out infinite;
-    }
-    .als-hero-content {
-      position: relative; z-index: 2;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 18px 16px;
-    }
-    .als-hero-left { display: flex; flex-direction: column; gap: 6px; }
-    .als-hero-tag {
-      font-family: 'Orbitron', monospace;
-      font-size: 7px; font-weight: 800;
-      letter-spacing: 2px;
-      color: var(--c-green);
-      background: rgba(0,229,160,0.1);
-      border: 1px solid rgba(0,229,160,0.22);
-      border-radius: 20px;
-      padding: 2px 8px;
-      width: fit-content;
-    }
-    .als-hero-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 46px;
-      line-height: 0.9;
-      letter-spacing: 2px;
-      color: #fff;
-      text-shadow: 0 0 24px rgba(0,229,160,0.25);
-    }
-    .als-hero-sub {
-      font-family: 'Orbitron', monospace;
-      font-size: 8px; font-weight: 700;
-      color: var(--c-muted);
-      letter-spacing: 1px;
-    }
-    .als-hero-right {
-      display: flex; flex-direction: column;
-      align-items: center; gap: 8px;
-    }
-    .als-hero-orb {
-      font-size: 38px;
-      filter: drop-shadow(0 0 14px rgba(0,229,160,0.5));
-      animation: crown-bob 3s ease-in-out infinite;
-    }
-    .als-hero-arrow {
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--c-green-d), var(--c-green));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; color: #001A0D; font-weight: 900;
-      box-shadow: 0 4px 14px rgba(0,229,160,0.4);
-    }
-    .als-hero-bar {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--c-green), var(--c-green2), transparent);
-      animation: bar-sweep 2.5s ease-in-out infinite;
-    }
-    @keyframes bar-sweep {
-      0%,100% { opacity: 0.5; transform: scaleX(0.7); }
-      50%      { opacity: 1;   transform: scaleX(1);   }
-    }
-
-    /* MINI CARDS */
-    .als-mini-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .als-mini-card {
-      position: relative;
-      border-radius: 18px;
-      overflow: hidden;
-      min-height: 116px;
-      cursor: pointer;
-      border: 1.5px solid rgba(255,255,255,0.07);
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: space-between;
-      padding: 16px 14px 14px;
-      gap: 8px;
-      transition: transform var(--med), border-color var(--med), box-shadow var(--med);
-    }
-    .als-mini-card:hover { transform: translateY(-2px); }
-    .als-mini-card:active { transform: scale(0.96); }
-    .als-mini-friends {
-      background: linear-gradient(145deg, #12092E, #1D0F4A 60%, #121E3B);
-      border-color: rgba(168,85,247,0.22);
-      box-shadow: 0 8px 24px rgba(168,85,247,0.14);
-    }
-    .als-mini-bot {
-      background: linear-gradient(145deg, #07192C, #0D2B44 55%, #10203A);
-      border-color: rgba(59,130,246,0.28);
-      box-shadow: 0 12px 32px rgba(59,130,246,0.16);
-    }
-    .als-mini-glow {
-      position: absolute; inset: 0;
-      opacity: 0.6;
-      pointer-events: none;
-    }
-    .als-mini-friends .als-mini-glow {
-      background: radial-gradient(ellipse at 80% 20%, rgba(168,85,247,0.2), transparent 60%);
-    }
-    .als-mini-bot .als-mini-glow {
-      background:
-        radial-gradient(ellipse at 78% 22%, rgba(59,130,246,0.28), transparent 58%),
-        radial-gradient(ellipse at 20% 78%, rgba(0,229,160,0.16), transparent 52%);
-    }
-    .als-mini-top {
-      width: 100%;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 8px;
-      position: relative;
-      z-index: 1;
-    }
-    .als-mini-icon {
-      font-size: 24px;
-      margin-bottom: 4px;
-    }
-    .als-mini-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      font-family: 'Orbitron', monospace;
-      font-size: 7px;
-      font-weight: 800;
-      letter-spacing: 1px;
-    }
-    .als-mini-friends .als-mini-badge {
-      background: rgba(168,85,247,0.12);
-      border: 1px solid rgba(168,85,247,0.26);
-      color: #D8B4FE;
-    }
-    .als-mini-bot .als-mini-badge {
-      background: rgba(59,130,246,0.12);
-      border: 1px solid rgba(59,130,246,0.28);
-      color: #93C5FD;
-    }
-    .als-mini-copy {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      max-width: 84%;
-    }
-    .als-mini-title {
-      font-family: 'Orbitron', monospace;
-      font-size: 10px; font-weight: 800;
-      color: var(--c-text);
-      letter-spacing: .5px;
-      text-transform: uppercase;
-    }
-    .als-mini-sub {
-      font-size: 9px; font-weight: 600;
-      color: var(--c-muted);
-      line-height: 1.35;
-    }
-    .als-mini-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      position: relative;
-      z-index: 1;
-    }
-    .als-mini-chip {
-      padding: 3px 7px;
-      border-radius: 999px;
-      font-family: 'Orbitron', monospace;
-      font-size: 7px;
-      font-weight: 700;
-      letter-spacing: .5px;
-      border: 1px solid rgba(255,255,255,0.1);
-      color: rgba(232,240,255,0.8);
-      background: rgba(255,255,255,0.06);
-    }
-    .als-mini-arr {
-      position: absolute;
-      right: 12px; top: 50%;
-      transform: translateY(-50%);
-      font-size: 20px;
-      color: rgba(255,255,255,0.2);
-      font-weight: 700;
-    }
-    .als-mini-friends .als-mini-arr { color: rgba(168,85,247,0.5); }
-    .als-mini-bot    .als-mini-arr { color: rgba(59,130,246,0.5);  }
-    .als-bot-core {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      border: 1px solid rgba(59,130,246,0.35);
-      background:
-        radial-gradient(circle at 50% 35%, rgba(147,197,253,0.3), transparent 48%),
-        linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 0 24px rgba(59,130,246,0.18);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-    .als-bot-core::before,
-    .als-bot-core::after {
-      content: '';
-      position: absolute;
-      border-radius: 50%;
-      border: 1px solid rgba(59,130,246,0.28);
-    }
-    .als-bot-core::before {
-      inset: -7px;
-      opacity: 0.55;
-    }
-    .als-bot-core::after {
-      inset: -13px;
-      opacity: 0.28;
-    }
-    .als-bot-grid {
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(90deg, transparent 48%, rgba(59,130,246,0.18) 50%, transparent 52%),
-        linear-gradient(0deg, transparent 48%, rgba(59,130,246,0.18) 50%, transparent 52%);
-      mix-blend-mode: screen;
-      opacity: 0.45;
-    }
-    .als-mini-cta {
-      margin-top: 2px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-family: 'Orbitron', monospace;
-      font-size: 8px;
-      font-weight: 800;
-      letter-spacing: .8px;
-      color: var(--c-text);
-    }
-
-    /* ══════════════════════════════════════════════
-       MAP PAGE — FULL SCREEN SLIDER
-    ══════════════════════════════════════════════ */
-    #mapPopup.map-page {
-      position: absolute;
-      inset: 0;
-      z-index: 90;
-      display: flex;
-      flex-direction: column;
-      padding: 14px 12px 18px;
-      background:
-        radial-gradient(circle at top left, rgba(0, 229, 160, 0.16), transparent 30%),
-        radial-gradient(circle at top right, rgba(255, 184, 0, 0.14), transparent 26%),
-        linear-gradient(180deg, rgba(9, 14, 28, 0.99), rgba(4, 7, 14, 1));
-      opacity: 0;
-      pointer-events: none;
-      transform: translateX(104%);
-      transition: transform .42s cubic-bezier(.22, 1, .36, 1), opacity .24s ease;
-      overflow: hidden;
-    }
-    #mapPopup.map-page.open {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateX(0);
-    }
-    #mapPopup.map-page::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.03) 44%, transparent 62%),
-        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 28px);
-      opacity: .35;
-      pointer-events: none;
-    }
-    #mapPopup .map-page-head,
-    #mapPopup .map-stage,
-    #mapPopup .map-cta {
-      position: relative;
-      z-index: 1;
-    }
-    #mapPopup .map-page-head {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    #mapPopup .map-page-title {
-      flex: 1;
-      min-width: 0;
-      padding-top: 2px;
-    }
-    #mapPopup .map-page-step {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 10px;
-      border-radius: 999px;
-      background: rgba(0, 229, 160, 0.08);
-      border: 1px solid rgba(0, 229, 160, 0.18);
-      font-family: 'Orbitron', monospace;
-      font-size: 7px;
-      font-weight: 800;
-      letter-spacing: 1.3px;
-      color: var(--c-green);
-      margin-bottom: 8px;
-    }
-    #mapPopup .map-page-counter {
-      color: rgba(232, 240, 255, 0.68);
-    }
-    #mapPopup .map-stage {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-      gap: 12px;
-    }
-    #mapPopup .map-stage-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-    #mapPopup .map-stage-label {
-      font-family: 'Orbitron', monospace;
-      font-size: 8px;
-      font-weight: 800;
-      letter-spacing: 1.4px;
-      color: var(--c-muted);
-    }
-    #mapPopup .map-stage-hint {
-      font-size: 9px;
-      font-weight: 700;
-      color: rgba(232, 240, 255, 0.55);
-    }
-    #mapPopup .map-slide-shell {
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 10px;
-    }
-    #mapPopup .map-nav-btn {
-      appearance: none;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--c-text);
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: var(--fast);
-      flex-shrink: 0;
-    }
-    #mapPopup .map-nav-btn:hover {
-      border-color: rgba(0, 229, 160, 0.3);
-      background: rgba(0, 229, 160, 0.1);
-      color: var(--c-green);
-      box-shadow: 0 0 16px rgba(0, 229, 160, 0.16);
-    }
-    #mapPopup .map-slide-viewport {
-      overflow: hidden;
-      border-radius: 24px;
-    }
-    #mapPopup .map-slide-track {
-      display: flex;
-      transition: transform .42s cubic-bezier(.22, 1, .36, 1);
-      will-change: transform;
-    }
-    #mapPopup .map-card {
-      min-width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      border-radius: 24px;
-      background: linear-gradient(180deg, rgba(20, 27, 43, 0.98), rgba(9, 13, 23, 0.99));
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      overflow: hidden;
-      transition: border-color var(--med), box-shadow var(--med), transform var(--med);
-      cursor: pointer;
-    }
-    #mapPopup .map-card.map-sel {
-      border-color: rgba(0, 229, 160, 0.45);
-      box-shadow: 0 0 0 1px rgba(0, 229, 160, 0.18), 0 18px 42px rgba(0, 0, 0, 0.42);
-    }
-    #mapPopup .map-thumb {
-      width: 100%;
-      height: 230px;
-      min-width: unset;
-      border-radius: 0;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    #mapPopup .map-thumb::before {
-      content: '';
-      position: absolute;
-      inset: auto -12% -22% -12%;
-      height: 120px;
-      background: radial-gradient(circle, rgba(0, 229, 160, 0.22), transparent 68%);
-      filter: blur(12px);
-    }
-    #mapPopup .map-mini {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    #mapPopup .map-mini svg {
-      width: 168px;
-      height: 168px;
-      display: block;
-      border-radius: 16px;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.52);
-      background: rgba(6, 8, 15, 0.16);
-    }
-    #mapPopup .map-thumb-bar {
-      position: absolute;
-      left: 14px;
-      right: 14px;
-      bottom: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 16px;
-      background: linear-gradient(180deg, rgba(5, 10, 20, 0.28), rgba(5, 10, 20, 0.82));
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(12px);
-      z-index: 4;
-    }
-    #mapPopup .map-thumb-type,
-    #mapPopup .map-thumb-bet {
-      font-family: 'Orbitron', monospace;
-      font-size: 8px;
-      font-weight: 800;
-      letter-spacing: .8px;
-    }
-    #mapPopup .map-thumb-type {
-      color: rgba(255, 255, 255, 0.82);
-    }
-    #mapPopup .map-thumb-bet {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 5px 9px;
-      border-radius: 999px;
-      background: rgba(0, 229, 160, 0.16);
-      border: 1px solid rgba(0, 229, 160, 0.34);
-      color: var(--c-green);
-      white-space: nowrap;
-    }
-    #mapPopup .mp-cl { background: linear-gradient(160deg, #0C1828, #101C30); }
-    #mapPopup .mp-ne { background: linear-gradient(160deg, #100428, #18083C); }
-    #mapPopup .mp-vo { background: linear-gradient(160deg, #2A0900, #3A1200); }
-    #mapPopup .mp-ic { background: linear-gradient(160deg, #062244, #0B335E); }
-    #mapPopup .mp-te { background: linear-gradient(160deg, #2A1902, #3B2608); }
-    #mapPopup .map-info2 {
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    #mapPopup .map-name-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    #mapPopup .map-name {
-      font-family: 'Orbitron', monospace;
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--c-text);
-      letter-spacing: .5px;
-    }
-    #mapPopup .map-desc {
-      font-size: 10px;
-      font-weight: 600;
-      color: rgba(232, 240, 255, 0.66);
-      line-height: 1.55;
-    }
-    #mapPopup .map-chk {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: var(--c-green);
-      color: #02150D;
-      font-size: 12px;
-      font-weight: 900;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity var(--fast);
-      box-shadow: 0 0 18px rgba(0, 229, 160, 0.25);
-    }
-    #mapPopup .map-card.map-sel .map-chk { opacity: 1; }
-    #mapPopup .map-tag {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      font-size: 8px;
-      font-weight: 800;
-      padding: 4px 9px;
-      border-radius: 999px;
-      letter-spacing: .9px;
-      z-index: 5;
-    }
-    #mapPopup .map-card.map-sel .map-thumb::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 45%, rgba(0, 229, 160, 0.08));
-      pointer-events: none;
-    }
-    #mapPopup .map-card.map-sel .map-thumb-bar {
-      border-color: rgba(0, 229, 160, 0.28);
-      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.24);
-    }
-    #mapPopup .map-thumb-tabs {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 2px;
-      scrollbar-width: none;
-    }
-    #mapPopup .map-thumb-tabs::-webkit-scrollbar {
-      display: none;
-    }
-    #mapPopup .map-thumb-tab {
-      appearance: none;
-      min-width: 88px;
-      border-radius: 16px;
-      padding: 8px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      cursor: pointer;
-      transition: var(--med);
-      text-align: left;
-      font: inherit;
-    }
-    #mapPopup .map-thumb-tab.active {
-      border-color: rgba(0, 229, 160, 0.38);
-      background: rgba(0, 229, 160, 0.1);
-      box-shadow: 0 0 0 1px rgba(0, 229, 160, 0.16);
-    }
-    #mapPopup .map-thumb-tab-mini {
-      height: 56px;
-      border-radius: 10px;
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 7px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    #mapPopup .map-thumb-tab-mini .map-mini svg {
-      width: 48px;
-      height: 48px;
-      border-radius: 7px;
-      box-shadow: none;
-    }
-    #mapPopup .map-thumb-tab-name {
-      font-family: 'Orbitron', monospace;
-      font-size: 8px;
-      font-weight: 700;
-      color: var(--c-text);
-      letter-spacing: .35px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    #mapPopup .map-thumb-tab-entry {
-      margin-top: 3px;
-      font-family: 'Orbitron', monospace;
-      font-size: 7px;
-      font-weight: 700;
-      color: var(--c-green);
-      letter-spacing: .5px;
-    }
-
-    /* ══ BET CHIPS ON MAP CARDS ══ */
-    .map-bet-row {
-      display: flex;
-      gap: 5px;
-      flex-wrap: wrap;
-    }
-    .map-entry-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: rgba(0,229,160,0.10);
-      color: var(--c-green);
-      border: 1px solid rgba(0,229,160,0.24);
-      font-family: 'Orbitron', monospace;
-      font-size: 8px;
-      font-weight: 700;
-      letter-spacing: .5px;
-      white-space: nowrap;
-    }
-    .mbet-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      padding: 4px 9px;
-      border-radius: 20px;
-      font-family: 'Orbitron', monospace;
-      font-size: 8.5px;
-      font-weight: 700;
-      letter-spacing: .4px;
-      white-space: nowrap;
-    }
-    .mbet-entry { background: rgba(244,63,94,0.10); color: #FB7185; border: 1px solid rgba(244,63,94,0.25); }
-    .mbet-win   { background: rgba(255,184,0,0.10);  color: var(--c-gold); border: 1px solid rgba(255,184,0,0.25); }
-    .mbet-bonus { background: rgba(59,130,246,0.10); color: #93C5FD; border: 1px solid rgba(59,130,246,0.25); }
-    #mapPopup .map-card.map-sel .map-entry-badge {
-      background: rgba(0,229,160,0.18);
-      border-color: rgba(0,229,160,0.42);
-      box-shadow: 0 0 0 1px rgba(0,229,160,0.08), 0 0 18px rgba(0,229,160,0.12);
-    }
-    #mapPopup .map-card.map-sel .mbet-entry { background: rgba(244,63,94,0.18); border-color: rgba(244,63,94,0.45); }
-    #mapPopup .map-card.map-sel .mbet-win   { background: rgba(255,184,0,0.18);  border-color: rgba(255,184,0,0.45); }
-
-    .map-popup-hdr-row { display: flex; align-items: center; gap: 10px; }
-    .map-current-bet {
-      width: 100%;
-      display: grid;
-      grid-template-columns: minmax(0,1fr) auto auto;
-      align-items: center;
-      gap: 8px;
-      padding: 11px 12px;
-      background: rgba(0,229,160,0.07);
-      border: 1px solid rgba(0,229,160,0.16);
-      border-radius: 14px;
-    }
-    .map-current-bet .current-map-copy {
-      min-width: 0;
-    }
-    .map-current-bet .current-map-label {
-      font-family: 'Orbitron', monospace;
-      font-size: 7px;
-      font-weight: 700;
-      letter-spacing: 1.2px;
-      color: var(--c-muted);
-      margin-bottom: 4px;
-    }
-    .map-current-bet .current-map-name {
-      font-family: 'Orbitron', monospace;
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--c-text);
-      letter-spacing: .4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .map-current-chip {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 3px;
-      padding: 8px 10px;
-      border-radius: 12px;
-      background: rgba(8,14,28,0.72);
-      border: 1px solid rgba(255,255,255,0.08);
-      min-width: 92px;
-    }
-    .map-current-chip strong {
-      font-family: 'Orbitron', monospace;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: .4px;
-      line-height: 1;
-    }
-    .map-current-chip span {
-      font-family: 'Orbitron', monospace;
-      font-size: 7px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: var(--c-muted);
-      line-height: 1;
-    }
-    .map-current-chip.entry strong { color: var(--c-green); }
-    .map-current-chip.win strong { color: var(--c-gold); }
-
-    #mapPopup .map-summary-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 10px;
-      align-items: center;
-    }
-    #mapPopup .map-mode-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 9px 12px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      font-family: 'Orbitron', monospace;
-      font-size: 8px;
-      font-weight: 700;
-      letter-spacing: .8px;
-      color: rgba(232, 240, 255, 0.8);
-    }
-    #mapPopup .map-mode-pill strong {
-      color: var(--c-text);
-      font-size: 9px;
-      font-weight: 800;
-      letter-spacing: .5px;
-    }
-    #mapPopup .map-page-balance {
-      text-align: right;
-      font-family: 'Orbitron', monospace;
-      font-size: 8px;
-      font-weight: 700;
-      color: var(--c-muted);
-    }
-    #mapPopup .map-page-balance strong {
-      display: block;
-      margin-top: 3px;
-      font-size: 11px;
-      color: var(--c-green);
-      letter-spacing: .5px;
-    }
-
-    @keyframes crown-bob {
-      0%,100%{ transform: translateY(0); }
-      50%    { transform: translateY(-5px); }
+    .settings-ico:hover svg {
+      transform: rotate(180deg) scale(1.1);
     }
   </style>
 </head>
@@ -4168,20 +3281,20 @@
 <body>
   <div class="phone" id="phone">
 
-    <!-- BG — AURORA ARENA CANVAS -->
+    <!-- BG � AURORA ARENA CANVAS -->
     <div class="bg"></div>
 
     <div id="flash"></div>
 
     <div class="shell" id="shell">
 
-      <!-- ══════════════ HEADER ══════════════ -->
+      <!-- -------------- HEADER -------------- -->
       <div class="hdr">
         <!-- Left -->
         <div class="hdr-left">
           <div class="av-row">
             <div class="av-wrap">
-              <div class="av-ring rip" onclick="toggleStatus();ripple(event,this)" id="avRing">⚔️</div>
+              <div class="av-ring rip" onclick="toggleStatus();ripple(event,this)" id="avRing">&#128100;</div>
               <span class="av-dot on" id="avDot"></span>
             </div>
             <div class="av-info">
@@ -4194,10 +3307,10 @@
           </div>
           <div class="cur-row">
             <div class="cur cur-gold rip" onclick="bumpCoins();ripple(event,this)" title="Coins">
-              <span class="cur-ico">🪙</span><span class="cur-val" id="coinDisplay">24,850</span>
+              <span class="cur-ico">&#129689;</span><span class="cur-val" id="coinDisplay">24,850</span>
             </div>
             <div class="cur cur-gem rip" onclick="bumpGems();ripple(event,this)" title="Gems">
-              <span class="cur-ico">💎</span><span class="cur-val" id="gemDisplay">480</span>
+              <span class="cur-ico">&#128142;</span><span class="cur-val" id="gemDisplay">480</span>
             </div>
           </div>
         </div>
@@ -4240,16 +3353,17 @@
               </svg>
               <span class="pip" id="notifPip"></span>
             </div>
-            <div class="ico-btn rip" onclick="window.location.href='help.html'" aria-label="Help center">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(59,130,246,0.88)"
-                stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9.09 9a3 3 0 1 1 5.82 1c0 2-3 2-3 4" />
-                <path d="M12 17h.01" />
+            <div class="ico-btn rip" onclick="window.location.href='help.html'" aria-label="Help">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,184,0,0.9)"
+                stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M9.4 9.2a2.8 2.8 0 1 1 4.31 2.37c-.97.65-1.71 1.18-1.71 2.43"></path>
+                <circle cx="12" cy="17.4" r="1"></circle>
               </svg>
             </div>
-            <div class="ico-btn rip" onclick="window.location.href='shop.html'"
-              style="font-size:13px;">🛒</div>
-            <div class="ico-btn settings-ico rip" onclick="window.location.href='settings.html'" style="font-size:13px;">
+            <div class="ico-btn rip" onclick="window.location.href='shop.html'" aria-label="Shop"
+              style="font-size:13px;">&#128722;</div>
+            <div class="ico-btn settings-ico rip" onclick="window.location.href='settings.html'" aria-label="Settings" style="font-size:13px;">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(232,240,255,0.75)"
                 stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="3" />
@@ -4258,48 +3372,103 @@
               </svg>
             </div>
           </div>
-          <div class="map-btn rip" onclick="window.location.href='ludo_board.html';ripple(event,this)">
+          <div class="map-btn rip" onclick="openMap();ripple(event,this)">
             <div>
-              <span class="map-btn-lbl">NEW MAP</span>
-              <span class="map-btn-val">Open Board</span>
+              <span class="map-btn-lbl">MAP LAYOUT</span>
+              <span class="map-btn-val" id="mapLabel">Classic Arena</span>
             </div>
-            <span class="map-arr">▸</span>
+            <span class="map-arr">&#9656;</span>
           </div>
         </div>
       </div>
 
-      <!-- HERO SLIDER REMOVED — map selection now lives in the betting flow -->
+      <!-- -------------- HERO SLIDER -------------- -->
+      <div class="hero">
+        <div class="hero-ticker">&#10022; SEASON 7</div>
+        <div class="live-pill">
+          <div class="live-dot"></div><span id="liveCount">48.2K</span> LIVE
+        </div>
+        <div class="hero-nav">
+          <button class="hero-arrow" type="button" onclick="goSlide(idx - 1)" aria-label="Previous map">&#8249;</button>
+          <button class="hero-arrow" type="button" onclick="goSlide(idx + 1)" aria-label="Next map">&#8250;</button>
+        </div>
+        <div id="heroWrap" style="position:absolute;inset:0;overflow:hidden;">
+          <div id="heroTrack">
 
-      <!-- ══════════════ STATS STRIP ══════════════ -->
-      <div class="stats-strip">
-        <div class="stat-tile st-gold rip" onclick="window.location.href='trophies.html'">
-          <span class="st-icon">🏆</span>
-          <span class="st-val" style="color:var(--c-gold)" data-target="1240">0</span>
-          <div class="st-lbl">Trophies</div>
-        </div>
-        <div class="stat-tile st-blue rip" onclick="window.location.href='win-rate.html'">
-          <span class="st-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#93C5FD"
-              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
-              <polyline points="16 7 22 7 22 13" />
-            </svg></span>
-          <span class="st-val" style="color:#93C5FD" data-target="83" data-suffix="%">0%</span>
-          <div class="st-lbl">Win Rate</div>
-        </div>
-        <div class="stat-tile st-fire rip" onclick="window.location.href='streak.html'">
-          <span class="st-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FB923C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></span>
-          <span class="st-val" style="color:#FB923C" data-target="14">0</span>
-          <div class="st-lbl">Streak</div>
-        </div>
-        <div class="stat-tile st-purple rip" onclick="window.location.href='s-plus-rank.html'">
-          <span class="st-icon">⭐</span>
-          <span class="st-val" style="color:#C084FC">S+</span>
-          <div class="st-lbl">Rank</div>
+            <div class="h-slide">
+              <div class="board-wrap">
+                <div class="orb-ring"></div>
+                <div class="orb-ring2"></div>
+                <svg class="hero-svg" data-theme="classic" viewBox="0 0 150 150" width="134" height="134"
+                  style="filter:drop-shadow(0 0 14px rgba(0,229,160,0.4));margin-top:6px;"></svg>
+              </div>
+              <div class="slide-info">
+                <div class="slide-title">Classic Arena</div>
+                <div class="slide-tags"><span class="stag stag-free">FREE</span><span
+                    class="stag stag-free">BALANCED</span></div>
+              </div>
+            </div>
+
+            <div class="h-slide">
+              <div class="board-wrap">
+                <div class="orb-ring"></div>
+                <div class="orb-ring2"></div>
+                <svg class="hero-svg" data-theme="neon" viewBox="0 0 150 150" width="134" height="134"
+                  style="filter:drop-shadow(0 0 14px rgba(168,85,247,0.5));margin-top:6px;"></svg>
+              </div>
+              <div class="slide-info">
+                <div class="slide-title">Neon City</div>
+                <div class="slide-tags"><span class="stag stag-hot">&#128293; HOT</span><span
+                    class="stag stag-new">CYBER</span></div>
+              </div>
+            </div>
+
+            <div class="h-slide">
+              <div class="board-wrap">
+                <div class="orb-ring"></div>
+                <div class="orb-ring2"></div>
+                <svg class="hero-svg" data-theme="volcano" viewBox="0 0 150 150" width="134" height="134"
+                  style="filter:drop-shadow(0 0 14px rgba(251,146,60,0.5));margin-top:6px;"></svg>
+              </div>
+              <div class="slide-info">
+                <div class="slide-title">Volcano Pit</div>
+                <div class="slide-tags"><span class="stag stag-new">&#10024; NEW</span><span class="stag stag-hot">LAVA</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="h-slide">
+              <div class="board-wrap">
+                <div class="orb-ring"></div>
+                <div class="orb-ring2"></div>
+                <svg class="hero-svg" data-theme="ice" viewBox="0 0 150 150" width="134" height="134"
+                  style="filter:drop-shadow(0 0 14px rgba(34,211,238,0.5));margin-top:6px;"></svg>
+              </div>
+              <div class="slide-info">
+                <div class="slide-title">Ice Kingdom</div>
+                <div class="slide-tags"><span class="stag stag-lock">&#128274; LV.10</span><span
+                    class="stag stag-new">FROST</span></div>
+              </div>
+            </div>
+
+            <div class="h-slide">
+              <div class="board-wrap">
+                <div class="orb-ring"></div>
+                <div class="orb-ring2"></div>
+                <svg class="hero-svg" data-theme="temple" viewBox="0 0 150 150" width="134" height="134"
+                  style="filter:drop-shadow(0 0 14px rgba(255,184,0,0.4));margin-top:6px;"></svg>
+              </div>
+              <div class="slide-info">
+                <div class="slide-title">Ancient Temple</div>
+                <div class="slide-tags"><span class="stag stag-lock">&#128274; LV.15</span><span
+                    class="stag stag-free">EPIC</span></div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
-
-
-
+      <!-- -------------- SKILL SETUP (ref image style) -------------- -->
       <!-- <div class="skills-section">
       <div class="sec-head">
         <div class="sec-title">Skill Setup</div>
@@ -4307,7 +3476,7 @@
       <div class="skill-list" id="skillList">
 
         <div class="skill-row sk-red rip" onclick="ripple(event,this);upgradeSkill(this,'Force Attack',4)" data-level="4" data-max="10">
-          <div class="sk-icon">⚔️</div>
+          <div class="sk-icon">??</div>
           <div class="sk-body">
             <div class="sk-name">FORCE ATTACK</div>
             <div class="sk-bar-track"><div class="sk-bar-fill" data-pct="72"></div></div>
@@ -4316,7 +3485,7 @@
         </div>
 
         <div class="skill-row sk-purple rip" onclick="ripple(event,this);upgradeSkill(this,'Magic Attack',6)" data-level="6" data-max="10">
-          <div class="sk-icon">🔮</div>
+          <div class="sk-icon">??</div>
           <div class="sk-body">
             <div class="sk-name">MAGIC ATTACK</div>
             <div class="sk-bar-track"><div class="sk-bar-fill" data-pct="55"></div></div>
@@ -4325,7 +3494,7 @@
         </div>
 
         <div class="skill-row sk-blue rip" onclick="ripple(event,this);upgradeSkill(this,'Shield Defense',3)" data-level="3" data-max="10">
-          <div class="sk-icon">🛡️</div>
+          <div class="sk-icon">???</div>
           <div class="sk-body">
             <div class="sk-name">SHIELD DEFENSE</div>
             <div class="sk-bar-track"><div class="sk-bar-fill" data-pct="38"></div></div>
@@ -4334,7 +3503,7 @@
         </div>
 
         <div class="skill-row sk-green rip" onclick="ripple(event,this);upgradeSkill(this,'Health',8)" data-level="8" data-max="10">
-          <div class="sk-icon">💚</div>
+          <div class="sk-icon">??</div>
           <div class="sk-body">
             <div class="sk-name">HEALTH</div>
             <div class="sk-bar-track"><div class="sk-bar-fill" data-pct="88"></div></div>
@@ -4343,98 +3512,75 @@
         </div>
 
       </div>
-    </div> -->
-
-      <!-- ══════════════ PLAY ARENA — INNOVATIVE MODE SECTION ══════════════ -->
-      <div class="arena-launch-section">
-        <div class="als-header">
-          <div class="als-label">CHOOSE YOUR BATTLE</div>
-        </div>
-
-        <!-- Big Play Online hero card -->
-        <div class="als-hero-card rip" onclick="openModes('online');flash();ripple(event,this)">
-          <div class="als-hero-bg"></div>
-          <div class="als-hero-glow"></div>
-          <div class="als-hero-content">
-            <div class="als-hero-left">
-              <div class="als-hero-tag">⚡ FEATURED</div>
-              <div class="als-hero-title">Play<br>Online</div>
-              <div class="als-hero-sub">1v1 · 2v2 · 4v4 · Bet & Win</div>
+    </div> -->      <!-- -------------- PLAY MODES -------------- -->
+      <div class="modes-section">
+        <div class="mode-deck">
+          <div class="mode-hero-card" aria-label="Battle mode selector">
+            <div class="mode-hero-top">
+              <span class="mode-hero-tag">MAIN BATTLE HUB</span>
+              <div class="mode-hero-status"><span class="mode-hero-status-dot"></span>12K Live</div>
             </div>
-            <div class="als-hero-right">
-              <div class="als-hero-orb">🌐</div>
-              <div class="als-hero-arrow">▶</div>
+            <div class="mode-hero-main">
+              <div class="mode-hero-copy">
+                <div class="mode-hero-title" id="modeHeroTitle">Jump Into Arena</div>
+                <div class="mode-hero-sub" id="modeHeroSub">Queue instantly with live players and the fastest route from lobby to match.</div>
+              </div>
+              <div class="mode-hero-side" aria-hidden="true">
+                <span class="mode-hero-side-label" id="modeSideLabel">Queue Type</span>
+                <span class="mode-hero-side-value" id="modeSideValue">Live Match</span>
+                <span class="mode-hero-side-line"></span>
+                <span class="mode-hero-side-chip" id="modeSideChip">Ranked</span>
+              </div>
             </div>
-          </div>
-          <div class="als-hero-bar"></div>
-        </div>
-
-        <!-- Two smaller cards side by side -->
-        <div class="als-mini-row">
-          <div class="als-mini-card als-mini-friends rip" onclick="openModes('friends');flash();ripple(event,this)">
-            <div class="als-mini-glow"></div>
-            <div class="als-mini-top">
-              <div class="als-mini-icon">👥</div>
-              <div class="als-mini-badge">PRIVATE ROOM</div>
+            <div class="mode-hero-controls">
+              <button class="mode-battle-btn rip" type="button" id="modeBattleBtn"
+                onclick="launchSelectedMode(event);ripple(event,this);">
+                <span class="mode-battle-label" id="modeBattleLabel">Play</span>
+                <span class="mode-battle-meta" id="modeBattleMeta">Play Online</span>
+              </button>
+              <div class="mode-dropdown" id="modeDropdown">
+                <label class="mode-dropdown-label" for="modeSelect">Mode</label>
+                <div class="mode-select-wrap">
+                  <select class="mode-select" id="modeSelect" onchange="selectBattleMode(this.value)">
+                    <option value="online">Play Online</option>
+                    <option value="computer">Vs Computer</option>
+                    <option value="friends">With Friends</option>
+                  </select>
+                </div>
+              </div>
             </div>
-            <div class="als-mini-copy">
-              <div class="als-mini-title">With Friends</div>
-              <div class="als-mini-sub">Create a room and play together.</div>
-            </div>
-            <div class="als-mini-meta">
-              <div class="als-mini-chip">Invite</div>
-              <div class="als-mini-chip">Team Up</div>
-            </div>
-            <div class="als-mini-arr">›</div>
-          </div>
-          <div class="als-mini-card als-mini-bot rip" onclick="openModes('computer');flash();ripple(event,this)">
-            <div class="als-mini-glow"></div>
-            <div class="als-bot-grid"></div>
-            <div class="als-mini-top">
-              <div class="als-bot-core">🤖</div>
-              <div class="als-mini-badge">AI SHOWDOWN</div>
-            </div>
-            <div class="als-mini-copy">
-              <div class="als-mini-title">Vs Computer</div>
-              <div class="als-mini-sub">Take on a smart solo challenge.</div>
-            </div>
-            <div class="als-mini-meta">
-              <div class="als-mini-chip">Adaptive AI</div>
-              <div class="als-mini-chip">Fast Queue</div>
-            </div>
-            <div class="als-mini-arr">›</div>
           </div>
         </div>
       </div>
 
-      <!-- ══════════════ TOURNAMENT BANNER ══════════════ -->
+      <!-- -------------- TOURNAMENT BANNER -------------- -->
       <div class="tourn-wrap">
         <div class="tourn-card rip" onclick="ripple(event,this);window.location.href='tournament.html'">
           <div class="tc-left">
-            <div class="tc-crown">👑</div>
+            <div class="tc-crown">&#9819;</div>
             <div>
               <div class="tc-title">TOURNAMENT</div>
-              <div class="tc-sub">⏱ <span id="tournTimer">11d : 4h</span> remaining</div>
+              <div class="tc-sub">&#9203; <span id="tournTimer">11d : 4h</span> remaining</div>
             </div>
           </div>
           <div class="tc-right">
-            <div class="tc-prize">🏆 <span id="prizeCount">50,000</span></div>
+            <div class="tc-prize">&#127942; <span id="prizeCount">50,000</span></div>
             <button class="tc-btn rip"
               onclick="event.stopPropagation();ripple(event,this);window.location.href='tournament.html'">JOIN</button>
           </div>
         </div>
       </div>
 
-      <!-- ══════════════ WIN % PROGRESS CARD ══════════════ -->
+      <!-- -------------- WIN % PROGRESS CARD -------------- -->
       <!-- <div class="progress-card">
       <div class="pc-header">
         <div class="pc-title">ARENA WIN %</div>
-        <div class="pc-badge">+1.22% ↑</div>
+        <div class="pc-badge">+1.22% ?</div>
       </div>
       <div class="pc-stats">
         <div>
           <div class="pc-big" id="winPct">17.83%</div>
-          <div class="pc-meta">🟢 <span>+1.22%</span> this week</div>
+          <div class="pc-meta">?? <span>+1.22%</span> this week</div>
         </div>
         <div style="text-align:right">
           <div class="pc-meta-val">Rank Progress</div>
@@ -4444,18 +3590,18 @@
       <canvas id="sparkCanvas" class="spark-wrap" height="36"></canvas>
     </div> -->
 
-      <!-- ══════════════ REWARDS ROW ══════════════ -->
+      <!-- -------------- REWARDS ROW -------------- -->
       <div class="rewards-row">
         <div class="rw-card rip" onclick="ripple(event,this);window.location.href='daily-reward.html'">
-          <span class="rw-icon">🎁</span>
+          <span class="rw-icon">&#127873;</span>
           <div class="rw-body">
             <div class="rw-title">Daily Reward</div>
-            <div class="rw-sub">Day 7 · 2h left</div>
+            <div class="rw-sub">Day 7 &#8226; 2h left</div>
           </div>
           <div class="rw-badge rw-badge-g">CLAIM</div>
         </div>
         <div class="rw-card rip" onclick="ripple(event,this);window.location.href='lucky-spin.html'">
-          <span class="rw-icon"><span class="spin-ico">🎡</span></span>
+          <span class="rw-icon"><span class="spin-ico">&#127920;</span></span>
           <div class="rw-body">
             <div class="rw-title">Lucky Spin</div>
             <div class="rw-sub">1 free today</div>
@@ -4464,29 +3610,30 @@
         </div>
       </div>
 
+      <div style="flex-shrink:0;height:42px;"></div>
     </div><!-- /shell -->
 
-    <!-- ══════════════ BOTTOM NAV ══════════════ -->
+    <!-- -------------- BOTTOM NAV -------------- -->
     <div class="bottom-nav">
       <div class="nav-row">
         <div class="nav-it rip" onclick="window.location.href='friends.html'">
-          <div class="nav-icon-box">👥<span class="nav-badge">7</span></div>
+          <div class="nav-icon-box">&#128101;<span class="nav-badge">7</span></div>
           <div class="nav-lbl">Friends</div>
         </div>
-        <div class="nav-it rip" onclick="window.location.href='rank.html'">
-          <div class="nav-icon-box">🏆<span class="nav-badge">3</span></div>
-          <div class="nav-lbl">Rank</div>
+        <div class="nav-it rip" onclick="window.location.href='trophies.html'">
+          <div class="nav-icon-box">&#127942;<span class="nav-badge">3</span></div>
+          <div class="nav-lbl">Trophies</div>
         </div>
-        <div class="nav-battle" onclick="window.location.href='index.html'">
-          <div class="battle-orb">🏠</div>
+        <div class="nav-battle" onclick="openModes('online');flash()">
+          <div class="battle-orb">&#9876;</div>
           <div class="battle-lbl">Home</div>
         </div>
         <div class="nav-it rip" onclick="window.location.href='items.html'">
-          <div class="nav-icon-box">🎒</div>
+          <div class="nav-icon-box">&#127890;</div>
           <div class="nav-lbl">Items</div>
         </div>
         <div class="nav-it rip" onclick="window.location.href='profile.html'">
-          <div class="nav-icon-box">👤</div>
+          <div class="nav-icon-box">&#128100;</div>
           <div class="nav-lbl">Profile</div>
         </div>
       </div>
@@ -4495,371 +3642,258 @@
     <!-- Toast -->
     <div id="toast"></div>
 
-    <!-- ══════════════ MODE POPUP ══════════════ -->
+    <!-- -------------- MODE POPUP -------------- -->
     <div class="overlay" id="modePopup" onclick="closeOverlay(event,'modePopup')">
       <div class="popup-box">
         <div class="popup-handle"></div>
         <div class="popup-hdr">
           <div>
             <div class="popup-mode-tag" id="popupTag">PLAY ONLINE</div>
-            <div class="popup-ttl" id="modePopupTitle">Select Game Mode</div>
-            <div class="popup-sub" id="modePopupSub">Choose your match size</div>
+            <div class="popup-ttl">Select Game Mode</div>
+            <div class="popup-sub">Choose players per match</div>
           </div>
-          <div class="popup-close" onclick="closePopup('modePopup')">✕</div>
+          <div class="popup-close" onclick="closePopup('modePopup')">&#10005;</div>
         </div>
         <div class="popup-chips">
-          <div class="pchip pchip-g" id="modeChip1">Live Queue</div>
-          <div class="pchip pchip-b" id="modeChip2">Ranked Ready</div>
-          <div class="pchip pchip-p" id="modeChip3">Bonus XP</div>
+          <div class="pchip pchip-g">Live Queue</div>
+          <div class="pchip pchip-b">Ranked Ready</div>
+          <div class="pchip pchip-p">Bonus XP</div>
         </div>
         <div class="mode-2x2">
-          <div class="mc2 mc2-g mc2-feat rip" onclick="pickMode('1v1','Quick Duel',2);ripple(event,this)">
+          <div class="mc2 mc2-g mc2-feat rip" onclick="joinMode('1v1','Quick Duel');ripple(event,this)">
             <div class="mc2-glow"></div>
             <div class="mc2-body">
               <div class="mc2-toprow">
                 <div class="mc2-num">1v1</div><span class="mc2-tag">DUEL</span>
               </div>
               <div class="mc2-title">Quick Duel</div>
-              <div class="mc2-meta">👤 2 players · ⏱ ~5 min</div>
-              <div class="mc2-bar"><div class="mc2-bar-fill"></div></div>
-              <button class="join-btn2 rip" onclick="event.stopPropagation();pickMode('1v1','Quick Duel',2);ripple(event,this)">SELECT ▸</button>
+              <div class="mc2-meta">&#128101; 2 players &#8226; &#9201; ~5 min</div>
+              <div class="mc2-bar">
+                <div class="mc2-bar-fill"></div>
+              </div>
+              <button class="join-btn2 rip"
+                onclick="event.stopPropagation();joinMode('1v1','Quick Duel');ripple(event,this)">JOIN &#9656;</button>
             </div>
           </div>
-          <div class="mc2 mc2-v rip" onclick="pickMode('2v2','Duo Battle',4);ripple(event,this)">
+          <div class="mc2 mc2-v rip" onclick="joinMode('2v2','Duo Battle');ripple(event,this)">
             <div class="mc2-glow"></div>
             <div class="mc2-body">
               <div class="mc2-toprow">
                 <div class="mc2-num">2v2</div><span class="mc2-tag">PAIR</span>
               </div>
               <div class="mc2-title">Duo Battle</div>
-              <div class="mc2-meta">👥 4 Players · ⏱ ~10 min</div>
-              <div class="mc2-bar"><div class="mc2-bar-fill"></div></div>
-              <button class="join-btn2 rip" onclick="event.stopPropagation();pickMode('2v2','Duo Battle',4);ripple(event,this)">SELECT ▸</button>
+              <div class="mc2-meta">&#128101; 4 players &#8226; &#9201; ~10 min</div>
+              <div class="mc2-bar">
+                <div class="mc2-bar-fill"></div>
+              </div>
+              <button class="join-btn2 rip"
+                onclick="event.stopPropagation();joinMode('2v2','Duo Battle');ripple(event,this)">JOIN &#9656;</button>
             </div>
           </div>
-          <div class="mc2 mc2-b rip" onclick="pickMode('3v3','Trio Clash',6);ripple(event,this)">
+          <div class="mc2 mc2-b rip" onclick="joinMode('3v3','Trio Clash');ripple(event,this)">
             <div class="mc2-glow"></div>
             <div class="mc2-body">
               <div class="mc2-toprow">
                 <div class="mc2-num">3v3</div><span class="mc2-tag">TRIO</span>
               </div>
               <div class="mc2-title">Trio Clash</div>
-              <div class="mc2-meta">👥 6 Players · ⏱ ~15 min</div>
-              <div class="mc2-bar"><div class="mc2-bar-fill"></div></div>
-              <button class="join-btn2 rip" onclick="event.stopPropagation();pickMode('3v3','Trio Clash',6);ripple(event,this)">SELECT ▸</button>
+              <div class="mc2-meta">&#128101; 6 players &#8226; &#9201; ~15 min</div>
+              <div class="mc2-bar">
+                <div class="mc2-bar-fill"></div>
+              </div>
+              <button class="join-btn2 rip"
+                onclick="event.stopPropagation();joinMode('3v3','Trio Clash');ripple(event,this)">JOIN &#9656;</button>
             </div>
           </div>
-          <div class="mc2 mc2-r rip" onclick="pickMode('4v4','Squad War',8);ripple(event,this)">
+          <div class="mc2 mc2-r rip" onclick="joinMode('4v4','Squad War');ripple(event,this)">
             <div class="mc2-glow"></div>
             <div class="mc2-body">
               <div class="mc2-toprow">
                 <div class="mc2-num">4v4</div><span class="mc2-tag">SQUAD</span>
               </div>
               <div class="mc2-title">Squad War</div>
-              <div class="mc2-meta">👥 8 Players · ⏱ ~20 min</div>
-              <div class="mc2-bar"><div class="mc2-bar-fill"></div></div>
-              <button class="join-btn2 rip" onclick="event.stopPropagation();pickMode('4v4','Squad War',8);ripple(event,this)">SELECT ▸</button>
+              <div class="mc2-meta">&#128101; 8 players &#8226; &#9201; ~20 min</div>
+              <div class="mc2-bar">
+                <div class="mc2-bar-fill"></div>
+              </div>
+              <button class="join-btn2 rip"
+                onclick="event.stopPropagation();joinMode('4v4','Squad War');ripple(event,this)">JOIN &#9656;</button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ══════════════ MAP + BET PAGE ══════════════ -->
-    <div class="map-page" id="mapPopup">
-      <div class="map-page-head">
-        <div class="back-btn" onclick="goBackToModes()">‹</div>
-        <div class="map-page-title">
-          <div class="map-page-step">
-            <span>STEP 2 OF 3</span>
-            <span class="map-page-counter" id="mapPageCount">1 / 5</span>
-          </div>
-          <div class="popup-mode-tag" id="mapModeTag">1v1 · QUICK DUEL</div>
-          <div class="popup-ttl">Choose Your Arena</div>
-          <div class="popup-sub">Swipe through the arena cards or tap a mini card below to lock your map clearly.</div>
-        </div>
-        <div class="popup-close" onclick="closePopup('mapPopup')">✕</div>
-      </div>
-
-      <div class="map-stage">
-        <div class="map-stage-top">
-          <div class="map-stage-label">ARENA SLIDER</div>
-          <div class="map-stage-hint">Use arrows or thumbnails to change map</div>
-        </div>
-
-        <div class="map-slide-shell">
-          <button class="map-nav-btn" onclick="stepMap(-1)" aria-label="Previous arena">‹</button>
-          <div class="map-slide-viewport">
-            <div class="map-slide-track" id="mapSlideTrack">
-              <div class="map-card map-sel rip" data-mv="classic" data-ml="Classic Arena" onclick="selMapBet(this);ripple(event,this)">
-                <div class="map-thumb mp-cl">
-                  <div class="map-mini"></div>
-                  <div class="map-tag tag-def">DEFAULT</div>
-                  <div class="map-thumb-bar">
-                    <div class="map-thumb-type">STANDARD BOARD</div>
-                    <div class="map-thumb-bet">ENTRY <span class="map-thumb-entry-val">500</span></div>
-                  </div>
-                </div>
-                <div class="map-info2">
-                  <div class="map-name-row">
-                    <div class="map-name">Classic Arena</div>
-                    <div style="display:flex;align-items:center;gap:6px;">
-                      <div class="map-entry-badge">ENTRY <span class="map-entry-val">500</span></div>
-                      <div class="map-chk" id="mc0">✓</div>
-                    </div>
-                  </div>
-                  <div class="map-desc">Balanced tournament layout with the cleanest read for every player on the table.</div>
-                  <div class="map-bet-row" id="bet-classic">
-                    <div class="mbet-chip mbet-entry">🪙 <span class="mbet-val">500</span></div>
-                    <div class="mbet-chip mbet-win">🏆 <span class="mbet-val">950</span></div>
-                    <div class="mbet-chip mbet-bonus">+50 XP</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="map-card rip" data-mv="neon" data-ml="Neon City" onclick="selMapBet(this);ripple(event,this)">
-                <div class="map-thumb mp-ne">
-                  <div class="map-mini"></div>
-                  <div class="neon-s"></div>
-                  <div class="map-tag tag-hot">🔥 HOT</div>
-                  <div class="map-thumb-bar">
-                    <div class="map-thumb-type">CYBER NIGHT</div>
-                    <div class="map-thumb-bet">ENTRY <span class="map-thumb-entry-val">1,000</span></div>
-                  </div>
-                </div>
-                <div class="map-info2">
-                  <div class="map-name-row">
-                    <div class="map-name">Neon City</div>
-                    <div style="display:flex;align-items:center;gap:6px;">
-                      <div class="map-entry-badge">ENTRY <span class="map-entry-val">1,000</span></div>
-                      <div class="map-chk"></div>
-                    </div>
-                  </div>
-                  <div class="map-desc">A bright cyber board with glowing lanes and sharper contrast for fast selection.</div>
-                  <div class="map-bet-row" id="bet-neon">
-                    <div class="mbet-chip mbet-entry">🪙 <span class="mbet-val">1,000</span></div>
-                    <div class="mbet-chip mbet-win">🏆 <span class="mbet-val">1,900</span></div>
-                    <div class="mbet-chip mbet-bonus">+80 XP</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="map-card rip" data-mv="volcano" data-ml="Volcano Pit" onclick="selMapBet(this);ripple(event,this)">
-                <div class="map-thumb mp-vo">
-                  <div class="map-mini"></div>
-                  <div class="lava-p"></div>
-                  <div class="map-tag tag-new">✨ NEW</div>
-                  <div class="map-thumb-bar">
-                    <div class="map-thumb-type">LAVA RISK</div>
-                    <div class="map-thumb-bet">ENTRY <span class="map-thumb-entry-val">2,000</span></div>
-                  </div>
-                </div>
-                <div class="map-info2">
-                  <div class="map-name-row">
-                    <div class="map-name">Volcano Pit</div>
-                    <div style="display:flex;align-items:center;gap:6px;">
-                      <div class="map-entry-badge">ENTRY <span class="map-entry-val">2,000</span></div>
-                      <div class="map-chk"></div>
-                    </div>
-                  </div>
-                  <div class="map-desc">A high-stakes lava board with bold heat visuals for users who want a dramatic pick.</div>
-                  <div class="map-bet-row" id="bet-volcano">
-                    <div class="mbet-chip mbet-entry">🪙 <span class="mbet-val">2,000</span></div>
-                    <div class="mbet-chip mbet-win">🏆 <span class="mbet-val">3,800</span></div>
-                    <div class="mbet-chip mbet-bonus">+120 XP</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="map-card rip" data-mv="ice" data-ml="Ice Kingdom" onclick="selMapBet(this);ripple(event,this)">
-                <div class="map-thumb mp-ic">
-                  <div class="map-mini"></div>
-                  <div class="ice-s"></div>
-                  <div class="map-tag tag-lock">❄️ FROST</div>
-                  <div class="map-thumb-bar">
-                    <div class="map-thumb-type">ARCTIC CLASH</div>
-                    <div class="map-thumb-bet">ENTRY <span class="map-thumb-entry-val">3,000</span></div>
-                  </div>
-                </div>
-                <div class="map-info2">
-                  <div class="map-name-row">
-                    <div class="map-name">Ice Kingdom</div>
-                    <div style="display:flex;align-items:center;gap:6px;">
-                      <div class="map-entry-badge">ENTRY <span class="map-entry-val">3,000</span></div>
-                      <div class="map-chk"></div>
-                    </div>
-                  </div>
-                  <div class="map-desc">A polished arctic board with bright corners and a colder premium match presentation.</div>
-                  <div class="map-bet-row" id="bet-ice">
-                    <div class="mbet-chip mbet-entry">🪙 <span class="mbet-val">3,000</span></div>
-                    <div class="mbet-chip mbet-win">🏆 <span class="mbet-val">5,700</span></div>
-                    <div class="mbet-chip mbet-bonus">+150 XP</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="map-card rip" data-mv="temple" data-ml="Ancient Temple" onclick="selMapBet(this);ripple(event,this)">
-                <div class="map-thumb mp-te">
-                  <div class="map-mini"></div>
-                  <div class="map-tag" style="background:rgba(255,184,0,0.15);color:var(--c-gold);border:1px solid rgba(255,184,0,0.35);">👑 EPIC</div>
-                  <div class="map-thumb-bar">
-                    <div class="map-thumb-type">ROYAL STAKES</div>
-                    <div class="map-thumb-bet">ENTRY <span class="map-thumb-entry-val">5,000</span></div>
-                  </div>
-                </div>
-                <div class="map-info2">
-                  <div class="map-name-row">
-                    <div class="map-name">Ancient Temple</div>
-                    <div style="display:flex;align-items:center;gap:6px;">
-                      <div class="map-entry-badge">ENTRY <span class="map-entry-val">5,000</span></div>
-                      <div class="map-chk"></div>
-                    </div>
-                  </div>
-                  <div class="map-desc">A prestige arena with rich gold styling that reads like the premium final choice.</div>
-                  <div class="map-bet-row" id="bet-temple">
-                    <div class="mbet-chip mbet-entry">🪙 <span class="mbet-val">5,000</span></div>
-                    <div class="mbet-chip mbet-win">🏆 <span class="mbet-val">9,500</span></div>
-                    <div class="mbet-chip mbet-bonus">+200 XP</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <button class="map-nav-btn" onclick="stepMap(1)" aria-label="Next arena">›</button>
-        </div>
-
-        <div class="map-thumb-tabs" id="mapThumbTabs">
-          <button class="map-thumb-tab active" data-mv="classic" onclick="selMapBet(document.querySelector('#mapPopup .map-card[data-mv=&quot;classic&quot;]'))">
-            <div class="map-thumb-tab-mini mp-cl">
-              <div class="map-mini"></div>
-            </div>
-            <div class="map-thumb-tab-name">Classic</div>
-            <div class="map-thumb-tab-entry">ENTRY <span class="thumb-entry-val">500</span></div>
-          </button>
-          <button class="map-thumb-tab" data-mv="neon" onclick="selMapBet(document.querySelector('#mapPopup .map-card[data-mv=&quot;neon&quot;]'))">
-            <div class="map-thumb-tab-mini mp-ne">
-              <div class="map-mini"></div>
-            </div>
-            <div class="map-thumb-tab-name">Neon City</div>
-            <div class="map-thumb-tab-entry">ENTRY <span class="thumb-entry-val">1,000</span></div>
-          </button>
-          <button class="map-thumb-tab" data-mv="volcano" onclick="selMapBet(document.querySelector('#mapPopup .map-card[data-mv=&quot;volcano&quot;]'))">
-            <div class="map-thumb-tab-mini mp-vo">
-              <div class="map-mini"></div>
-            </div>
-            <div class="map-thumb-tab-name">Volcano</div>
-            <div class="map-thumb-tab-entry">ENTRY <span class="thumb-entry-val">2,000</span></div>
-          </button>
-          <button class="map-thumb-tab" data-mv="ice" onclick="selMapBet(document.querySelector('#mapPopup .map-card[data-mv=&quot;ice&quot;]'))">
-            <div class="map-thumb-tab-mini mp-ic">
-              <div class="map-mini"></div>
-            </div>
-            <div class="map-thumb-tab-name">Ice Kingdom</div>
-            <div class="map-thumb-tab-entry">ENTRY <span class="thumb-entry-val">3,000</span></div>
-          </button>
-          <button class="map-thumb-tab" data-mv="temple" onclick="selMapBet(document.querySelector('#mapPopup .map-card[data-mv=&quot;temple&quot;]'))">
-            <div class="map-thumb-tab-mini mp-te">
-              <div class="map-mini"></div>
-            </div>
-            <div class="map-thumb-tab-name">Temple</div>
-            <div class="map-thumb-tab-entry">ENTRY <span class="thumb-entry-val">5,000</span></div>
-          </button>
-        </div>
-
-        <div class="map-summary-row">
-          <div class="map-mode-pill">
-            <span>ACTIVE MODE</span>
-            <strong id="mapModeInfo">1v1 · Quick Duel</strong>
-          </div>
-          <div class="map-page-balance">
-            <span>Balance</span>
-            <strong id="balanceDisplay">24,850 🪙</strong>
-          </div>
-        </div>
-      </div>
-
-      <div class="map-cta" style="flex-direction:column;gap:8px;padding:12px 0 0;background:none;border-top:none;">
-        <div class="map-current-bet">
-          <div class="current-map-copy">
-            <div class="current-map-label">SELECTED ARENA</div>
-            <div class="current-map-name" id="mapSelInfoLarge">Classic Arena</div>
-          </div>
-          <div class="map-current-chip entry">
-            <span>YOUR BET</span>
-            <strong id="mapCurrentEntry">🪙 500</strong>
-          </div>
-          <div class="map-current-chip win">
-            <span>TO WIN</span>
-            <strong id="mapCurrentWin">🏆 950</strong>
-          </div>
-        </div>
-        <div class="map-sel-info" style="width:100%;justify-content:flex-start;">
-          <div class="msi-dot"></div>
-          <span id="mapSelInfo">Classic Arena</span>
-        </div>
-        <button class="play-now rip" style="width:100%;" onclick="openBetConfirm();ripple(event,this)">CONFIRM BET & FIND MATCH ▸</button>
-      </div>
-    </div>
-    <!-- ══════════════ BET CONFIRM POPUP ══════════════ -->
-    <div class="overlay" id="betConfirmPopup" onclick="closeOverlay(event,'betConfirmPopup')">
-      <div class="popup-box" style="max-height:auto;">
+    <!-- -------------- MAP POPUP -------------- -->
+    <div class="overlay" id="mapPopup" onclick="closeOverlay(event,'mapPopup')">
+      <div class="popup-box map-sheet">
         <div class="popup-handle"></div>
         <div class="popup-hdr">
-          <div class="back-btn" onclick="closePopup('betConfirmPopup')">‹</div>
-          <div style="flex:1;padding-left:10px;">
-            <div class="popup-mode-tag">CONFIRM BET</div>
-            <div class="popup-ttl">Lock It In</div>
+          <div>
+            <div class="popup-mode-tag">MAP LAYOUT</div>
+            <div class="popup-ttl">Select Arena</div>
+            <div class="popup-sub">Choose board style then continue</div>
           </div>
-          <div class="popup-close" onclick="closePopup('betConfirmPopup')">✕</div>
+          <div class="popup-close" onclick="closePopup('mapPopup')">&#10005;</div>
         </div>
-
-        <!-- Match summary card -->
-        <div style="margin:0 14px 14px;background:var(--c-surface);border:1px solid var(--c-border2);border-radius:16px;padding:16px;">
-          <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
-            <div>
-              <div style="font-family:'Orbitron',monospace;font-size:8px;font-weight:700;color:var(--c-muted);letter-spacing:1.5px;margin-bottom:4px;">MODE</div>
-              <div id="cfMode" style="font-family:'Orbitron',monospace;font-size:13px;font-weight:900;color:var(--c-text);">1v1 · Quick Duel</div>
+        <div class="map-list">
+          <div class="map-card map-sel rip" data-mv="classic" data-ml="Classic Arena"
+            onclick="selMap(this);ripple(event,this)">
+            <div class="map-thumb mp-cl">
+              <div class="map-mini">
+                <div class="mz-r"></div>
+                <div class="mz-b"></div>
+                <div class="mz-g"></div>
+                <div class="mz-y"></div>
+                <div class="mz-ph"></div>
+                <div class="mz-pv"></div>
+                <div class="mz-c"></div>
+              </div>
+              <div class="map-pg mpg-g"></div>
+              <div class="map-tag tag-def">DEFAULT</div>
             </div>
-            <div style="text-align:right;">
-              <div style="font-family:'Orbitron',monospace;font-size:8px;font-weight:700;color:var(--c-muted);letter-spacing:1.5px;margin-bottom:4px;">ARENA</div>
-              <div id="cfMap" style="font-family:'Orbitron',monospace;font-size:13px;font-weight:900;color:var(--c-text);">Classic Arena</div>
+            <div class="map-info2">
+              <div>
+                <div class="map-name-row">
+                  <div class="map-name">Classic Arena</div>
+                  <div class="map-chk" id="mc0">&#10003;</div>
+                </div>
+                <div class="map-desc">Balanced tournament layout with standard four-corner board.</div>
+              </div>
+              <div class="map-tags">
+                <div class="mtg mtg-g">Standard</div>
+                <div class="mtg mtg-g">Clean</div>
+              </div>
             </div>
           </div>
-          <div style="height:1px;background:var(--c-border);margin-bottom:12px;"></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div style="text-align:center;">
-              <div style="font-family:'Orbitron',monospace;font-size:8px;font-weight:700;color:var(--c-muted);letter-spacing:1px;margin-bottom:4px;">ENTRY BET</div>
-              <div id="cfBet" style="font-family:'Orbitron',monospace;font-size:22px;font-weight:900;color:var(--c-rose);">🪙 500</div>
+          <div class="map-card rip" data-mv="neon" data-ml="Neon City" onclick="selMap(this);ripple(event,this)">
+            <div class="map-thumb mp-ne">
+              <div class="map-mini">
+                <div class="mz-r"></div>
+                <div class="mz-b"></div>
+                <div class="mz-g"></div>
+                <div class="mz-y"></div>
+                <div class="mz-ph"></div>
+                <div class="mz-pv"></div>
+                <div class="mz-c"></div>
+              </div>
+              <div class="neon-s"></div>
+              <div class="map-pg mpg-v"></div>
+              <div class="map-tag tag-hot">HOT</div>
             </div>
-            <div style="font-size:22px;color:var(--c-muted);">→</div>
-            <div style="text-align:center;">
-              <div style="font-family:'Orbitron',monospace;font-size:8px;font-weight:700;color:var(--c-muted);letter-spacing:1px;margin-bottom:4px;">WIN PRIZE</div>
-              <div id="cfWin" style="font-family:'Orbitron',monospace;font-size:22px;font-weight:900;color:var(--c-gold);">🪙 950</div>
+            <div class="map-info2">
+              <div>
+                <div class="map-name-row">
+                  <div class="map-name">Neon City</div>
+                  <div class="map-chk"></div>
+                </div>
+                <div class="map-desc">Futuristic board art with glowing lanes and high-contrast corners.</div>
+              </div>
+              <div class="map-tags">
+                <div class="mtg mtg-v">Cyber</div>
+                <div class="mtg mtg-b">Glow FX</div>
+              </div>
             </div>
           </div>
-          <div style="height:1px;background:var(--c-border);margin:12px 0;"></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div style="font-family:'Orbitron',monospace;font-size:9px;font-weight:700;color:var(--c-muted);">XP REWARD</div>
-            <div id="cfXp" style="font-family:'Orbitron',monospace;font-size:10px;font-weight:800;color:var(--c-blue);">+50 XP</div>
+          <div class="map-card rip" data-mv="volcano" data-ml="Volcano Pit" onclick="selMap(this);ripple(event,this)">
+            <div class="map-thumb mp-vo">
+              <div class="map-mini">
+                <div class="mz-r"></div>
+                <div class="mz-b"></div>
+                <div class="mz-g"></div>
+                <div class="mz-y"></div>
+                <div class="mz-ph"></div>
+                <div class="mz-pv"></div>
+                <div class="mz-c"></div>
+              </div>
+              <div class="lava-p"></div>
+              <div class="map-pg mpg-o"></div>
+              <div class="map-tag tag-new">NEW</div>
+            </div>
+            <div class="map-info2">
+              <div>
+                <div class="map-name-row">
+                  <div class="map-name">Volcano Pit</div>
+                  <div class="map-chk"></div>
+                </div>
+                <div class="map-desc">Molten orange palette with aggressive high-energy arena skin.</div>
+              </div>
+              <div class="map-tags">
+                <div class="mtg mtg-r">Lava</div>
+                <div class="mtg mtg-r">Hot Zone</div>
+              </div>
+            </div>
           </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
-            <div style="font-family:'Orbitron',monospace;font-size:9px;font-weight:700;color:var(--c-muted);">PLAYERS</div>
-            <div id="cfPlayers" style="font-family:'Orbitron',monospace;font-size:10px;font-weight:800;color:var(--c-text);">2 Players</div>
+          <div class="map-card rip" data-mv="ice" data-ml="Ice Kingdom" onclick="selMap(this);ripple(event,this)">
+            <div class="map-thumb mp-ic">
+              <div class="map-mini">
+                <div class="mz-r"></div>
+                <div class="mz-b"></div>
+                <div class="mz-g"></div>
+                <div class="mz-y"></div>
+                <div class="mz-ph"></div>
+                <div class="mz-pv"></div>
+                <div class="mz-c"></div>
+              </div>
+              <div class="ice-s"></div>
+              <div class="map-pg mpg-i"></div>
+              <div class="map-tag tag-lock">FROST</div>
+            </div>
+            <div class="map-info2">
+              <div>
+                <div class="map-name-row">
+                  <div class="map-name">Ice Kingdom</div>
+                  <div class="map-chk"></div>
+                </div>
+                <div class="map-desc">Cool crystal styling with icy tones and polished board finish.</div>
+              </div>
+              <div class="map-tags">
+                <div class="mtg mtg-b">Frozen</div>
+                <div class="mtg mtg-s">Bright</div>
+              </div>
+            </div>
           </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
-            <div style="font-family:'Orbitron',monospace;font-size:9px;font-weight:700;color:var(--c-muted);">YOUR BALANCE</div>
-            <div id="cfBalance" style="font-family:'Orbitron',monospace;font-size:10px;font-weight:800;color:var(--c-green);">24,850 🪙</div>
+          <div class="map-card rip" data-mv="temple" data-ml="Ancient Temple" onclick="selMap(this);ripple(event,this)">
+            <div class="map-thumb mp-te">
+              <div class="map-mini">
+                <div class="mz-r"></div>
+                <div class="mz-b"></div>
+                <div class="mz-g"></div>
+                <div class="mz-y"></div>
+                <div class="mz-ph"></div>
+                <div class="mz-pv"></div>
+                <div class="mz-c"></div>
+              </div>
+              <div class="map-pg mpg-gl"></div>
+              <div class="map-tag"
+                style="background:rgba(255,184,0,0.12);color:var(--c-gold);border:1px solid rgba(255,184,0,0.28);">EPIC
+              </div>
+            </div>
+            <div class="map-info2">
+              <div>
+                <div class="map-name-row">
+                  <div class="map-name">Ancient Temple</div>
+                  <div class="map-chk"></div>
+                </div>
+                <div class="map-desc">Golden stone styling for a ceremonial board presentation.</div>
+              </div>
+              <div class="map-tags">
+                <div class="mtg mtg-y">Temple</div>
+                <div class="mtg mtg-y">Relic</div>
+              </div>
+            </div>
           </div>
         </div>
-
-        <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:10px;padding:0 14px 16px;">
-          <button class="set-act set-ghost" onclick="closePopup('betConfirmPopup')">CANCEL</button>
-          <button class="play-now rip" onclick="lockBetAndPlay();ripple(event,this)" style="border:none;border-radius:12px;padding:12px;cursor:pointer;font-family:'Orbitron',monospace;font-size:10px;font-weight:800;letter-spacing:.5px;">⚔️ FIND MATCH</button>
+        <div class="map-cta">
+          <div class="map-sel-info">
+            <div class="msi-dot"></div><span id="mapSelInfo">Classic Arena</span>
+          </div>
+          <button class="play-now rip" onclick="enterMap();ripple(event,this)">PLAY NOW</button>
         </div>
       </div>
     </div>
 
-    <!-- ══════════════ SETTINGS POPUP ══════════════ -->
+    <!-- -------------- SETTINGS POPUP -------------- -->
     <div class="overlay" id="settingsPopup" onclick="closeOverlay(event,'settingsPopup')">
       <div class="popup-box settings-box">
         <div class="popup-handle"></div>
@@ -4869,12 +3903,12 @@
             <div class="popup-ttl">Arena Settings</div>
             <div class="popup-sub">Sound, alerts and gameplay behavior</div>
           </div>
-          <div class="popup-close" onclick="closePopup('settingsPopup')">✕</div>
+          <div class="popup-close" onclick="closePopup('settingsPopup')">&#10005;</div>
         </div>
         <div class="settings-scroll">
           <div class="set-card set-hero">
             <div class="set-player">
-              <div class="set-avatar">⚙️</div>
+              <div class="set-avatar">&#9881;</div>
               <div>
                 <div class="popup-mode-tag">PLAYER PROFILE</div>
                 <div class="popup-ttl" style="font-size:15px;">DAYA_X Control</div>
@@ -4979,22 +4013,9 @@
   </div><!-- /phone -->
 
   <script>
-    (function () {
-      try {
-        const seenLoading = sessionStorage.getItem('dayaLoadingSeen') === '1';
-        if (!seenLoading) {
-          window.location.replace('loading.html');
-          return;
-        }
-        sessionStorage.removeItem('dayaLoadingSeen');
-      } catch (e) {
-        window.location.replace('loading.html');
-        return;
-      }
-    })();
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     //  INTERACTIVE PARTICLE BACKGROUND SYSTEM
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     (function () {
       return; // disabled particle background; using CSS aurora ribbons
       const cv = document.getElementById('bgCanvas');
@@ -5129,9 +4150,9 @@
       draw();
     })();
 
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     //  SPARK LINE (progress card)
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     (function () {
       const cv = document.getElementById('sparkCanvas');
       if (!cv) return;
@@ -5167,9 +4188,9 @@
       ctx.shadowBlur = 0;
     })();
 
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     //  BOARD RENDERER
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     const THEMES = {
       classic: { bd: '#F0EDE8', cell: '#F7F4EF', grid: '#1C1810', out: '#C8A000', hn: '#FBF9F5', r: { p: '#C0392B', ri: '#E8816B', t: '#D4634A' }, g: { p: '#27774A', ri: '#7EC89A', t: '#5AAD78' }, b: { p: '#2856A0', ri: '#7AA8E0', t: '#5080C8' }, y: { p: '#C8980A', ri: '#E8CE7A', t: '#D4B040' } },
       neon: { bd: '#0C0820', cell: '#120E28', grid: '#2A1860', out: '#9370DB', hn: '#1C1438', r: { p: '#CC1860', ri: '#FF80B8', t: '#E840A0' }, g: { p: '#18A868', ri: '#78F0B0', t: '#40C888' }, b: { p: '#1860D0', ri: '#80B8FF', t: '#4090E8' }, y: { p: '#C8A800', ri: '#FFD870', t: '#D8BC30' } },
@@ -5196,29 +4217,9 @@
     }
     document.querySelectorAll('.hero-svg').forEach(svg => { svg.innerHTML = buildBoard(svg.dataset.theme); });
 
-    // ── INJECT CLEAR SVG BOARDS INTO MAP THUMBNAILS ──
-    (function injectMapBoards() {
-      document.querySelectorAll('#mapPopup .map-mini').forEach(mini => {
-        const holder = mini.closest('[data-mv]');
-        const theme = holder?.dataset.mv || 'classic';
-        const svgEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svgEl.setAttribute('viewBox', '0 0 150 150');
-        svgEl.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-        svgEl.style.cssText = [
-          'width:108px','height:108px','display:block',
-          'border-radius:8px',
-          'box-shadow:0 4px 24px rgba(0,0,0,0.7)',
-          'flex-shrink:0'
-        ].join(';');
-        svgEl.innerHTML = buildBoard(theme);
-        mini.innerHTML = '';
-        mini.appendChild(svgEl);
-      });
-    })();
-
-    // ══════════════════════════════════════════════════
-    //  SKILL BARS — animate on load
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
+    //  SKILL BARS � animate on load
+    // --------------------------------------------------
     window.addEventListener('load', () => {
       setTimeout(() => {
         document.querySelectorAll('.sk-bar-fill').forEach(el => {
@@ -5244,9 +4245,9 @@
       }, 3000);
     });
 
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     //  RIPPLE
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     function ripple(e, host) {
       if (!host) return;
       const r = host.getBoundingClientRect();
@@ -5257,60 +4258,60 @@
       host.appendChild(w); setTimeout(() => w.remove(), 620);
     }
 
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     //  FLASH
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     function flash() {
       const f = document.getElementById('flash');
       f.style.opacity = '1'; setTimeout(() => f.style.opacity = '0', 80);
     }
 
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     //  TOAST
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     let tT;
     function showToast(msg) {
       const t = document.getElementById('toast');
-      t.textContent = msg; t.classList.add('show');
+      t.innerHTML = msg; t.classList.add('show');
       clearTimeout(tT); tT = setTimeout(() => t.classList.remove('show'), 2400);
     }
 
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     //  STAT BOUNCE
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     function bounceVal(card) {
       const v = card.querySelector('.st-val'); if (!v) return;
       v.style.transform = 'scale(1.3)'; v.style.color = 'var(--c-green)';
       setTimeout(() => { v.style.transform = ''; v.style.color = ''; }, 280);
     }
 
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     //  COIN / GEM BUMP
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     function bumpCoins() {
       const el = document.getElementById('coinDisplay'); if (!el) return;
       const cur = parseInt(el.textContent.replace(/,/g, ''));
       const next = cur + Math.floor(Math.random() * 50 + 10);
       el.style.transform = 'scale(1.25)'; el.style.color = 'var(--c-green)';
       setTimeout(() => { el.textContent = next.toLocaleString(); el.style.transform = ''; el.style.color = ''; }, 200);
-      showToast('🪙 Coins: +' + Math.floor(Math.random() * 50 + 10));
+      showToast('&#129689; Coins: +' + Math.floor(Math.random() * 50 + 10));
     }
     function bumpGems() {
       const el = document.getElementById('gemDisplay'); if (!el) return;
       el.style.transform = 'scale(1.25)'; el.style.color = 'var(--c-green)';
       setTimeout(() => { el.style.transform = ''; el.style.color = ''; }, 200);
-      showToast('💎 You have 480 Gems');
+      showToast('&#128142; You have 480 Gems');
     }
 
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     //  SKILL UPGRADE (interactive)
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     function upgradeSkill(row, name, lv) {
       const lve = row.querySelector('.sk-lvl');
       const fill = row.querySelector('.sk-bar-fill');
       const cur = parseInt(row.dataset.level || lv);
       const max = parseInt(row.dataset.max || 10);
-      if (cur >= max) { showToast('✅ ' + name + ' is MAX level!'); return; }
+      if (cur >= max) { showToast('&#11088; ' + name + ' is MAX level!'); return; }
       const nl = cur + 1;
       row.dataset.level = nl;
       const npct = Math.min(100, Math.round((nl / max) * 100));
@@ -5319,7 +4320,7 @@
       // bounce
       lve.style.transform = 'scale(1.4)';
       setTimeout(() => lve.style.transform = '', 280);
-      showToast('⬆️ ' + name + ' upgraded → LV ' + nl);
+      showToast('&#11014; ' + name + ' upgraded &#8594; LV ' + nl);
     }
 
     document.querySelector('.settings-ico')?.addEventListener('click', function () {
@@ -5329,245 +4330,141 @@
       svg.style.transition = 'transform .6s cubic-bezier(.34,1.56,.64,1)';
       setTimeout(() => { svg.style.transform = ''; svg.style.transition = ''; }, 650);
     });
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     //  REWARD INTERACTIONS
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     function claimReward(card) {
       const b = card.querySelector('.rw-badge');
       const i = card.querySelector('.rw-icon');
       if (!b || !i) return;
-      b.textContent = '✓ DONE';
+      b.textContent = 'DONE &#10003;';
       b.style.background = 'rgba(0,229,160,0.12)';
       b.style.color = 'var(--c-green)';
       b.style.borderColor = 'rgba(0,229,160,0.28)';
-      i.textContent = '🎉';
-      showToast('🎁 Daily Reward Claimed! +500 Coins');
+      i.innerHTML = '&#127873;';
+      showToast('&#127873; Daily Reward Claimed! +500 Coins');
       bumpCoins();
-      setTimeout(() => { b.textContent = 'CLAIM'; b.style = ''; i.textContent = '🎁'; }, 3500);
+      setTimeout(() => { b.textContent = 'CLAIM'; b.style = ''; i.innerHTML = '&#127873;'; }, 3500);
     }
     function spinLucky(card) {
       const sp = card.querySelector('.spin-ico');
       if (sp) { sp.style.animationDuration = '.3s'; setTimeout(() => sp.style.animationDuration = '5s', 1800); }
-      const prizes = ['🪙 +1,200 Coins', '💎 +30 Gems', '⚔️ Epic Sword Skin', '🏆 +80 Trophies', '🎭 Rare Avatar Frame'];
+      const prizes = ['&#129689; +1,200 Coins', '&#128142; +30 Gems', '&#9876; Epic Sword Skin', '&#127942; +80 Trophies', '&#127912; Rare Avatar Frame'];
       const p = prizes[Math.floor(Math.random() * prizes.length)];
-      setTimeout(() => showToast('🎡 You won: ' + p + '!'), 900);
+      setTimeout(() => showToast('&#127920; You won: ' + p + '!'), 900);
     }
 
-    // ══════════════════════════════════════════════════
-    //  BET + MODE + MAP FLOW
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
+    //  POPUP SYSTEM
+    // --------------------------------------------------
     const mLabels = { online: 'PLAY ONLINE', friends: 'WITH FRIENDS', computer: 'VS COMPUTER' };
-    const MODE_POPUP_CONTENT = {
+    const battleModes = {
       online: {
-        title: 'Select Game Mode',
-        sub: 'Choose your match size for ranked online play',
-        chips: ['Live Queue', 'Ranked Ready', 'Bonus XP']
-      },
-      friends: {
-        title: 'Select Friend Match',
-        sub: 'Pick a room size first, then choose the arena and bet together',
-        chips: ['Private Room', 'Invite Ready', 'Team Battle']
+        title: 'Jump Into Arena',
+        button: 'Play',
+        label: 'Play Online',
+        sub: 'Queue instantly with live players and the fastest route from lobby to match.',
+        sideLabel: 'Queue Type',
+        sideValue: 'Live Match',
+        sideChip: 'Ranked',
+        action: () => { openModes('online'); flash(); }
       },
       computer: {
-        title: 'Select AI Battle',
-        sub: 'Choose your solo battle size and arena before facing the bot',
-        chips: ['Adaptive AI', 'Solo Practice', 'Fast Start']
+        title: 'Sharpen With Bots',
+        button: 'Train',
+        label: 'Vs Computer',
+        sub: 'Practice your moves against smart bots with instant start and zero queue.',
+        sideLabel: 'Session',
+        sideValue: 'Bot Match',
+        sideChip: 'Practice',
+        action: () => { flash(); window.location.href = 'vs-computer.html'; }
+      },
+      friends: {
+        title: 'Create Friend Room',
+        button: 'Invite',
+        label: 'With Friends',
+        sub: 'Open a private room, share the code, and battle with your squad.',
+        sideLabel: 'Room Type',
+        sideValue: 'Private Room',
+        sideChip: 'Squad',
+        action: () => { flash(); window.location.href = 'play-with-friends.html'; }
       }
     };
+    let selectedBattleMode = 'online';
+    let selMapData = { v: 'classic', l: 'Classic Arena' };
 
-    // Bet data per map: { entry, win, xp }
-    const MAP_BETS = {
-      classic:  { entry: 500,   win: 950,   xp: 50  },
-      neon:     { entry: 1000,  win: 1900,  xp: 80  },
-      volcano:  { entry: 2000,  win: 3800,  xp: 120 },
-      ice:      { entry: 3000,  win: 5700,  xp: 150 },
-      temple:   { entry: 5000,  win: 9500,  xp: 200 },
-    };
-
-    let currentMode = { code: '1v1', name: 'Quick Duel', players: 2 };
-    let selMapData  = { v: 'classic', l: 'Classic Arena' };
-    const getMapCards = () => Array.from(document.querySelectorAll('#mapPopup .map-card'));
-
-    function syncMapSlider(card) {
-      const cards = getMapCards();
-      const activeIndex = Math.max(cards.indexOf(card), 0);
-      const track = document.getElementById('mapSlideTrack');
-      if (track) track.style.transform = 'translateX(-' + (activeIndex * 100) + '%)';
-
-      const counter = document.getElementById('mapPageCount');
-      if (counter) counter.textContent = (activeIndex + 1) + ' / ' + cards.length;
-
-      document.querySelectorAll('#mapPopup .map-thumb-tab').forEach((tab, index) => {
-        const isActive = index === activeIndex;
-        tab.classList.toggle('active', isActive);
-        if (isActive) tab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-      });
+    function setBattleModeUI(modeKey) {
+      const cfg = battleModes[modeKey] || battleModes.online;
+      const title = document.getElementById('modeHeroTitle');
+      const heroSub = document.getElementById('modeHeroSub');
+      const battleLabel = document.getElementById('modeBattleLabel');
+      const battleMeta = document.getElementById('modeBattleMeta');
+      const sideLabel = document.getElementById('modeSideLabel');
+      const sideValue = document.getElementById('modeSideValue');
+      const sideChip = document.getElementById('modeSideChip');
+      const select = document.getElementById('modeSelect');
+      if (select) select.value = modeKey;
+      if (title) title.textContent = cfg.title;
+      if (heroSub) heroSub.textContent = cfg.sub;
+      if (battleLabel) battleLabel.textContent = cfg.button;
+      if (battleMeta) battleMeta.textContent = cfg.label;
+      if (sideLabel) sideLabel.textContent = cfg.sideLabel;
+      if (sideValue) sideValue.textContent = cfg.sideValue;
+      if (sideChip) sideChip.textContent = cfg.sideChip;
     }
 
-    function stepMap(direction) {
-      const cards = getMapCards();
-      if (!cards.length) return;
-      const currentIndex = Math.max(cards.findIndex(card => card.classList.contains('map-sel')), 0);
-      const nextIndex = (currentIndex + direction + cards.length) % cards.length;
-      selMapBet(cards[nextIndex]);
+    function selectBattleMode(modeKey) {
+      selectedBattleMode = modeKey;
+      setBattleModeUI(modeKey);
+    }
+
+    function launchSelectedMode(event) {
+      event.stopPropagation();
+      const cfg = battleModes[selectedBattleMode] || battleModes.online;
+      cfg.action();
     }
 
     function openModes(m) {
       const t = document.getElementById('popupTag');
       if (t) t.textContent = mLabels[m] || 'SELECT MODE';
-      const cfg = MODE_POPUP_CONTENT[m] || MODE_POPUP_CONTENT.online;
-      const ttl = document.getElementById('modePopupTitle');
-      if (ttl) ttl.textContent = cfg.title;
-      const sub = document.getElementById('modePopupSub');
-      if (sub) sub.textContent = cfg.sub;
-      const chip1 = document.getElementById('modeChip1');
-      const chip2 = document.getElementById('modeChip2');
-      const chip3 = document.getElementById('modeChip3');
-      if (chip1) chip1.textContent = cfg.chips[0];
-      if (chip2) chip2.textContent = cfg.chips[1];
-      if (chip3) chip3.textContent = cfg.chips[2];
       document.getElementById('modePopup').classList.add('open');
     }
-
-    // Step 1 → 2: mode selected, open map+bet popup
-    function pickMode(code, name, players) {
-      currentMode = { code, name, players };
-      closePopup('modePopup');
-      // Update map popup header
-      const tag = document.getElementById('mapModeTag');
-      if (tag) tag.textContent = code + ' · ' + name.toUpperCase();
-      const modeInfo = document.getElementById('mapModeInfo');
-      if (modeInfo) modeInfo.textContent = code + ' · ' + name;
-      const liveBalance = document.getElementById('coinDisplay');
-      const mapBalance = document.getElementById('balanceDisplay');
-      if (liveBalance && mapBalance) mapBalance.textContent = liveBalance.textContent + ' 🪙';
-      // Scale bets by players (more players = higher pot)
-      const scale = players / 2;
-      Object.keys(MAP_BETS).forEach(key => {
-        const base = MAP_BETS[key];
-        const row = document.getElementById('bet-' + key);
-        if (!row) return;
-        const chips = row.querySelectorAll('.mbet-val');
-        if (chips[0]) chips[0].textContent = (base.entry * scale).toLocaleString();
-        if (chips[1]) chips[1].textContent = (base.win * scale).toLocaleString();
-        const entryBadge = row.closest('.map-card')?.querySelector('.map-entry-val');
-        if (entryBadge) entryBadge.textContent = (base.entry * scale).toLocaleString();
-        const thumbEntry = row.closest('.map-card')?.querySelector('.map-thumb-entry-val');
-        if (thumbEntry) thumbEntry.textContent = (base.entry * scale).toLocaleString();
-        const thumbTabEntry = document.querySelector(`#mapPopup .map-thumb-tab[data-mv="${key}"] .thumb-entry-val`);
-        if (thumbTabEntry) thumbTabEntry.textContent = (base.entry * scale).toLocaleString();
-      });
-      // Reset to classic selected
-      selMapBet(document.querySelector('#mapPopup .map-card[data-mv="classic"]'));
-      setTimeout(() => document.getElementById('mapPopup').classList.add('open'), 80);
-    }
-
-    function goBackToModes() {
-      closePopup('mapPopup');
-      setTimeout(() => document.getElementById('modePopup').classList.add('open'), 120);
-    }
-
-    // Step 2: select map card
-    function selMapBet(card) {
-      if (!card) return;
-      getMapCards().forEach(c => {
-        c.classList.remove('map-sel');
-        const ch = c.querySelector('.map-chk'); if (ch) ch.textContent = '';
-      });
-      card.classList.add('map-sel');
-      const ch = card.querySelector('.map-chk'); if (ch) ch.textContent = '✓';
-      selMapData = { v: card.dataset.mv || 'classic', l: card.dataset.ml || 'Classic Arena' };
-
-      const scale = currentMode.players / 2;
-      const base = MAP_BETS[selMapData.v] || MAP_BETS.classic;
-      const entry = base.entry * scale;
-      const win = base.win * scale;
-
-      const mapSelInfo = document.getElementById('mapSelInfo');
-      if (mapSelInfo) mapSelInfo.textContent = selMapData.l;
-      const mapSelInfoLarge = document.getElementById('mapSelInfoLarge');
-      if (mapSelInfoLarge) mapSelInfoLarge.textContent = selMapData.l;
-      const mapCurrentEntry = document.getElementById('mapCurrentEntry');
-      if (mapCurrentEntry) mapCurrentEntry.textContent = '🪙 ' + entry.toLocaleString();
-      const mapCurrentWin = document.getElementById('mapCurrentWin');
-      if (mapCurrentWin) mapCurrentWin.textContent = '🏆 ' + win.toLocaleString();
-
-      syncMapSlider(card);
-    }
-
-    // Step 2 → 3: open confirm
-    function openBetConfirm() {
-      const scale = currentMode.players / 2;
-      const base  = MAP_BETS[selMapData.v] || MAP_BETS.classic;
-      const entry = base.entry * scale;
-      const win   = base.win   * scale;
-      const xp    = base.xp;
-
-      document.getElementById('cfMode').textContent    = currentMode.code + ' · ' + currentMode.name;
-      document.getElementById('cfMap').textContent     = selMapData.l;
-      document.getElementById('cfBet').textContent     = '🪙 ' + entry.toLocaleString();
-      document.getElementById('cfWin').textContent     = '🪙 ' + win.toLocaleString();
-      document.getElementById('cfXp').textContent      = '+' + xp + ' XP';
-      document.getElementById('cfPlayers').textContent = currentMode.players + ' Players';
-
-      const coinEl = document.getElementById('coinDisplay');
-      const bal = coinEl ? parseInt(coinEl.textContent.replace(/,/g,'')) : 24850;
-      document.getElementById('cfBalance').textContent = bal.toLocaleString() + ' 🪙';
-
-      document.getElementById('betConfirmPopup').classList.add('open');
-    }
-
-    // Step 3: lock bet, deduct coins, find match
-    function lockBetAndPlay() {
-      const scale = currentMode.players / 2;
-      const base  = MAP_BETS[selMapData.v] || MAP_BETS.classic;
-      const entry = base.entry * scale;
-
-      const coinEl = document.getElementById('coinDisplay');
-      if (coinEl) {
-        const bal = parseInt(coinEl.textContent.replace(/,/g,''));
-        if (bal < entry) {
-          showToast('❌ Not enough coins! Need ' + entry.toLocaleString() + ' 🪙');
-          return;
-        }
-        coinEl.textContent = (bal - entry).toLocaleString();
-        coinEl.style.color = 'var(--c-rose)';
-        setTimeout(() => { coinEl.style.color = ''; }, 600);
-      }
-      document.getElementById('balanceDisplay').textContent =
-        (parseInt((coinEl?.textContent||'0').replace(/,/g,''))).toLocaleString() + ' 🪙';
-
-      closePopup('betConfirmPopup');
-      closePopup('mapPopup');
-      flash();
-
-      const btn = document.querySelector('#betConfirmPopup .play-now');
-      if (btn) { btn.textContent = '⏳ FINDING MATCH...'; btn.disabled = true; }
-
-      showToast('⚔️ ' + currentMode.code + ' · ' + selMapData.l + ' · Bet 🪙' + entry.toLocaleString());
-
-      setTimeout(() => {
-        if (btn) { btn.textContent = '⚔️ FIND MATCH'; btn.disabled = false; }
-        let is8 = selMapData.v === 'neon';
-        setTimeout(() => window.location.href = !is8
-          ? `ludo_board.html?layout=${encodeURIComponent(selMapData.v)}`
-          : `ludo_board_8_player.html?layout=classic`, 600);
-      }, 2000);
-    }
-
     function openMap() { document.getElementById('mapPopup').classList.add('open'); }
     function openSettings() { renderSetUI(); document.getElementById('settingsPopup').classList.add('open'); }
     function closePopup(id) { document.getElementById(id).classList.remove('open'); }
     function closeOverlay(e, id) { if (e.target === document.getElementById(id)) closePopup(id); }
 
     function selMap(card) {
-      selMapBet(card);
+      document.querySelectorAll('.map-card').forEach(c => {
+        c.classList.remove('map-sel');
+        const ch = c.querySelector('.map-chk'); if (ch) ch.textContent = '';
+      });
+      card.classList.add('map-sel');
+      const ch = card.querySelector('.map-chk'); if (ch) ch.innerHTML = '&#10003;';
+      selMapData = { v: card.dataset.mv || 'classic', l: card.dataset.ml || 'Classic Arena' };
+      document.getElementById('mapLabel').textContent = selMapData.l;
+      document.getElementById('mapSelInfo').textContent = selMapData.l;
     }
-    function enterMap() { openBetConfirm(); }
+    function enterMap() {
+      localStorage.setItem('ludoMap', JSON.stringify(selMapData));
+      showToast('&#128506; Loading ' + selMapData.l + '...');
+      setTimeout(() => window.location.href = `ludo_board.html?layout=${encodeURIComponent(selMapData.v)}`, 600);
+    }
+    function joinMode(code, name) {
+      const btns = document.querySelectorAll('.join-btn2');
+      btns.forEach(b => { b.disabled = true; b.style.opacity = '.45'; b.innerHTML = '&#8987;'; });
+      const t = document.getElementById('popupTag'); if (t) t.innerHTML = '&#8987; FINDING MATCH...';
+      flash();
+      setTimeout(() => {
+        btns.forEach(b => { b.disabled = false; b.style.opacity = ''; b.innerHTML = 'JOIN &#9656;'; });
+        closePopup('modePopup'); if (t) t.textContent = mLabels['online'];
+        showToast('&#9876; Joining ' + name + '...');
+      }, 1800);
+    }
 
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     //  SETTINGS
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     const SD = { notifications: true, friendActivity: true, music: true, sfx: true, vibration: false, autoRoll: false, theme: 'arena', speed: 'balanced' };
     let SS = { ...SD };
     function renderSetUI() {
@@ -5585,48 +4482,65 @@
     function saveSet() {
       localStorage.setItem('arenaSettings', JSON.stringify(SS));
       const b = document.getElementById('saveBtn'); const orig = b.textContent;
-      b.textContent = 'SAVED ✓';
+      b.innerHTML = 'SAVED &#10003;';
       setTimeout(() => { b.textContent = orig; closePopup('settingsPopup'); }, 900);
     }
     (function () { try { const r = localStorage.getItem('arenaSettings'); if (r) SS = { ...SD, ...JSON.parse(r) }; } catch (e) { SS = { ...SD }; } renderSetUI(); })();
 
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     //  STATUS TOGGLE
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     let isOnline = true;
     function toggleStatus() {
       isOnline = !isOnline;
       const dot = document.getElementById('avDot');
       dot.className = 'av-dot ' + (isOnline ? 'on' : 'off');
-      showToast(isOnline ? '🟢 Status: Online' : '⚫ Status: Offline');
+      showToast(isOnline ? '&#128994; Status: Online' : '&#9898; Status: Offline');
     }
 
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     //  BELL / NOTIF
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     function toggleNotif(btn) {
       const p = btn.querySelector('.pip'); if (!p) return;
       const h = p.style.display === 'none';
       p.style.display = h ? '' : 'none';
-      showToast(h ? '🔔 Notifications On' : '🔕 Notifications Off');
+      showToast(h ? '&#128276; Notifications On' : '&#128277; Notifications Off');
     }
 
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     //  NAV ACTIVE
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     function setNav(item) {
       document.querySelectorAll('.nav-it').forEach(n => n.classList.remove('act'));
       item.classList.add('act');
     }
 
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
     //  HERO SLIDER
-    // ══════════════════════════════════════════════════
+    // --------------------------------------------------
+    const track = document.getElementById('heroTrack');
+    let idx = 0; const TOTAL = 5;
+    function goSlide(i) {
+      idx = Math.max(0, Math.min(TOTAL - 1, i));
+      track.style.transform = `translateX(-${idx * 20}%)`;
+    }
+    let tx = 0, ty = 0, drag = false, dsx = 0;
+    const hw = document.getElementById('heroWrap');
+    hw.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+    hw.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 35) goSlide(idx + (dx < 0 ? 1 : -1));
+    });
+    hw.addEventListener('mousedown', e => { drag = true; dsx = e.clientX; });
+    hw.addEventListener('mouseup', e => { if (!drag) return; drag = false; const dx = e.clientX - dsx; if (Math.abs(dx) > 40) goSlide(idx + (dx < 0 ? 1 : -1)); });
+    hw.addEventListener('mouseleave', () => drag = false);
+    setBattleModeUI(selectedBattleMode);
   
 
-// ═══════════════════════════════════════════════════════
-//  BACKGROUND CANVAS — AURORA ARENA
-// ═══════════════════════════════════════════════════════
+// -------------------------------------------------------
+//  BACKGROUND CANVAS � AURORA ARENA
+// -------------------------------------------------------
 (function() {
   return; // disabled canvas arena render; using CSS aurora ribbons
   const cv = document.getElementById('bgCanvas');
@@ -5637,14 +4551,14 @@
   const ctx = cv.getContext('2d');
   let t = 0;
 
-  // ── helpers ──
+  // -- helpers --
   function rg(x,y,r,stops){ const g=ctx.createRadialGradient(x,y,0,x,y,r); stops.forEach(([p,c])=>g.addColorStop(p,c)); return g; }
   function lg(x0,y0,x1,y1,stops){ const g=ctx.createLinearGradient(x0,y0,x1,y1); stops.forEach(([p,c])=>g.addColorStop(p,c)); return g; }
   function lerp(a,b,t){ return a+(b-a)*t; }
   function easeInOut(t){ return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2; }
   const s = Math.sin, c = Math.cos;
 
-  // ── LAYER 1: Deep space sky + stars ──
+  // -- LAYER 1: Deep space sky + stars --
   function drawSky() {
     const g = lg(0,0,0,H,[
       [0,   '#030610'],
@@ -5663,7 +4577,7 @@
     ctx.fillRect(0,0,W,H);
   }
 
-  // ── LAYER 2: Stars (fixed, twinkle via opacity) ──
+  // -- LAYER 2: Stars (fixed, twinkle via opacity) --
   const STARS = [];
   for(let i=0;i<90;i++){
     STARS.push({
@@ -5692,9 +4606,9 @@
     });
   }
 
-  // ── LAYER 3: Aurora curtains ──
+  // -- LAYER 3: Aurora curtains --
   function drawAurora() {
-    // Purple curtain — top left sweeping
+    // Purple curtain � top left sweeping
     const ax1 = W*.3 + s(t*.07)*60;
     const g1 = ctx.createRadialGradient(ax1, -30, 0, ax1, 120, 340);
     g1.addColorStop(0,   `rgba(140,30,255,${0.32+s(t*.09)*.08})`);
@@ -5704,7 +4618,7 @@
     ctx.fillStyle = g1;
     ctx.fillRect(0, 0, W, H*.55);
 
-    // Teal curtain — top right
+    // Teal curtain � top right
     const ax2 = W*.7 + c(t*.08)*50;
     const g2 = ctx.createRadialGradient(ax2, -20, 0, ax2, 100, 300);
     g2.addColorStop(0,   `rgba(0,220,140,${0.30+c(t*.10)*.08})`);
@@ -5733,7 +4647,7 @@
     ctx.fillRect(0, 0, W, H*.5);
   }
 
-  // ── LAYER 4: Stadium silhouette ──
+  // -- LAYER 4: Stadium silhouette --
   function drawStadium() {
     const by = H*.56; // base Y
 
@@ -5815,7 +4729,7 @@
     ctx.fillRect(0, rimY, W, 30);
   }
 
-  // ── LAYER 5: Arena floor ──
+  // -- LAYER 5: Arena floor --
   function drawFloor() {
     const fy = H*.56;
     const fg = lg(0, fy, 0, H, [
@@ -5838,7 +4752,7 @@
     ctx.fillRect(0, fy, W, 80);
   }
 
-  // ── LAYER 6: Perspective holographic grid ──
+  // -- LAYER 6: Perspective holographic grid --
   function drawHoloGrid() {
     const fy = H*.56;
     ctx.save();
@@ -5877,7 +4791,7 @@
     ctx.restore();
   }
 
-  // ── LAYER 7: Energy orbs (3) ──
+  // -- LAYER 7: Energy orbs (3) --
   const ORBS = [
     { x:W*.12, y:H*.28, r:48, ph:0,    sp:.07, cols:['rgba(160,40,255,.75)','rgba(100,10,220,.35)','rgba(60,0,140,.12)'], gCol:'rgba(148,40,255,.35)' },
     { x:W*.88, y:H*.35, r:40, ph:2.1,  sp:.09, cols:['rgba(0,230,160,.70)','rgba(0,170,110,.32)','rgba(0,90,60,.10)'],   gCol:'rgba(0,210,140,.30)' },
@@ -5911,7 +4825,7 @@
     });
   }
 
-  // ── LAYER 8: Spotlight pillars ──
+  // -- LAYER 8: Spotlight pillars --
   function drawSpotlights() {
     [[W*.18, H*.56, 'rgba(130,40,255,.18)', 'rgba(0,220,140,.12)', -5],
      [W*.82, H*.56, 'rgba(0,160,255,.18)',  'rgba(255,140,0,.10)',  5]].forEach(([sx,sy,c1,c2,skew])=>{
@@ -5928,7 +4842,7 @@
     });
   }
 
-  // ── LAYER 9: Lens flare ──
+  // -- LAYER 9: Lens flare --
   function drawFlare() {
     const fx = W*.50 + s(t*.03)*4;
     const fy2 = H*.14 + c(t*.04)*3;
@@ -5957,7 +4871,7 @@
     });
   }
 
-  // ── LAYER 10: Rising energy sparks ──
+  // -- LAYER 10: Rising energy sparks --
   const SPARKS = Array.from({length:22},(_,i)=>({
     x: Math.random()*W,
     baseY: H*.40 + Math.random()*(H*.18),
@@ -5984,7 +4898,7 @@
     });
   }
 
-  // ── RENDER LOOP ──
+  // -- RENDER LOOP --
   function draw() {
     ctx.clearRect(0,0,W,H);
     drawSky();
@@ -6003,3 +4917,7 @@
   draw();
 })();
 </script>
+
+  <script src='js/global-nav.js'></script>
+</body>
+</html>

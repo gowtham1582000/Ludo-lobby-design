@@ -179,6 +179,44 @@
       box-shadow:0 0 12px rgba(0,229,160,.24);
       transform:translateY(-1px);
     }
+    .queue-strip {
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:8px;
+      margin-top:14px;
+    }
+    .queue-pill {
+      min-height:74px;
+      padding:10px 9px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:var(--c-text);
+      text-align:left;
+      transition:var(--med);
+    }
+    .queue-pill b, .queue-pill span {
+      display:block;
+    }
+    .queue-pill b {
+      font-size:15px;
+      line-height:1;
+    }
+    .queue-pill span {
+      margin-top:5px;
+      font-size:10px;
+      line-height:1.2;
+      color:var(--c-muted);
+    }
+    .queue-pill.active {
+      border-color:rgba(0,229,160,.34);
+      background:linear-gradient(180deg, rgba(0,229,160,.14), rgba(255,255,255,.03));
+      box-shadow:0 10px 26px rgba(0,229,160,.14);
+    }
+    .queue-pill:hover {
+      transform:translateY(-1px);
+      border-color:rgba(0,229,160,.24);
+    }
     .section {
       flex-shrink:0;
       padding:0 12px;
@@ -553,6 +591,9 @@
       font-size:9px;
       color:var(--c-muted);
     }
+    .launch-panel {
+      margin-top:12px;
+    }
     .bottom-nav {
       position:absolute;
       left:0;
@@ -643,79 +684,34 @@
 
       <div class="section">
         <div class="hero-card">
-          <h2>Stake In. Lock Table. Enter Arena.</h2>
-          <p>Choose the queue, select the board, then confirm the bet before matchmaking starts.</p>
+          <h2>Pick A Queue. Tap A Board. Play Fast.</h2>
+          <p>Default matchmaking is ready from the start, so most players only need a map tap and one final launch.</p>
           <div class="hero-stats">
             <div class="hero-stat"><b>12.4K</b><span>Players</span></div>
             <div class="hero-stat"><b>14s</b><span>Queue</span></div>
             <div class="hero-stat"><b>4</b><span>Maps</span></div>
+          </div>
+          <div class="queue-strip" id="modeList">
+            <button class="queue-pill active" data-mode="1v1" onclick="selectMode('1v1', this)">
+              <b>1v1 Duel</b>
+              <span>Fastest queue</span>
+            </button>
+            <button class="queue-pill" data-mode="2v2" onclick="selectMode('2v2', this)">
+              <b>2v2 Team</b>
+              <span>Shared pressure</span>
+            </button>
+            <button class="queue-pill" data-mode="4v4" onclick="selectMode('4v4', this)">
+              <b>4v4 Clash</b>
+              <span>Big table chaos</span>
+            </button>
           </div>
         </div>
       </div>
 
       <div class="section">
         <div class="sec-head">
-          <div class="sec-title">Choose Mode</div>
-          <div class="sec-state" id="modeState">1v1 Active</div>
-        </div>
-        <div class="list" id="modeList">
-          <button class="mode-card active" data-mode="1v1" onclick="selectMode('1v1', this)">
-            <div class="mode-top">
-              <div class="mode-type">1v1 Duel</div>
-              <div class="mode-badge">Fast</div>
-            </div>
-            <div class="mode-main">
-              <div class="mode-copy">
-                <strong>Quick Stake Match</strong>
-                <span>Direct pressure, shortest queue, and clean one-on-one betting.</span>
-              </div>
-              <div class="mode-meter">
-                <div class="mode-meter-label">Live</div>
-                <div class="mode-meter-track"><div class="mode-meter-fill" style="width:84%"></div></div>
-              </div>
-            </div>
-          </button>
-
-          <button class="mode-card" data-mode="2v2" onclick="selectMode('2v2', this)">
-            <div class="mode-top">
-              <div class="mode-type">2v2 Team</div>
-              <div class="mode-badge">Squad</div>
-            </div>
-            <div class="mode-main">
-              <div class="mode-copy">
-                <strong>Partner Pot</strong>
-                <span>Queue with shared pressure and coordinated mid-stake play.</span>
-              </div>
-              <div class="mode-meter">
-                <div class="mode-meter-label">Live</div>
-                <div class="mode-meter-track"><div class="mode-meter-fill" style="width:70%"></div></div>
-              </div>
-            </div>
-          </button>
-
-          <button class="mode-card" data-mode="4v4" onclick="selectMode('4v4', this)">
-            <div class="mode-top">
-              <div class="mode-type">4v4 Clash</div>
-              <div class="mode-badge">Hot</div>
-            </div>
-            <div class="mode-main">
-              <div class="mode-copy">
-                <strong>Big Table Rush</strong>
-                <span>Large room energy with the biggest pots and highest chaos.</span>
-              </div>
-              <div class="mode-meter">
-                <div class="mode-meter-label">Live</div>
-                <div class="mode-meter-track"><div class="mode-meter-fill" style="width:92%"></div></div>
-              </div>
-            </div>
-          </button>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="sec-head">
           <div class="sec-title">Select Map And Bet</div>
-          <div class="sec-state" id="mapState">Royal Classic</div>
+          <div class="sec-state" id="modeState">1v1 Ready</div>
         </div>
         <div class="list" id="mapList">
           <button class="map-card active" data-map="Royal Classic" onclick="selectMap('Royal Classic', this)">
@@ -798,21 +794,14 @@
             <div class="bet-line">Table Pot <b>4,000 Coins</b></div>
           </button>
         </div>
-      </div>
-
-      <div class="section">
-        <div class="sec-head">
-          <div class="sec-title">Confirm Entry</div>
-          <div class="sec-state" id="readyState">500 Coins</div>
-        </div>
-        <div class="summary-card">
+        <div class="summary-card launch-panel">
           <div class="summary-grid">
             <div class="sum-box"><b id="summaryMode">1V1</b><span>Mode</span></div>
             <div class="sum-box"><b id="summaryMap">ROYAL CLASSIC</b><span>Map</span></div>
             <div class="sum-box"><b id="summaryBet">500</b><span>Bet</span></div>
           </div>
-          <button class="cta-btn" onclick="startMatch()">Start Match</button>
-          <div class="helper">Bet value updates instantly when you switch maps or tables.</div>
+          <button class="cta-btn" onclick="startMatch()">Queue Now</button>
+          <div class="helper" id="readyState">Bet value updates instantly when you switch maps or tables.</div>
         </div>
       </div>
 
@@ -845,7 +834,6 @@
 
   <script>
     const modeState = document.getElementById('modeState');
-    const mapState = document.getElementById('mapState');
     const readyState = document.getElementById('readyState');
     const summaryMode = document.getElementById('summaryMode');
     const summaryMap = document.getElementById('summaryMap');
@@ -868,9 +856,8 @@
       summaryMode.textContent = selectedMode.toUpperCase();
       summaryMap.textContent = selectedMap.toUpperCase();
       summaryBet.textContent = selectedBet.toUpperCase();
-      modeState.textContent = selectedMode + ' Active';
-      mapState.textContent = selectedMap;
-      readyState.textContent = selectedBet + ' Coins';
+      modeState.textContent = selectedMode + ' Ready';
+      readyState.textContent = selectedMode + ' on ' + selectedMap + ' for ' + selectedBet + ' coins.';
     }
 
     function clearBetSelection(card) {
@@ -879,7 +866,7 @@
 
     function selectMode(mode, button) {
       selectedMode = mode;
-      document.querySelectorAll('.mode-card').forEach((card) => card.classList.remove('active'));
+      document.querySelectorAll('.queue-pill').forEach((card) => card.classList.remove('active'));
       button.classList.add('active');
       refreshSummary();
       showToast(mode + ' selected.');
@@ -913,7 +900,7 @@
     }
 
     function randomizePick() {
-      const modeCards = Array.from(document.querySelectorAll('.mode-card'));
+      const modeCards = Array.from(document.querySelectorAll('.queue-pill'));
       const mapCards = Array.from(document.querySelectorAll('.map-card'));
       const modeCard = modeCards[Math.floor(Math.random() * modeCards.length)];
       const mapCard = mapCards[Math.floor(Math.random() * mapCards.length)];
@@ -926,10 +913,20 @@
     }
 
     function startMatch() {
+      const layoutMap = {
+        'Royal Classic': 'classic',
+        'Temple Gold': 'temple',
+        'Frost Ring': 'ice',
+        'Volcano Vault': 'volcano'
+      };
+      localStorage.setItem('ludoOnlineEntry', JSON.stringify({ mode: selectedMode, map: selectedMap, bet: selectedBet }));
       showToast('Joining ' + selectedMode + ' on ' + selectedMap + ' for ' + selectedBet + ' coins.');
+      setTimeout(() => {
+        window.location.href = 'ludo_board.html?layout=' + encodeURIComponent(layoutMap[selectedMap] || 'classic');
+      }, 420);
     }
 
     refreshSummary();
   </script>
-</body>
+  <script src="js/global-nav.js"></script></body>
 </html>
