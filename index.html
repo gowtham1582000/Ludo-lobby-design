@@ -650,21 +650,29 @@
       height: 34px;
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 12px;
-      background: rgba(8, 12, 20, 0.62);
-      color: #fff;
+      background: rgba(8, 12, 20, 0.32);
+      color: rgba(255, 255, 255, 0.68);
       display: grid;
       place-items: center;
       font-size: 18px;
       line-height: 1;
       cursor: pointer;
       pointer-events: auto;
-      transition: transform var(--fast), border-color var(--fast), background var(--fast);
+      opacity: .58;
+      transition: transform var(--fast), border-color var(--fast), background var(--fast), opacity var(--fast), color var(--fast);
     }
 
     .hero-arrow:hover {
       transform: scale(1.06);
-      border-color: rgba(0, 229, 160, 0.3);
-      background: rgba(8, 12, 20, 0.82);
+      border-color: rgba(0, 229, 160, 0.18);
+      background: rgba(8, 12, 20, 0.48);
+      opacity: .82;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .hero-arrow.is-hidden {
+      opacity: 0;
+      pointer-events: none;
     }
 
     /* --------------------------------------------------------
@@ -835,38 +843,50 @@
 
     .slide-info {
       position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 50px;
-      background: linear-gradient(0deg, rgba(8, 12, 20, 0.98) 60%, transparent);
+      left: 50%;
+      bottom: 6px;
+      transform: translateX(-50%);
+      min-width: 118px;
+      max-width: 154px;
+      padding: 5px 8px 6px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(10, 17, 31, 0.92), rgba(8, 13, 24, 0.96));
+      border: 1px solid rgba(115, 196, 255, 0.1);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-end;
-      padding-bottom: 4px;
+      justify-content: center;
       z-index: 8;
     }
 
     .slide-title {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 13px;
-      letter-spacing: 1.5px;
-      color: #fff;
+      font-size: 11px;
+      line-height: 1;
+      letter-spacing: 1px;
+      color: #F8FBFF;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
     }
 
     .slide-tags {
       display: flex;
-      gap: 5px;
-      margin-top: 1px;
+      gap: 4px;
+      margin-top: 3px;
+      flex-wrap: nowrap;
+      justify-content: center;
+    }
+
+    .h-slide {
+      overflow: visible;
     }
 
     .stag {
-      font-size: 7px;
+      font-size: 6px;
       font-weight: 700;
-      padding: 1.5px 6px;
-      border-radius: 5px;
-      letter-spacing: .6px;
+      padding: 1px 5px;
+      border-radius: 999px;
+      letter-spacing: .5px;
     }
 
     .stag-free {
@@ -1226,17 +1246,18 @@
     .mode-hero-card {
       position: relative;
       overflow: visible;
-      border: 1px solid rgba(255, 184, 0, 0.28);
+      border: 1px solid rgba(99, 191, 255, 0.12);
       border-radius: 24px;
       padding: 10px 11px 12px;
       background:
-        radial-gradient(circle at 50% 100%, rgba(255, 184, 0, 0.28), transparent 38%),
-        radial-gradient(circle at 14% 18%, rgba(0, 229, 160, 0.14), transparent 24%),
-        linear-gradient(180deg, rgba(32, 10, 62, 0.96), rgba(66, 20, 118, 0.96) 58%, rgba(55, 12, 104, 0.98));
+        radial-gradient(circle at 78% 12%, rgba(92, 170, 255, 0.16), transparent 28%),
+        radial-gradient(circle at 16% 18%, rgba(0, 229, 160, 0.12), transparent 26%),
+        radial-gradient(circle at 50% 112%, rgba(255, 184, 0, 0.12), transparent 32%),
+        linear-gradient(180deg, rgba(12, 20, 38, 0.94), rgba(10, 18, 34, 0.96) 56%, rgba(8, 14, 28, 0.98));
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.08),
-        0 16px 34px rgba(34, 4, 72, 0.45),
-        0 0 0 1px rgba(255, 184, 0, 0.08);
+        0 16px 34px rgba(2, 10, 24, 0.46),
+        0 0 0 1px rgba(99, 191, 255, 0.04);
     }
 
     .mode-hero-card::before {
@@ -1464,34 +1485,6 @@
 
     .mode-dropdown {
       width: 100%;
-    }
-
-    .mode-select {
-      width: 100%;
-      height: 52px;
-      border-radius: 18px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(10, 14, 28, 0.44);
-      color: var(--c-text);
-      padding: 10px 34px 10px 12px;
-      cursor: pointer;
-      transition: transform var(--med), border-color var(--med), background var(--med);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 10px;
-      font-weight: 700;
-    }
-
-    .mode-select:hover {
-      transform: translateY(-2px);
-      border-color: rgba(255, 184, 0, 0.24);
-      background: rgba(15, 21, 40, 0.58);
-    }
-
-    .mode-select-wrap {
       position: relative;
     }
 
@@ -1505,15 +1498,132 @@
       margin-bottom: 5px;
     }
 
-    .mode-select-wrap::after {
+    .mode-picker {
+      position: relative;
+    }
+
+    .mode-picker-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 38px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+        rgba(10, 14, 28, 0.62);
+      color: var(--c-text);
+      padding: 6px 30px 6px 30px;
+      cursor: pointer;
+      transition: transform var(--med), border-color var(--med), background var(--med), box-shadow var(--med);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 10px 20px rgba(2, 6, 23, 0.24);
+      text-align: center;
+    }
+
+    .mode-picker-btn:hover,
+    .mode-picker.open .mode-picker-btn {
+      transform: translateY(-2px);
+      border-color: rgba(255, 184, 0, 0.26);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03)),
+        rgba(15, 21, 40, 0.8);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 14px 26px rgba(255, 184, 0, 0.14);
+    }
+
+    .mode-picker-btn::after {
       content: '\25BE';
       position: absolute;
-      right: 12px;
+      right: 10px;
       top: 50%;
-      transform: translateY(2px);
-      font-size: 12px;
+      transform: translateY(-50%);
+      font-size: 9px;
       color: #FFCD57;
+      transition: transform var(--med);
+    }
+
+    .mode-picker.open .mode-picker-btn::after {
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    .mode-picker-value {
+      display: block;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 15px;
+      line-height: 1;
+      letter-spacing: .7px;
+      color: #FFF3CB;
       pointer-events: none;
+      text-align: center;
+    }
+
+    .mode-picker-menu {
+      position: absolute;
+      right: 0;
+      left: auto;
+      top: calc(100% + 6px);
+      display: grid;
+      gap: 5px;
+      margin-top: 0;
+      padding: 6px;
+      width: 148px;
+      min-width: 148px;
+      max-height: 220px;
+      overflow: hidden;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background:
+        linear-gradient(180deg, rgba(19, 28, 48, 0.98), rgba(10, 14, 28, 0.98));
+      box-shadow:
+        0 16px 28px rgba(0, 0, 0, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-4px);
+      transition: opacity var(--med), transform var(--med), visibility var(--med);
+      z-index: 14;
+    }
+
+    .mode-picker.open .mode-picker-menu {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .mode-picker-option {
+      width: 100%;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--c-text);
+      padding: 8px 10px;
+      text-align: left;
+      cursor: pointer;
+      transition: transform var(--fast), border-color var(--fast), background var(--fast), box-shadow var(--fast);
+    }
+
+    .mode-picker-option:hover,
+    .mode-picker-option.active {
+      transform: translateY(-1px);
+      border-color: rgba(255, 184, 0, 0.24);
+      background: linear-gradient(135deg, rgba(255, 184, 0, 0.12), rgba(59, 130, 246, 0.1));
+      box-shadow: 0 10px 18px rgba(255, 184, 0, 0.12);
+    }
+
+    .mode-option-name {
+      display: block;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px;
+      line-height: 1;
+      letter-spacing: .7px;
+      color: #FFF3CB;
     }
 
     /* --------------------------------------------------------
@@ -1883,13 +1993,7 @@
     }
 
     .bottom-nav::before {
-      content: '';
-      position: absolute;
-      top: -1px;
-      left: 6%;
-      right: 6%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0, 229, 160, 0.5), rgba(0, 229, 160, 0.25), transparent);
+      content: none;
     }
 
     .nav-row {
@@ -3389,8 +3493,8 @@
           <div class="live-dot"></div><span id="liveCount">48.2K</span> LIVE
         </div>
         <div class="hero-nav">
-          <button class="hero-arrow" type="button" onclick="goSlide(idx - 1)" aria-label="Previous map">&#8249;</button>
-          <button class="hero-arrow" type="button" onclick="goSlide(idx + 1)" aria-label="Next map">&#8250;</button>
+          <button class="hero-arrow" id="heroPrev" type="button" onclick="goSlide(idx - 1)" aria-label="Previous map">&#8249;</button>
+          <button class="hero-arrow" id="heroNext" type="button" onclick="goSlide(idx + 1)" aria-label="Next map">&#8250;</button>
         </div>
         <div id="heroWrap" style="position:absolute;inset:0;overflow:hidden;">
           <div id="heroTrack">
@@ -3539,13 +3643,26 @@
                 <span class="mode-battle-meta" id="modeBattleMeta">Play Online</span>
               </button>
               <div class="mode-dropdown" id="modeDropdown">
-                <label class="mode-dropdown-label" for="modeSelect">Mode</label>
-                <div class="mode-select-wrap">
-                  <select class="mode-select" id="modeSelect" onchange="selectBattleMode(this.value)">
-                    <option value="online">Play Online</option>
-                    <option value="computer">Vs Computer</option>
-                    <option value="friends">With Friends</option>
-                  </select>
+                <label class="mode-dropdown-label" for="modePickerBtn">Mode</label>
+                <div class="mode-picker" id="modePicker">
+                  <button class="mode-picker-btn" type="button" id="modePickerBtn" aria-haspopup="listbox"
+                    aria-expanded="false" onclick="toggleModePicker(event)">
+                    <span class="mode-picker-value" id="modePickerValue">Play Online</span>
+                  </button>
+                  <div class="mode-picker-menu" id="modePickerMenu" role="listbox" aria-label="Battle mode options">
+                    <button class="mode-picker-option active" type="button" data-mode="online"
+                      onclick="pickBattleMode(event, 'online')">
+                      <span class="mode-option-name">Play Online</span>
+                    </button>
+                    <button class="mode-picker-option" type="button" data-mode="computer"
+                      onclick="pickBattleMode(event, 'computer')">
+                      <span class="mode-option-name">Vs Computer</span>
+                    </button>
+                    <button class="mode-picker-option" type="button" data-mode="friends"
+                      onclick="pickBattleMode(event, 'friends')">
+                      <span class="mode-option-name">With Friends</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -4387,7 +4504,11 @@
         sideLabel: 'Room Type',
         sideValue: 'Private Room',
         sideChip: 'Squad',
-        action: () => { flash(); window.location.href = 'play-with-friends.html'; }
+        action: () => {
+          localStorage.setItem('ludoFriendRoomMap', JSON.stringify(selMapData));
+          flash();
+          window.location.href = 'play-with-friends.html?source=lobby';
+        }
       }
     };
     let selectedBattleMode = 'online';
@@ -4402,8 +4523,7 @@
       const sideLabel = document.getElementById('modeSideLabel');
       const sideValue = document.getElementById('modeSideValue');
       const sideChip = document.getElementById('modeSideChip');
-      const select = document.getElementById('modeSelect');
-      if (select) select.value = modeKey;
+      const pickerValue = document.getElementById('modePickerValue');
       if (title) title.textContent = cfg.title;
       if (heroSub) heroSub.textContent = cfg.sub;
       if (battleLabel) battleLabel.textContent = cfg.button;
@@ -4411,6 +4531,10 @@
       if (sideLabel) sideLabel.textContent = cfg.sideLabel;
       if (sideValue) sideValue.textContent = cfg.sideValue;
       if (sideChip) sideChip.textContent = cfg.sideChip;
+      if (pickerValue) pickerValue.textContent = cfg.label;
+      document.querySelectorAll('.mode-picker-option').forEach((option) => {
+        option.classList.toggle('active', option.dataset.mode === modeKey);
+      });
     }
 
     function selectBattleMode(modeKey) {
@@ -4422,6 +4546,29 @@
       event.stopPropagation();
       const cfg = battleModes[selectedBattleMode] || battleModes.online;
       cfg.action();
+    }
+
+    function toggleModePicker(event) {
+      event.stopPropagation();
+      const picker = document.getElementById('modePicker');
+      if (!picker) return;
+      const shouldOpen = !picker.classList.contains('open');
+      picker.classList.toggle('open', shouldOpen);
+      const trigger = document.getElementById('modePickerBtn');
+      if (trigger) trigger.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+    }
+
+    function closeModePicker() {
+      const picker = document.getElementById('modePicker');
+      const trigger = document.getElementById('modePickerBtn');
+      if (picker) picker.classList.remove('open');
+      if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    }
+
+    function pickBattleMode(event, modeKey) {
+      event.stopPropagation();
+      selectBattleMode(modeKey);
+      closeModePicker();
     }
 
     function openModes(m) {
@@ -4520,10 +4667,17 @@
     //  HERO SLIDER
     // --------------------------------------------------
     const track = document.getElementById('heroTrack');
+    const heroPrev = document.getElementById('heroPrev');
+    const heroNext = document.getElementById('heroNext');
     let idx = 0; const TOTAL = 5;
+    function updateHeroArrows() {
+      if (heroPrev) heroPrev.classList.toggle('is-hidden', idx === 0);
+      if (heroNext) heroNext.classList.toggle('is-hidden', idx === TOTAL - 1);
+    }
     function goSlide(i) {
       idx = Math.max(0, Math.min(TOTAL - 1, i));
       track.style.transform = `translateX(-${idx * 20}%)`;
+      updateHeroArrows();
     }
     let tx = 0, ty = 0, drag = false, dsx = 0;
     const hw = document.getElementById('heroWrap');
@@ -4535,6 +4689,15 @@
     hw.addEventListener('mousedown', e => { drag = true; dsx = e.clientX; });
     hw.addEventListener('mouseup', e => { if (!drag) return; drag = false; const dx = e.clientX - dsx; if (Math.abs(dx) > 40) goSlide(idx + (dx < 0 ? 1 : -1)); });
     hw.addEventListener('mouseleave', () => drag = false);
+    document.addEventListener('click', (event) => {
+      const picker = document.getElementById('modePicker');
+      if (picker && !picker.contains(event.target)) closeModePicker();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeModePicker();
+    });
+
+    updateHeroArrows();
     setBattleModeUI(selectedBattleMode);
   
 

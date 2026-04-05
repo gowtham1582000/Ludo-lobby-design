@@ -1,524 +1,857 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=390, initial-scale=1.0">
-  <title>Daya Pass Arena - With Friends</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+  <title>Daya Pass Arena - Friend Waiting Room</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@600;700;800&display=swap"
+    rel="stylesheet">
   <style>
     :root {
-      --bg:#050812;
-      --text:#e8f0ff;
-      --soft:rgba(232,240,255,.72);
-      --muted:rgba(232,240,255,.42);
-      --green:#00e5a0;
-      --blue:#47b8ff;
-      --gold:#ffb800;
-      --border:rgba(255,255,255,.09);
-      --border-2:rgba(255,255,255,.14);
-      --fast:.16s ease;
-      --med:.28s ease;
+      --bg: #050812;
+      --text: #e8f0ff;
+      --soft: rgba(232, 240, 255, .72);
+      --muted: rgba(232, 240, 255, .42);
+      --green: #00e5a0;
+      --gold: #ffb800;
+      --b: rgba(255, 255, 255, .1);
+      --fast: .16s ease;
+      --med: .28s ease
     }
-    * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
-    html, body {
-      width:100%;
-      min-height:100vh;
-      background:#04060c;
-      color:var(--text);
-      font-family:'Rajdhani', sans-serif;
-      display:flex;
-      justify-content:center;
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent
     }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100vh;
+      background: #04060c;
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      display: flex;
+      justify-content: center
+    }
+
     .phone {
-      position:relative;
-      width:390px;
-      height:690px;
-      overflow:hidden;
-      background:linear-gradient(180deg, rgba(6,10,18,.98), rgba(8,14,22,.99));
-      box-shadow:0 0 0 1px rgba(0,229,160,.08), 0 40px 120px rgba(0,0,0,.9);
+      position: relative;
+      width: 390px;
+      height: 690px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #09111d, #050912);
+      box-shadow: 0 0 0 1px rgba(0, 229, 160, .08), 0 40px 120px rgba(0, 0, 0, .9)
     }
+
     .bg {
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(circle at 18% 14%, rgba(0,229,160,.16), transparent 24%),
-        radial-gradient(circle at 82% 18%, rgba(71,184,255,.16), transparent 24%),
-        radial-gradient(circle at 50% 76%, rgba(255,184,0,.08), transparent 30%),
-        linear-gradient(145deg, #08111d 0%, #0c1728 42%, #050912 100%);
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 18% 14%, rgba(0, 229, 160, .16), transparent 24%), radial-gradient(circle at 82% 18%, rgba(71, 184, 255, .16), transparent 24%), linear-gradient(145deg, #08111d 0%, #0c1728 42%, #050912 100%)
     }
-    .bg::before {
-      content:"";
-      position:absolute;
-      inset:-18%;
-      background:
-        repeating-linear-gradient(60deg, rgba(0,229,160,.08) 0 1px, transparent 1px 26px),
-        repeating-linear-gradient(-60deg, rgba(71,184,255,.05) 0 1px, transparent 1px 26px);
-      transform:perspective(900px) rotateX(62deg) translateY(148px) scale(1.2);
-      opacity:.72;
-    }
+
     .shell {
-      position:relative;
-      z-index:1;
-      height:690px;
-      overflow-y:auto;
-      padding:0 14px 118px;
-      scrollbar-width:none;
+      position: relative;
+      z-index: 1;
+      height: 690px;
+      overflow-y: auto;
+      padding: 0 12px 118px;
+      scrollbar-width: none
     }
-    .shell::-webkit-scrollbar { display:none; }
-    .hdr, .hdr-left, .hdr-copy, .section-head, .room-row, .friend-top, .toggle-row {
-      display:flex;
-      align-items:center;
-      gap:10px;
+
+    .shell::-webkit-scrollbar {
+      display: none
     }
-    .hdr {
-      position:sticky;
-      top:0;
-      z-index:8;
-      justify-content:space-between;
-      margin:0 -14px;
-      padding:14px;
-      background:linear-gradient(180deg, rgba(8,12,20,.96), rgba(8,12,20,.74));
-      border-bottom:1px solid rgba(255,255,255,.05);
-      backdrop-filter:blur(14px);
-    }
-    .hdr-copy {
-      flex-direction:column;
-      align-items:flex-start;
-      gap:2px;
-    }
-    .eyebrow {
-      font-size:11px;
-      letter-spacing:1.8px;
-      text-transform:uppercase;
-      color:var(--muted);
-    }
-    .hdr-title {
-      font-family:'Bebas Neue', sans-serif;
-      font-size:28px;
-      line-height:.92;
-      letter-spacing:1.3px;
-    }
-    .icon-btn, .mini-btn, .room-btn, .friend-card, .nav-btn, .toggle-pill {
-      border:1px solid var(--border-2);
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      font:inherit;
-      cursor:pointer;
-      transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast), background var(--fast);
-    }
-    .icon-btn:hover, .mini-btn:hover, .room-btn:hover, .friend-card:hover, .nav-btn:hover, .toggle-pill:hover {
-      transform:translateY(-2px);
-      border-color:rgba(0,229,160,.34);
-      box-shadow:0 14px 30px rgba(0,229,160,.12);
-    }
-    .icon-btn {
-      width:40px;
-      height:40px;
-      border-radius:14px;
-      display:grid;
-      place-items:center;
-    }
-    .mini-btn {
-      min-width:92px;
-      height:38px;
-      padding:0 14px;
-      border-radius:999px;
-      color:var(--green);
-      font-weight:700;
-    }
-    .ico {
-      width:16px;
-      height:16px;
-      position:relative;
-      display:inline-block;
-      color:currentColor;
-    }
-    .ico::before, .ico::after { content:""; position:absolute; }
-    .ico.back::before { width:10px; height:10px; border-left:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg); left:4px; top:3px; }
-    .ico.spark::before { inset:1px 5px; background:currentColor; clip-path:polygon(55% 0,100% 0,55% 50%,100% 50%,20% 100%,42% 56%,0 56%); }
-    .section { margin-top:14px; }
-    .panel {
-      border:1px solid var(--border);
-      border-radius:24px;
-      padding:14px;
-      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)), rgba(13,18,32,.9);
-    }
-    .hero {
-      position:relative;
-      overflow:hidden;
-    }
-    .hero::before {
-      content:"";
-      position:absolute;
-      width:200px;
-      height:200px;
-      right:-54px;
-      top:-48px;
-      border-radius:50%;
-      background:radial-gradient(circle, rgba(0,229,160,.18), transparent 70%);
-      filter:blur(10px);
-    }
-    .hero h2 {
-      position:relative;
-      z-index:1;
-      font-family:'Bebas Neue', sans-serif;
-      font-size:34px;
-      line-height:.92;
-      letter-spacing:1.2px;
-      max-width:230px;
-    }
-    .hero p {
-      position:relative;
-      z-index:1;
-      margin-top:8px;
-      max-width:250px;
-      color:var(--soft);
-      font-size:13px;
-      line-height:1.3;
-    }
-    .room-card {
-      position:relative;
-      z-index:1;
-      margin-top:16px;
-      border-radius:22px;
-      padding:14px;
-      border:1px solid rgba(255,255,255,.08);
-      background:linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-    }
-    .room-row {
-      justify-content:space-between;
-    }
-    .room-code {
-      font-family:'Orbitron', sans-serif;
-      font-size:22px;
-      letter-spacing:2px;
-    }
-    .room-sub {
-      margin-top:6px;
-      color:var(--muted);
-      font-size:12px;
-    }
-    .room-actions {
-      display:grid;
-      grid-template-columns:repeat(2, 1fr);
-      gap:10px;
-      margin-top:12px;
-    }
-    .room-btn {
-      height:42px;
-      border-radius:16px;
-      font-weight:700;
-    }
-    .room-btn.primary {
-      color:#06131a;
-      border-color:rgba(0,229,160,.4);
-      background:linear-gradient(135deg, var(--green), var(--blue));
-    }
-    .section-head {
-      justify-content:space-between;
-      margin-bottom:12px;
-    }
-    .section-title {
-      font-family:'Orbitron', sans-serif;
-      font-size:13px;
-      letter-spacing:.9px;
-      text-transform:uppercase;
-      color:var(--soft);
-    }
+
+    .hdr,
+    .hdr-left,
+    .hdr-copy,
     .toggle-row {
-      gap:8px;
+      display: flex;
+      align-items: center;
+      gap: 10px
     }
+
+    .hdr {
+      position: sticky;
+      top: 0;
+      z-index: 8;
+      justify-content: space-between;
+      margin: 0 -12px;
+      padding: 14px 12px;
+      background: linear-gradient(180deg, rgba(8, 12, 20, .96), rgba(8, 12, 20, .74));
+      border-bottom: 1px solid rgba(255, 255, 255, .05);
+      backdrop-filter: blur(14px)
+    }
+
+    .hdr-copy {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--muted)
+    }
+
+    .hdr-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      line-height: .92;
+      letter-spacing: 1.3px
+    }
+
+    .icon-btn,
+    .mini-btn,
+    .toggle-pill,
+    .nav-btn,
+    .cta,
+    .cta-main {
+      border: 1px solid var(--b);
+      background: rgba(255, 255, 255, .05);
+      color: var(--text);
+      font: inherit;
+      cursor: pointer;
+      transition: transform var(--fast), border-color var(--fast), box-shadow var(--fast), background var(--fast)
+    }
+
+    .icon-btn:hover,
+    .mini-btn:hover,
+    .toggle-pill:hover,
+    .nav-btn:hover,
+    .cta:hover,
+    .cta-main:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0, 229, 160, .34);
+      box-shadow: 0 14px 30px rgba(0, 229, 160, .12)
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center
+    }
+
+    .mini-btn {
+      min-width: 92px;
+      height: 38px;
+      padding: 0 14px;
+      border-radius: 999px;
+      color: var(--green);
+      font-weight: 700
+    }
+
+    .ico {
+      width: 16px;
+      height: 16px;
+      position: relative;
+      display: inline-block;
+      color: currentColor
+    }
+
+    .ico::before,
+    .ico::after {
+      content: "";
+      position: absolute
+    }
+
+    .ico.back::before {
+      width: 10px;
+      height: 10px;
+      border-left: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: rotate(45deg);
+      left: 4px;
+      top: 3px
+    }
+
+    .ico.spark::before {
+      inset: 1px 5px;
+      background: currentColor;
+      clip-path: polygon(55% 0, 100% 0, 55% 50%, 100% 50%, 20% 100%, 42% 56%, 0 56%)
+    }
+
+    .section {
+      margin-top: 12px
+    }
+
+    .room {
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 22px;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(31, 34, 42, .98), rgba(14, 16, 22, .98));
+      box-shadow: 0 24px 42px rgba(0, 0, 0, .34)
+    }
+
+    .room-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      min-height: 500px
+    }
+
+    .side {
+      padding: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+      background: radial-gradient(circle at 20% 18%, rgba(255, 120, 72, .24), transparent 32%), linear-gradient(180deg, #5a110d, #2a090a);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: start
+    }
+
+    .uid {
+      border: 2px solid rgba(255, 184, 0, .7);
+      border-radius: 8px;
+      padding: 8px 6px;
+      background: rgba(8, 10, 16, .38)
+    }
+
+    .uid-no {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 18px;
+      color: #fff4d0
+    }
+
+    .uid-tag {
+      margin-top: 4px;
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: #f0b400;
+      color: #17130a;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .8px;
+      text-transform: uppercase
+    }
+
+    .storm {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 40px;
+      line-height: .86;
+      letter-spacing: 1px;
+      color: #fff5eb;
+      text-shadow: 0 12px 24px rgba(0, 0, 0, .26)
+    }
+
+    .mini-map {
+      border: 2px solid rgba(255, 184, 0, .8);
+      border-radius: 12px;
+      padding: 8px;
+      background: rgba(13, 17, 27, .72);
+      grid-column: 1/-1
+    }
+
+    .mini-map-name {
+      margin-top: 8px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #ffe4ae;
+      text-align: center
+    }
+
+    .map-box,
+    .map-layout-box {
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .08);
+      background: linear-gradient(145deg, #203149, #111d31 54%, #0a1220)
+    }
+
+    .map-box {
+      height: 122px;
+      border-radius: 10px
+    }
+
+    .map-layout-box {
+      height: 122px;
+      border-radius: 18px
+    }
+
+    .map-svg,
+    .layout-svg {
+      width: 96px;
+      height: 96px;
+      filter: drop-shadow(0 8px 18px rgba(0, 0, 0, .28))
+    }
+
+    .main {
+      padding: 10px;
+      background: linear-gradient(180deg, rgba(36, 39, 46, .98), rgba(20, 22, 29, .98));
+      display: grid;
+      gap: 10px
+    }
+
+    .top {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      align-items: center
+    }
+
+    .bar,
+    .chip {
+      min-height: 34px;
+      border: 1px solid var(--b);
+      background: rgba(255, 255, 255, .04);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 10px
+    }
+
+    .bar {
+      justify-content: flex-start;
+      gap: 8px;
+      overflow: hidden
+    }
+
+    .lbl {
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      white-space: nowrap
+    }
+
+    .val {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff4ce;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .chip {
+      min-width: 0;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .7px
+    }
+
+    .teams {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px
+    }
+
+    .team {
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 10px;
+      padding: 10px;
+      background: linear-gradient(180deg, rgba(54, 57, 65, .95), rgba(32, 34, 40, .96))
+    }
+
+    .team-h {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #c9c9cc
+    }
+
+    .slots {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px
+    }
+
+    .slot {
+      width: 100%;
+      min-height: 56px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      background: rgba(17, 19, 24, .82);
+      padding: 7px;
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    .slot.fill {
+      background: linear-gradient(180deg, rgba(63, 48, 24, .92), rgba(28, 24, 18, .94));
+      border-color: rgba(255, 184, 0, .2)
+    }
+
+    .slot.empty {
+      cursor: pointer;
+      text-align: left;
+      transition: transform var(--fast), border-color var(--fast), background var(--fast), box-shadow var(--fast)
+    }
+
+    .slot.empty:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0, 229, 160, .32);
+      background: rgba(19, 25, 32, .96);
+      box-shadow: 0 14px 26px rgba(0, 229, 160, .1)
+    }
+
+    .slot.empty:active {
+      transform: translateY(0) scale(.98)
+    }
+
+    .av {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: #0e1219;
+      background: linear-gradient(135deg, #ffdc78, #d8971c)
+    }
+
+    .slot.empty .av {
+      background: rgba(255, 255, 255, .08);
+      color: rgba(255, 255, 255, .48)
+    }
+
+    .copy {
+      min-width: 0
+    }
+
+    .name {
+      font-size: 10px;
+      font-weight: 700;
+      color: #fff2c8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .sub {
+      margin-top: 2px;
+      font-size: 9px;
+      color: rgba(232, 240, 255, .5);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .slot.empty .name {
+      color: rgba(232, 240, 255, .42)
+    }
+
+    .bottom {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px
+    }
+
+    .cta,
+    .cta-main {
+      min-height: 38px;
+      border-radius: 8px;
+      font: 700 11px 'Rajdhani', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: .7px
+    }
+
+    .cta-main {
+      min-width: 0;
+      background: linear-gradient(135deg, #95fff1, #5fd2d8);
+      color: #08131a;
+      border-color: rgba(149, 255, 241, .42)
+    }
+
+    .layout {
+      margin-top: 14px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 20px;
+      padding: 14px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, .02)), rgba(14, 18, 28, .94)
+    }
+
+    .layout-h {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px
+    }
+
+    .layout-t {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--soft)
+    }
+
+    .layout-s {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
+      max-width: 210px
+    }
+
+    .mode-pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 229, 160, .2);
+      background: rgba(0, 229, 160, .08);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--green)
+    }
+
+    .layout-b {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      align-items: center
+    }
+
+    .layout-copy {
+      display: grid;
+      gap: 10px
+    }
+
+    .layout-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 30px;
+      line-height: .9;
+      letter-spacing: 1px
+    }
+
+    .toggle-row {
+      flex-wrap: wrap
+    }
+
     .toggle-pill {
-      height:32px;
-      padding:0 12px;
-      border-radius:999px;
-      font-size:11px;
-      font-weight:700;
-      color:var(--soft);
+      height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--soft)
     }
+
     .toggle-pill.active {
-      color:#07131a;
-      border-color:rgba(0,229,160,.42);
-      background:linear-gradient(135deg, var(--green), var(--blue));
-      box-shadow:0 12px 24px rgba(0,229,160,.16);
+      color: #07131a;
+      border-color: rgba(0, 229, 160, .42);
+      background: linear-gradient(135deg, var(--green), #47b8ff);
+      box-shadow: 0 12px 24px rgba(0, 229, 160, .16)
     }
-    .friend-list {
-      display:grid;
-      gap:10px;
+
+    .map-pill {
+      min-width: 88px
     }
-    .friend-card {
-      border-radius:20px;
-      padding:12px;
-      text-align:left;
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px
     }
-    .friend-top {
-      justify-content:space-between;
-      align-items:flex-start;
+
+    .tag {
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .08);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      color: #fff1c0
     }
-    .friend-main {
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width:0;
-    }
-    .avatar {
-      width:46px;
-      height:46px;
-      border-radius:15px;
-      display:grid;
-      place-items:center;
-      flex:0 0 auto;
-      font-size:18px;
-      border:1px solid rgba(255,255,255,.1);
-      background:linear-gradient(145deg, rgba(0,229,160,.16), rgba(71,184,255,.08));
-    }
-    .friend-name {
-      font-size:15px;
-      font-weight:700;
-      line-height:1.05;
-    }
-    .friend-meta {
-      margin-top:4px;
-      color:var(--muted);
-      font-size:12px;
-    }
-    .friend-badge {
-      min-width:76px;
-      height:30px;
-      border-radius:999px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(0,229,160,.22);
-      background:rgba(0,229,160,.1);
-      color:var(--green);
-      font-size:11px;
-      font-weight:700;
-    }
-    .friend-actions {
-      display:grid;
-      grid-template-columns:repeat(2, 1fr);
-      gap:8px;
-      margin-top:10px;
-    }
-    .friend-btn {
-      height:36px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.1);
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      font:700 12px 'Rajdhani', sans-serif;
-      cursor:pointer;
-      transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast);
-    }
-    .friend-btn:hover {
-      transform:translateY(-2px);
-      border-color:rgba(0,229,160,.32);
-      box-shadow:0 12px 24px rgba(0,229,160,.1);
-    }
-    .grid-two {
-      display:grid;
-      grid-template-columns:repeat(2, 1fr);
-      gap:10px;
-    }
-    .mini-stat {
-      border-radius:18px;
-      padding:12px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.035);
-      text-align:center;
-    }
-    .mini-stat strong {
-      display:block;
-      font-size:20px;
-      line-height:1;
-    }
-    .mini-stat span {
-      display:block;
-      margin-top:4px;
-      color:var(--muted);
-      font-size:11px;
-      text-transform:uppercase;
-      letter-spacing:.7px;
-    }
+
     .footer-nav {
-      position:absolute;
-      left:0;
-      right:0;
-      bottom:0;
-      z-index:8;
-      display:grid;
-      grid-template-columns:repeat(4, 1fr);
-      gap:8px;
-      padding:10px 12px 12px;
-      background:linear-gradient(180deg, rgba(8,12,20,.2), rgba(8,12,20,.96));
-      border-top:1px solid rgba(255,255,255,.06);
-      backdrop-filter:blur(12px);
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 8;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 10px 12px 12px;
+      background: linear-gradient(180deg, rgba(8, 12, 20, .2), rgba(8, 12, 20, .96));
+      border-top: 1px solid rgba(255, 255, 255, .06);
+      backdrop-filter: blur(12px)
     }
+
     .nav-btn {
-      min-height:56px;
-      border-radius:18px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-      font-size:11px;
-      font-weight:700;
-      text-transform:uppercase;
-      letter-spacing:.5px;
+      min-height: 56px;
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px
     }
+
     .nav-btn.act {
-      color:var(--green);
-      border-color:rgba(0,229,160,.3);
-      background:linear-gradient(180deg, rgba(0,229,160,.12), rgba(255,255,255,.03));
+      color: var(--green);
+      border-color: rgba(0, 229, 160, .3);
+      background: linear-gradient(180deg, rgba(0, 229, 160, .12), rgba(255, 255, 255, .03))
     }
+
+    .invite-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 24;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(2, 4, 10, .7);
+      backdrop-filter: blur(8px);
+      padding: 20px 12px 110px
+    }
+
+    .invite-modal.show {
+      display: flex
+    }
+
+    .invite-card {
+      width: 100%;
+      max-width: 366px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(19, 24, 36, .98), rgba(10, 14, 22, .98));
+      box-shadow: 0 30px 60px rgba(0, 0, 0, .42);
+      padding: 16px;
+      display: grid;
+      gap: 12px
+    }
+
+    .invite-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px
+    }
+
+    .invite-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #f3f7ff
+    }
+
+    .invite-sub {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .invite-close {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px
+    }
+
+    .friend-list {
+      display: grid;
+      gap: 8px
+    }
+
+    .friend-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      background: rgba(255, 255, 255, .04)
+    }
+
+    .friend-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0
+    }
+
+    .friend-av {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #8df7db, #39b7ff);
+      color: #07131a;
+      font-size: 12px;
+      font-weight: 800
+    }
+
+    .friend-copy {
+      min-width: 0
+    }
+
+    .friend-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #f2f7ff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .friend-state {
+      margin-top: 2px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      color: var(--green)
+    }
+
+    .invite-btn {
+      min-width: 82px;
+      height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 229, 160, .28);
+      background: rgba(0, 229, 160, .12);
+      color: var(--green);
+      font: 700 11px 'Rajdhani', sans-serif;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform var(--fast), border-color var(--fast), background var(--fast)
+    }
+
+    .invite-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0, 229, 160, .42);
+      background: rgba(0, 229, 160, .18)
+    }
+
+    .invite-btn:active {
+      transform: translateY(0) scale(.98)
+    }
+
     .toast {
-      position:fixed;
-      left:50%;
-      bottom:20px;
-      transform:translateX(-50%) translateY(24px);
-      min-width:180px;
-      max-width:280px;
-      padding:10px 14px;
-      border-radius:14px;
-      background:rgba(7,10,18,.92);
-      border:1px solid rgba(255,255,255,.08);
-      font-size:13px;
-      text-align:center;
-      opacity:0;
-      pointer-events:none;
-      transition:opacity var(--med), transform var(--med);
-      z-index:20;
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%) translateY(24px);
+      min-width: 180px;
+      max-width: 280px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(7, 10, 18, .92);
+      border: 1px solid rgba(255, 255, 255, .08);
+      font-size: 13px;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--med), transform var(--med);
+      z-index: 20
     }
-    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0)
+    }
   </style>
 </head>
+
 <body>
   <div class="phone">
     <div class="bg"></div>
     <div class="shell">
       <div class="hdr">
         <div class="hdr-left">
-          <button class="icon-btn" onclick="window.location.href='index.html'" aria-label="Back to lobby"><span class="ico back"></span></button>
+          <button class="icon-btn" onclick="window.location.href='index.html'" aria-label="Back to lobby"><span
+              class="ico back"></span></button>
           <div class="hdr-copy">
             <div class="eyebrow">Private Squad Room</div>
             <div class="hdr-title">With Friends</div>
           </div>
         </div>
-        <button class="mini-btn" onclick="window.location.href='friends.html'"><span class="ico spark"></span>Roster</button>
+        <button class="mini-btn" onclick="copyRoomCode()"><span class="ico spark"></span>Share</button>
       </div>
 
       <div class="section">
-        <div class="panel hero">
-          <h2>Build A Custom Room And Pull The Squad In</h2>
-          <p>Create a private lobby, switch room rules, and send fast invites without leaving the play flow.</p>
-          <div class="room-card">
-            <div class="room-row">
+        <div class="room">
+          <div class="room-grid">
+            <div class="side">
+              <div class="uid">
+                <div class="uid-no">5229202334</div>
+                <div class="uid-tag">ROOM UID</div>
+              </div>
               <div>
-                <div class="eyebrow">Room Code</div>
-                <div class="room-code" id="roomCode">DAYA-4421</div>
+                <div class="eyebrow">Private Room</div>
+                <div class="storm">L4 STORM</div>
               </div>
-              <div class="friend-badge" id="roomModeBadge">2v2</div>
+              <div class="mini-map">
+                <div class="map-box" id="roomMapPreview"><svg class="map-svg" id="roomMapBoard"
+                    viewBox="0 0 150 150"></svg></div>
+                <div class="mini-map-name" id="roomMapName">Classic Arena</div>
+              </div>
             </div>
-            <div class="room-sub">Share this code or send direct invites to online friends.</div>
-            <div class="room-actions">
-              <button class="room-btn primary" onclick="copyRoomCode()">Copy Code</button>
-              <button class="room-btn" onclick="shuffleRoomCode()">New Code</button>
+            <div class="main">
+              <div class="top">
+                <div class="chip" id="roomModeBadge">Squad</div>
+                <div class="chip" id="roomSummaryMode">2v2</div>
+              </div>
+              <div class="teams" id="teamsGrid"></div>
+              <div class="bottom">
+                <button class="cta" onclick="copyRoomCode()">Copy Room Code</button>
+                <button class="cta-main" onclick="showToast('Room is ready to start.')">Start</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="section">
-        <div class="panel">
-          <div class="section-head">
-            <div class="section-title">Room Setup</div>
-            <div class="toggle-row">
-              <button class="toggle-pill" onclick="setRoomMode('1v1', this)">1v1</button>
-              <button class="toggle-pill active" onclick="setRoomMode('2v2', this)">2v2</button>
-              <button class="toggle-pill" onclick="setRoomMode('4v4', this)">4v4</button>
+        <div class="layout">
+          <div class="layout-h">
+            <div>
+              <div class="layout-t">Map Layout</div>
+              <div class="layout-s" id="roomMapSub">Balanced board for private squad battles.</div>
             </div>
+            <div class="mode-pill" id="roomPlayNote">Private squad room</div>
           </div>
-          <div class="grid-two">
-            <div class="mini-stat"><strong id="slotCount">4</strong><span>Seats Open</span></div>
-            <div class="mini-stat"><strong>Private</strong><span>Room Type</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="panel">
-          <div class="section-head">
-            <div class="section-title">Online Friends</div>
-            <button class="mini-btn" onclick="inviteAll()">Invite All</button>
-          </div>
-          <div class="friend-list">
-            <div class="friend-card">
-              <div class="friend-top">
-                <div class="friend-main">
-                  <div class="avatar">KR</div>
-                  <div>
-                    <div class="friend-name">KING_R</div>
-                    <div class="friend-meta">Online now • Fast finisher • Chennai</div>
-                  </div>
-                </div>
-                <div class="friend-badge">Ready</div>
+          <div class="layout-b">
+            <div class="map-layout-box" id="mapLayoutPreview"><svg class="layout-svg" id="mapLayoutBoard"
+                viewBox="0 0 150 150"></svg></div>
+            <div class="layout-copy">
+              <div class="layout-name" id="mapLayoutName">Classic Arena</div>
+              <div class="toggle-row" id="modeToggles">
+                <button class="toggle-pill" data-mode="1v1" onclick="setRoomMode('1v1', this)">1v1</button>
+                <button class="toggle-pill active" data-mode="2v2" onclick="setRoomMode('2v2', this)">2v2</button>
+                <button class="toggle-pill" data-mode="3v3" onclick="setRoomMode('3v3', this)">3v3</button>
+                <button class="toggle-pill" data-mode="4v4" onclick="setRoomMode('4v4', this)">4v4</button>
               </div>
-              <div class="friend-actions">
-                <button class="friend-btn" onclick="sendInvite('KING_R')">Invite</button>
-                <button class="friend-btn" onclick="showToast('Opening KING_R profile.')">Profile</button>
+              <div class="toggle-row">
+                <button class="toggle-pill map-pill active"
+                  onclick="setRoomMap('Classic Arena','Balanced board for private squad battles.',this,'classic')">Classic</button>
+                <button class="toggle-pill map-pill"
+                  onclick="setRoomMap('Neon City','High-energy night map with bright cyber lanes.',this,'neon')">Neon</button>
+                <button class="toggle-pill map-pill"
+                  onclick="setRoomMap('Volcano Pit','Aggressive lava zone for tense comeback games.',this,'volcano')">Volcano</button>
               </div>
-            </div>
-
-            <div class="friend-card">
-              <div class="friend-top">
-                <div class="friend-main">
-                  <div class="avatar">NX</div>
-                  <div>
-                    <div class="friend-name">NOVA_X</div>
-                    <div class="friend-meta">Lobby idle • Looking for duo • Madurai</div>
-                  </div>
-                </div>
-                <div class="friend-badge">Online</div>
-              </div>
-              <div class="friend-actions">
-                <button class="friend-btn" onclick="sendInvite('NOVA_X')">Invite</button>
-                <button class="friend-btn" onclick="showToast('Opening NOVA_X profile.')">Profile</button>
-              </div>
-            </div>
-
-            <div class="friend-card">
-              <div class="friend-top">
-                <div class="friend-main">
-                  <div class="avatar">QV</div>
-                  <div>
-                    <div class="friend-name">QUEEN_V</div>
-                    <div class="friend-meta">Party leader • Strong support play • Coimbatore</div>
-                  </div>
-                </div>
-                <div class="friend-badge">Hot</div>
-              </div>
-              <div class="friend-actions">
-                <button class="friend-btn" onclick="sendInvite('QUEEN_V')">Invite</button>
-                <button class="friend-btn" onclick="showToast('Opening QUEEN_V profile.')">Profile</button>
-              </div>
-            </div>
-
-            <div class="friend-card">
-              <div class="friend-top">
-                <div class="friend-main">
-                  <div class="avatar">ZX</div>
-                  <div>
-                    <div class="friend-name">ZEN_X</div>
-                    <div class="friend-meta">In menu • Calm player • Bengaluru</div>
-                  </div>
-                </div>
-                <div class="friend-badge">Open</div>
-              </div>
-              <div class="friend-actions">
-                <button class="friend-btn" onclick="sendInvite('ZEN_X')">Invite</button>
-                <button class="friend-btn" onclick="showToast('Opening ZEN_X profile.')">Profile</button>
+              <div class="tags">
+                <span class="tag" id="slotCount">4/32</span>
+                <span class="tag">Private Room</span>
+                <span class="tag" id="layoutModeTag">2v2</span>
               </div>
             </div>
           </div>
@@ -534,52 +867,48 @@
     </div>
   </div>
 
+  <div class="invite-modal" id="inviteModal" onclick="closeInvitePopup(event)">
+    <div class="invite-card" onclick="event.stopPropagation()">
+      <div class="invite-head">
+        <div>
+          <div class="invite-title">Invite Online Friends</div>
+          <div class="invite-sub" id="inviteTargetText">Pick a friend for this team slot.</div>
+        </div>
+        <button class="icon-btn invite-close" type="button" onclick="closeInvitePopup()"
+          aria-label="Close invite list">X</button>
+      </div>
+      <div class="friend-list" id="friendList"></div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
   <script>
-    const toast = document.getElementById('toast');
-    const roomCode = document.getElementById('roomCode');
-    const roomModeBadge = document.getElementById('roomModeBadge');
-    const slotCount = document.getElementById('slotCount');
-    let toastTimer = null;
-
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
-    }
-
-    function copyRoomCode() {
-      const value = roomCode.textContent;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(value).then(() => showToast('Room code copied.')).catch(() => showToast('Room code ready to share.'));
-      } else {
-        showToast('Room code ready to share.');
-      }
-    }
-
-    function shuffleRoomCode() {
-      const code = 'DAYA-' + Math.floor(1000 + Math.random() * 9000);
-      roomCode.textContent = code;
-      showToast('Fresh room code created.');
-    }
-
-    function setRoomMode(mode, button) {
-      document.querySelectorAll('.toggle-pill').forEach((pill) => pill.classList.remove('active'));
-      button.classList.add('active');
-      roomModeBadge.textContent = mode;
-      slotCount.textContent = mode === '1v1' ? '2' : mode === '2v2' ? '4' : '8';
-      showToast(mode + ' room selected.');
-    }
-
-    function sendInvite(name) {
-      showToast('Invite sent to ' + name + '.');
-    }
-
-    function inviteAll() {
-      showToast('Invites sent to your full online squad.');
-    }
+    const toast = document.getElementById('toast'), roomCode = document.getElementById('roomCode'), roomModeBadge = document.getElementById('roomModeBadge'), slotCount = document.getElementById('slotCount'), roomSummaryMode = document.getElementById('roomSummaryMode'), layoutModeTag = document.getElementById('layoutModeTag'), roomPlayNote = document.getElementById('roomPlayNote'), roomMapName = document.getElementById('roomMapName'), roomMapSub = document.getElementById('roomMapSub'), roomMapBoard = document.getElementById('roomMapBoard'), mapLayoutName = document.getElementById('mapLayoutName'), mapLayoutBoard = document.getElementById('mapLayoutBoard'), playerCount = document.getElementById('playerCount'), teamsGrid = document.getElementById('teamsGrid'), inviteModal = document.getElementById('inviteModal'), inviteTargetText = document.getElementById('inviteTargetText'), friendList = document.getElementById('friendList');
+    const THEMES = { classic: { bd: '#F0EDE8', cell: '#F7F4EF', grid: '#1C1810', out: '#C8A000', hn: '#FBF9F5', r: { p: '#C0392B', ri: '#E8816B', t: '#D4634A' }, g: { p: '#27774A', ri: '#7EC89A', t: '#5AAD78' }, b: { p: '#2856A0', ri: '#7AA8E0', t: '#5080C8' }, y: { p: '#C8980A', ri: '#E8CE7A', t: '#D4B040' } }, neon: { bd: '#0C0820', cell: '#120E28', grid: '#2A1860', out: '#9370DB', hn: '#1C1438', r: { p: '#CC1860', ri: '#FF80B8', t: '#E840A0' }, g: { p: '#18A868', ri: '#78F0B0', t: '#40C888' }, b: { p: '#1860D0', ri: '#80B8FF', t: '#4090E8' }, y: { p: '#C8A800', ri: '#FFD870', t: '#D8BC30' } }, volcano: { bd: '#1A0800', cell: '#220C02', grid: '#4A1A00', out: '#D04000', hn: '#2C1006', r: { p: '#C83010', ri: '#FF8040', t: '#E06030' }, g: { p: '#407820', ri: '#90C060', t: '#68A040' }, b: { p: '#204890', ri: '#7090D0', t: '#4070B8' }, y: { p: '#B07808', ri: '#E0B840', t: '#C89820' } } };
+    const CC = new Map();[['r', [[6, 1], [7, 1], [7, 2], [7, 3], [7, 4], [7, 5]]], ['g', [[1, 7], [1, 8], [2, 7], [3, 7], [4, 7], [5, 7]]], ['y', [[7, 9], [7, 10], [7, 11], [7, 12], [7, 13], [8, 13]]], ['b', [[9, 7], [10, 7], [11, 7], [12, 7], [13, 6], [13, 7]]]].forEach(([s, cs]) => cs.forEach(([r, c]) => CC.set(`${r},${c}`, s))); const SC = [{ r: 2, c: 6, s: 'g' }, { r: 6, c: 12, s: 'y' }, { r: 8, c: 2, s: 'r' }, { r: 12, c: 8, s: 'b' }];
+    const ROOM_PLAYERS = { team1: [{ tag: 'KR', name: 'KING_R', sub: 'Leader' }, null, null, null], team2: [{ tag: 'QV', name: 'QUEEN_V', sub: 'Captain' }, null, null, null] };
+    const AVAILABLE_FRIENDS = [{ tag: 'NX', name: 'NOVA_X', state: 'Online Now' }, { tag: 'AX', name: 'ARROW_X', state: 'Ready to Join' }, { tag: 'SK', name: 'SKY_K', state: 'In Lobby' }, { tag: 'LM', name: 'LIME_M', state: 'Available' }, { tag: 'PX', name: 'PHOENIX', state: 'Online Now' }, { tag: 'ZX', name: 'ZEN_X', state: 'Ready to Join' }];
+    let currentMode = '2v2', inviteTarget = null;
+    function starPts(cx, cy, or, ir) { const p = []; for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + (Math.PI / 5) * i, r = i % 2 === 0 ? or : ir; p.push(`${(cx + Math.cos(a) * r).toFixed(2)},${(cy + Math.sin(a) * r).toFixed(2)}`) } return p.join(' ') }
+    function homeZone(x, y, s, th) { const tk = [[18, 18], [42, 18], [18, 42], [42, 42]].map(([dx, dy]) => { const cx = x + dx, cy = y + dy; return `<circle cx="${cx}" cy="${cy}" r="6.5" fill="${s.t}" stroke="${s.p}" stroke-width="1.4"/><circle cx="${cx - 1.3}" cy="${cy - 1.5}" r="1.8" fill="${s.ri}" opacity="0.4"/>` }).join(''); return `<rect x="${x}" y="${y}" width="60" height="60" fill="${s.p}" stroke="${th.grid}" stroke-width="1"/><rect x="${x + 4}" y="${y + 4}" width="52" height="52" rx="6" fill="none" stroke="${s.ri}" stroke-width="3"/><rect x="${x + 9}" y="${y + 9}" width="42" height="42" fill="${th.hn}" stroke="${s.p}" stroke-width="1"/>${tk}` }
+    function buildBoard(theme) { const th = THEMES[theme] || THEMES.classic; let cells = ''; for (let r = 0; r < 15; r++) { for (let c = 0; c < 15; c++) { const inT = r <= 5 && c >= 6 && c <= 8, inM = r >= 6 && r <= 8 && (c <= 5 || c >= 9), inB = r >= 9 && c >= 6 && c <= 8; if (!inT && !inM && !inB) continue; const sn = CC.get(`${r},${c}`), fill = sn ? th[sn].p : th.cell; cells += `<rect x="${c * 10}" y="${r * 10}" width="10" height="10" fill="${fill}" stroke="${th.grid}" stroke-width="0.95"/>` } } const stars = SC.map(({ r, c, s }) => { const cx = c * 10 + 5, cy = r * 10 + 5, sd = th[s]; return `<polygon points="${starPts(cx, cy, 3.7, 1.65)}" fill="none" stroke="${sd.ri}" stroke-width="0.9"/><polygon points="${starPts(cx, cy, 2.35, 1.05)}" fill="${sd.p}" opacity="0.95"/>` }).join(''); return `<rect x=".5" y=".5" width="149" height="149" fill="${th.bd}" stroke="${th.out}" stroke-width="1.4"/>${homeZone(0, 0, th.r, th)}${homeZone(90, 0, th.g, th)}${homeZone(0, 90, th.b, th)}${homeZone(90, 90, th.y, th)}${cells}<rect x="60" y="60" width="30" height="30" fill="${th.cell}" stroke="${th.grid}" stroke-width=".95"/><polygon points="60,60 90,60 75,75" fill="${th.g.p}" stroke="${th.grid}" stroke-width=".95"/><polygon points="90,60 90,90 75,75" fill="${th.y.p}" stroke="${th.grid}" stroke-width=".95"/><polygon points="60,90 90,90 75,75" fill="${th.b.p}" stroke="${th.grid}" stroke-width=".95"/><polygon points="60,60 60,90 75,75" fill="${th.r.p}" stroke="${th.grid}" stroke-width=".95"/><circle cx="75" cy="75" r="3.1" fill="${th.hn}" stroke="${th.grid}" stroke-width=".8"/>${stars}<rect x=".5" y=".5" width="149" height="149" fill="none" stroke="${th.grid}" stroke-width="1.2"/>` }
+    function slotsPerTeam(mode) { return mode === '1v1' ? 1 : mode === '2v2' ? 2 : mode === '3v3' ? 3 : 4 }
+    function countFilledSlots(mode) { const perTeam = slotsPerTeam(mode); return ['team1', 'team2'].reduce((total, key) => total + ROOM_PLAYERS[key].slice(0, perTeam).filter(Boolean).length, 0) }
+    function renderFriendList() { friendList.innerHTML = AVAILABLE_FRIENDS.map((friend, index) => `<div class="friend-row"><div class="friend-meta"><div class="friend-av">${friend.tag}</div><div class="friend-copy"><div class="friend-name">${friend.name}</div><div class="friend-state">${friend.state}</div></div></div><button class="invite-btn" type="button" onclick="assignFriendToSlot(${index})">Invite</button></div>`).join('') }
+    function closeInvitePopup(event) { if (event && event.target !== inviteModal) return; inviteModal.classList.remove('show'); inviteTarget = null }
+    function openInvitePopup(teamKey, slotNumber) { inviteTarget = { teamKey, slotNumber }; inviteTargetText.textContent = `Choose an online friend for ${teamKey === 'team1' ? 'Team 1' : 'Team 2'} slot ${slotNumber}.`; renderFriendList(); inviteModal.classList.add('show') }
+    function assignFriendToSlot(friendIndex) { if (!inviteTarget) return; const friend = AVAILABLE_FRIENDS.splice(friendIndex, 1)[0]; if (!friend) return; ROOM_PLAYERS[inviteTarget.teamKey][inviteTarget.slotNumber - 1] = { tag: friend.tag, name: friend.name, sub: 'Invited' }; closeInvitePopup(); renderTeams(currentMode); updateRoomCounts(); showToast(friend.name + ' invited to the room.') }
+    function renderTeams(mode) { const perTeam = slotsPerTeam(mode), teams = [{ key: 'team1', label: 'Team 1', state: 'Ready', players: ROOM_PLAYERS.team1 }, { key: 'team2', label: 'Team 2', state: 'Live', players: ROOM_PLAYERS.team2 }]; teamsGrid.innerHTML = teams.map(team => { const slots = Array.from({ length: perTeam }, (_, index) => { const p = team.players[index]; if (p) { return `<div class="slot fill"><div class="av">${p.tag}</div><div class="copy"><div class="name">${p.name}</div><div class="sub">${p.sub}</div></div></div>` } return `<button class="slot empty" type="button" onclick="openInvitePopup('${team.key}', ${index + 1})"><div class="av">+</div><div class="copy"><div class="name">Invite Friend</div><div class="sub">Tap to add player</div></div></button>` }).join(''); return `<div class="team"><div class="team-h"><span>${team.label}</span><span>${team.state}</span></div><div class="slots">${slots}</div></div>` }).join('') }
+    function updateRoomCounts() { const totalPlayers = slotsPerTeam(currentMode) * 2, filledSlots = countFilledSlots(currentMode); playerCount.textContent = `${filledSlots}/${totalPlayers}`; slotCount.textContent = `${filledSlots}/${totalPlayers}` }
+    function showToast(m) { toast.textContent = m; toast.classList.add('show'); clearTimeout(window.tt); window.tt = setTimeout(() => toast.classList.remove('show'), 1800) }
+    function copyRoomCode() { const v = roomCode.textContent; if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(v).then(() => showToast('Room code copied.')).catch(() => showToast('Room code ready to share.')) } else showToast('Room code ready to share.') }
+    function setRoomMode(mode, btn) { currentMode = mode; document.querySelectorAll('#modeToggles .toggle-pill').forEach(p => p.classList.remove('active')); if (btn) btn.classList.add('active'); roomSummaryMode.textContent = mode; layoutModeTag.textContent = mode; roomModeBadge.textContent = mode === '1v1' ? 'Duel' : mode === '2v2' ? 'Squad' : mode === '3v3' ? 'Trio' : 'War'; roomPlayNote.textContent = mode === '1v1' ? 'Head-to-head private duel' : mode === '2v2' ? 'Private squad room' : mode === '3v3' ? 'Trios private room' : 'Full team room battle'; renderTeams(mode); updateRoomCounts(); showToast(mode + ' room selected.') }
+    function setRoomMap(name, sub, btn, theme) { document.querySelectorAll('.map-pill').forEach(p => p.classList.remove('active')); if (btn) btn.classList.add('active'); roomMapName.textContent = name; mapLayoutName.textContent = name; roomMapSub.textContent = sub; roomMapBoard.innerHTML = buildBoard(theme); mapLayoutBoard.innerHTML = buildBoard(theme); showToast(name + ' selected.') }
+    function syncRoomMapFromLobby() { const raw = localStorage.getItem('ludoFriendRoomMap') || localStorage.getItem('ludoMap'); if (!raw) { roomMapBoard.innerHTML = buildBoard('classic'); mapLayoutBoard.innerHTML = buildBoard('classic'); return } try { const p = JSON.parse(raw); if (p.v === 'neon') setRoomMap('Neon City', 'High-energy night map with bright cyber lanes.', document.querySelectorAll('.map-pill')[1], 'neon'); else if (p.v === 'volcano') setRoomMap('Volcano Pit', 'Aggressive lava zone for tense comeback games.', document.querySelectorAll('.map-pill')[2], 'volcano'); else setRoomMap('Classic Arena', 'Balanced board for private squad battles.', document.querySelectorAll('.map-pill')[0], 'classic') } catch { roomMapBoard.innerHTML = buildBoard('classic'); mapLayoutBoard.innerHTML = buildBoard('classic') } }
+    syncRoomMapFromLobby(); setRoomMode('2v2', document.querySelector('#modeToggles .toggle-pill[data-mode="2v2"]'));
   </script>
-  <script src="js/global-nav.js"></script></body>
+  <script src="js/global-nav.js"></script>
+</body>
+
 </html>

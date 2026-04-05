@@ -103,7 +103,6 @@
         white-space: nowrap;
       }
       .global-nav-btn.active::after {
-        content: '';
         position: relative;
         display: block;
         width: 18px;
