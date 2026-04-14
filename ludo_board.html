@@ -75,10 +75,14 @@ const RT   = 122;
 const cx = c => RL + c * S;
 const ry = r => RT + r * S;
 
-const CC_TOP = 11;   // 12th block — P1/P2 connector
-const CC_BOT = 13;   // 14th block — P3/P4 connector
+const CC_TOP = 12;   // 13th block — P1/P2 connector
+const CC_BOT = 12;   // 13th block — P3/P4 connector
 const CX_TOP = cx(CC_TOP);
 const CX_BOT = cx(CC_BOT);
+const UC_TOP = 11;   // 12th block — top U-connector
+const UC_BOT = 13;   // 14th block — bottom U-connector
+const UX_TOP = cx(UC_TOP);
+const UX_BOT = cx(UC_BOT);
 
 // Keep CC as alias for top (used in T-arm loops)
 const CC = CC_TOP;
@@ -99,15 +103,15 @@ const P4_HOME_X = cx(CC_BOT + ARM_N) + S;
 const HOME_TOP_Y = Math.max(0, ARM_TOP_Y + BL/2 - HOME_D/2);
 const HOME_BOT_Y = Math.min(CH - HOME_D, ARM_BOT_Y + BL/2 - HOME_D/2);
 
-// Top U-connector: 3 each side of CC_TOP (col11)
-const U_L_TOP = CC_TOP - 3;   // col8
-const U_R_TOP = CC_TOP + 3;   // col14
+// Top U-connector: 3 each side of UC_TOP (col11)
+const U_L_TOP = UC_TOP - 3;   // col8
+const U_R_TOP = UC_TOP + 3;   // col14
 const ULX_TOP = cx(U_L_TOP);
 const URX_TOP = cx(U_R_TOP);
 
-// Bottom U-connector: 3 each side of CC_BOT (col13)
-const U_L_BOT = CC_BOT - 3;   // col10
-const U_R_BOT = CC_BOT + 3;   // col16
+// Bottom U-connector: 3 each side of UC_BOT (col13)
+const U_L_BOT = UC_BOT - 3;   // col10
+const U_R_BOT = UC_BOT + 3;   // col16
 const ULX_BOT = cx(U_L_BOT);
 const URX_BOT = cx(U_R_BOT);
 
@@ -253,7 +257,12 @@ function barrel(bLeft, bW, bTop, bH, glow, bg1, bg2) {
 }
 
 /* ─────────────────── 2. Outer rectangle ─────────────────── */
-const pinkSet = new Set(['0-6','0-18','12-6','12-18','3-0','9-0','3-24','9-24']);
+const pinkSet = new Set([
+  '0-6','0-14',
+  '12-10','12-18',
+  '4-0','11-0',
+  '1-24','8-24'
+]);
 const arrMap  = {
   '0-3':'r','0-4':'r','0-20':'r','0-21':'r',
   '12-3':'l','12-4':'l','12-20':'l','12-21':'l',
@@ -264,8 +273,8 @@ for (let r=0; r<ROWS; r++) {
   for (let c=0; c<COLS; c++) {
     const onBorder = r===0||r===ROWS-1||c===0||c===COLS-1;
     if (!onBorder) continue;
-    if (r===0      && c===CC_TOP) { slv(cx(c),ry(r)); continue; }
-    if (r===ROWS-1 && c===CC_BOT) { slv(cx(c),ry(r)); continue; }
+    if (r===0      && c===CC_TOP) { blk(cx(c),ry(r)); continue; }
+    if (r===ROWS-1 && c===CC_BOT) { blk(cx(c),ry(r)); continue; }
     const key = `${r}-${c}`;
     pinkSet.has(key) ? safe(cx(c),ry(r)) : blk(cx(c),ry(r));
     if (arrMap[key]) arrowSVG(cx(c),ry(r),arrMap[key]);
@@ -275,19 +284,21 @@ for (let r=0; r<ROWS; r++) {
 /* ─────────────────── 3. Top T-arm ─────────────────── */
 homeCircle('radial-gradient(circle,#ff6060,#e63946,#a01020)','0 0 20px #e6394699', P1_HOME_X, HOME_TOP_Y);
 homeLabel('P1','#fff','0 0 12px rgba(255,80,80,1), 0 2px 8px rgba(0,0,0,1)', P1_HOME_X, HOME_TOP_Y);
-for (let i=ARM_N; i>=1; i--) ap1(cx(CC-i), ARM_TOP_Y);
+for (let i=ARM_N; i>=1; i--) (i===ARM_N ? safe(cx(CC-i), ARM_TOP_Y) : ap1(cx(CC-i), ARM_TOP_Y));
 slv(CX, ARM_TOP_Y);
-for (let i=1; i<=ARM_N; i++) ap2(cx(CC+i), ARM_TOP_Y);
+for (let i=1; i<=ARM_N; i++) (i===ARM_N ? safe(cx(CC+i), ARM_TOP_Y) : ap2(cx(CC+i), ARM_TOP_Y));
 homeCircle('radial-gradient(circle,#60e880,#2dc653,#1a7a30)','0 0 20px #2dc65399', P2_HOME_X, HOME_TOP_Y);
 homeLabel('P2','#fff','0 0 12px rgba(45,198,83,1), 0 2px 8px rgba(0,0,0,1)', P2_HOME_X, HOME_TOP_Y);
 
 /* ─────────────────── 4. Top stem ─────────────────── */
-stemTopYs.forEach(y => slv(CX, y));
+stemTopYs.forEach((y, index) => (index === 1 ? safe(CX, y) : slv(CX, y)));
 arrowSVG(CX, stemTopYs[0], 'd');
 
 /* ─────────────────── 5. U-connector top ─────────────────── */
-slv(CX_TOP, TOP_ENTRY_Y);
+slv(UX_TOP, TOP_ENTRY_Y);
 for (let c=U_L_TOP; c<=U_R_TOP; c++) slv(cx(c), TOP_HBAR_Y);
+slv(ULX_TOP, TOP_HBAR_Y);
+slv(URX_TOP, TOP_HBAR_Y);
 slv(ULX_TOP, TOP_LEGS_Y);
 slv(URX_TOP, TOP_LEGS_Y);
 
@@ -302,21 +313,24 @@ barrel(BOT_BARREL_LEFT, BOT_BARREL_W, BARREL_T2, HALF_H, true,
   'linear-gradient(160deg,#1050b8,#3a86ff)');
 
 /* ─────────────────── 7. U-connector bottom ─────────────────── */
+for (let c=U_L_BOT; c<=U_R_BOT; c++) slv(cx(c), BOT_HBAR_Y);
+slv(ULX_BOT, BOT_HBAR_Y);
+slv(URX_BOT, BOT_HBAR_Y);
 slv(ULX_BOT, BOT_LEGS_Y);
 slv(URX_BOT, BOT_LEGS_Y);
-for (let c=U_L_BOT; c<=U_R_BOT; c++) slv(cx(c), BOT_HBAR_Y);
-slv(CX_BOT, BOT_EXIT_Y);
+slv(UX_BOT, BOT_EXIT_Y);
 
 /* ─────────────────── 8. Bottom stem ─────────────────── */
-stemBotYs.forEach(y => slv(CX_BOT, y));
+  
+stemBotYs.forEach((y, index) => (index === 0 ? safe(CX_BOT, y) : slv(CX_BOT, y)));
 arrowSVG(CX_BOT, stemBotYs[stemBotYs.length-1], 'u');
 
 /* ─────────────────── 9. Bottom T-arm ─────────────────── */
 homeCircle('radial-gradient(circle,#ffe570,#f4c430,#c89010)','0 0 20px #f4c43099', P3_HOME_X, HOME_BOT_Y);
 homeLabel('P3','#ffe04a','0 0 12px rgba(244,196,48,1), 0 2px 8px rgba(0,0,0,1)', P3_HOME_X, HOME_BOT_Y);
-for (let i=ARM_N; i>=1; i--) ap3(cx(CC_BOT-i), ARM_BOT_Y);
+for (let i=ARM_N; i>=1; i--) (i===ARM_N ? safe(cx(CC_BOT-i), ARM_BOT_Y) : ap3(cx(CC_BOT-i), ARM_BOT_Y));
 slv(CX_BOT, ARM_BOT_Y);
-for (let i=1; i<=ARM_N; i++) ap4(cx(CC_BOT+i), ARM_BOT_Y);
+for (let i=1; i<=ARM_N; i++) (i===ARM_N ? safe(cx(CC_BOT+i), ARM_BOT_Y) : ap4(cx(CC_BOT+i), ARM_BOT_Y));
 homeCircle('radial-gradient(circle,#70b0ff,#3a86ff,#1050b8)','0 0 20px #3a86ff99', P4_HOME_X, HOME_BOT_Y);
 homeLabel('P4','#fff','0 0 12px rgba(58,134,255,1), 0 2px 8px rgba(0,0,0,1)', P4_HOME_X, HOME_BOT_Y);
 
