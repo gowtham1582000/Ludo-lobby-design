@@ -1,97 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=390, initial-scale=1.0">
-  <title>Daya Pass Arena - Daily Reward</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
-  <style>
-    :root { --green:#00e5a0; --blue:#3b82f6; --gold:#ffb800; --text:#e8f0ff; --soft:rgba(232,240,255,.72); --muted:rgba(232,240,255,.42); --border:rgba(255,255,255,.09); --border2:rgba(255,255,255,.14); --fast:.15s ease; --med:.25s ease; }
-    * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
-    html,body { width:100%; min-height:100vh; background:#04060c; color:var(--text); font-family:'Rajdhani',sans-serif; display:flex; justify-content:center; }
-    .phone { position:relative; width:390px; height:690px; overflow:hidden; background:linear-gradient(180deg, rgba(6,9,18,.96), rgba(10,15,24,.98)); box-shadow:0 0 0 1px rgba(0,229,160,.08), 0 40px 120px rgba(0,0,0,.9); }
-    .bg { position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at 18% 14%, rgba(0,229,160,.16), transparent 24%), radial-gradient(circle at 82% 18%, rgba(255,184,0,.14), transparent 24%), linear-gradient(145deg, #091221 0%, #0c1728 40%, #060b14 100%); }
-    .shell { position:relative; z-index:1; height:690px; overflow-y:auto; padding:0 14px 104px; scrollbar-width:none; }
-    .shell::-webkit-scrollbar { display:none; }
-    .hdr,.hdr-side,.hdr-copy,.section-title { display:flex; align-items:center; gap:10px; }
-    .hdr { position:sticky; top:0; z-index:5; justify-content:space-between; margin:0 -14px; padding:14px; background:linear-gradient(180deg, rgba(8,12,20,.96), rgba(8,12,20,.72)); border-bottom:1px solid rgba(255,255,255,.05); backdrop-filter:blur(12px); }
-    .hdr-copy { flex-direction:column; align-items:flex-start; gap:2px; }
-    .eyebrow { font-size:11px; letter-spacing:1.8px; text-transform:uppercase; color:var(--muted); }
-    .hdr-title { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1.3px; line-height:.9; }
-    .icon-btn,.mini-btn,.claim-btn,.day-card,.nav-btn { border:1px solid var(--border2); background:rgba(255,255,255,.05); color:var(--text); font:inherit; cursor:pointer; transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast), background var(--fast); }
-    .icon-btn:hover,.mini-btn:hover,.claim-btn:hover,.day-card:hover,.nav-btn:hover,.panel:hover { transform:translateY(-2px); border-color:rgba(0,229,160,.32); box-shadow:0 12px 28px rgba(0,229,160,.12); }
-    .icon-btn { width:40px; height:40px; border-radius:14px; display:grid; place-items:center; }
-    .mini-btn,.claim-btn { border-radius:999px; font-weight:700; }
-    .mini-btn { height:38px; padding:0 14px; color:var(--green); }
-    .claim-btn { height:44px; padding:0 18px; color:var(--green); }
-    .ico { width:16px; height:16px; position:relative; display:inline-block; color:currentColor; }
-    .ico::before,.ico::after { content:""; position:absolute; }
-    .ico.back::before { width:10px; height:10px; border-left:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg); left:4px; top:3px; }
-    .section { margin-top:14px; }
-    .panel { border:1px solid var(--border); border-radius:24px; padding:14px; background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)), rgba(13,18,32,.9); transition:transform var(--fast), border-color var(--fast), box-shadow var(--fast); }
-    .hero h2 { font-family:'Bebas Neue',sans-serif; font-size:31px; line-height:.9; letter-spacing:1.2px; }
-    .hero p { margin-top:6px; color:var(--soft); font-size:13px; line-height:1.3; }
-    .claim-row { margin-top:14px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
-    .claim-row strong { font-family:'Orbitron',sans-serif; font-size:20px; }
-    .section-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
-    .section-title { font-family:'Orbitron',sans-serif; font-size:13px; letter-spacing:.9px; text-transform:uppercase; color:var(--soft); }
-    .days { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
-    .day-card { border-radius:20px; padding:14px; text-align:left; }
-    .day-card strong { display:block; font-size:18px; }
-    .day-card span { display:block; margin-top:5px; color:var(--muted); font-size:12px; line-height:1.2; }
-    .day-card.active { border-color:rgba(0,229,160,.3); background:linear-gradient(180deg, rgba(0,229,160,.12), rgba(255,255,255,.03)); }
-    .footer-nav { position:absolute; left:0; right:0; bottom:0; z-index:8; display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:10px 12px 12px; background:linear-gradient(180deg, rgba(8,12,20,.2), rgba(8,12,20,.96)); border-top:1px solid rgba(255,255,255,.06); backdrop-filter:blur(12px); }
-    .nav-btn { min-height:56px; border-radius:18px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
-    .nav-btn.act { color:var(--green); border-color:rgba(0,229,160,.3); background:linear-gradient(180deg, rgba(0,229,160,.12), rgba(255,255,255,.03)); }
-    .toast { position:fixed; left:50%; bottom:20px; transform:translateX(-50%) translateY(24px); min-width:180px; max-width:280px; padding:10px 14px; border-radius:14px; background:rgba(7,10,18,.92); border:1px solid rgba(255,255,255,.08); font-size:13px; text-align:center; opacity:0; pointer-events:none; transition:opacity var(--med), transform var(--med); z-index:20; }
-    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-  </style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=390, initial-scale=1.0"/>
+  <title>Daya Pass Arena - Daily Rewards</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;800;900&family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/daily-reward.css"/>
 </head>
 <body>
-  <div class="phone">
-    <div class="bg"></div>
-    <div class="shell">
-      <div class="hdr">
-        <div class="hdr-side"><button class="icon-btn" onclick="window.location.href='index.html'"><span class="ico back"></span></button><div class="hdr-copy"><div class="eyebrow">Reward Track</div><div class="hdr-title">Daily Reward</div></div></div>
-        <button class="mini-btn" onclick="showToast('Reward calendar refreshed.')">Refresh</button>
-      </div>
-      <div class="section">
-        <div class="panel hero">
-          <h2>Keep Your Login Streak Hot</h2>
-          <p>Claim today’s chest and keep pushing toward the big day-seven cashout.</p>
-          <div class="claim-row">
-            <div><div class="eyebrow">Today</div><strong>500 Coins</strong></div>
-            <button class="claim-btn" onclick="showToast('Daily reward claimed.')">Claim</button>
-          </div>
+
+<div class="phone">
+  <!-- BG -->
+  <div class="bg"></div>
+
+  <!-- SHELL -->
+  <div class="shell">
+
+    <!-- HEADER -->
+    <div class="hdr">
+      <div class="hdr-side">
+        <button class="icon-btn" onclick="window.location.href='index.html'">
+          <span class="ico back"></span>
+        </button>
+        <div class="hdr-copy">
+          <div class="eyebrow">Reward Track</div>
+          <div class="hdr-title">Daily Rewards</div>
         </div>
       </div>
-      <div class="section">
-        <div class="panel">
-          <div class="section-head"><div class="section-title">7 Day Track</div><button class="mini-btn" onclick="showToast('Streak protected for today.')">Protect</button></div>
-          <div class="days">
-            <button class="day-card"><strong>Day 1</strong><span>200 Coins</span></button>
-            <button class="day-card"><strong>Day 2</strong><span>Avatar Frame</span></button>
-            <button class="day-card"><strong>Day 3</strong><span>15 Gems</span></button>
-            <button class="day-card"><strong>Day 4</strong><span>Token Trail</span></button>
-            <button class="day-card"><strong>Day 5</strong><span>600 Coins</span></button>
-            <button class="day-card"><strong>Day 6</strong><span>Rank Boost</span></button>
-            <button class="day-card active"><strong>Day 7</strong><span>Epic Chest + Spin</span></button>
-          </div>
+      <div class="hdr-right">
+        <div class="currency-chip gold"><span>🪙</span><b id="coinCount">24,650</b></div>
+        <div class="currency-chip gem"><span>💎</span><b id="gemCount">480</b></div>
+      </div>
+    </div>
+
+    <!-- STREAK HERO -->
+    <section class="streak-hero">
+      <div class="streak-fire-wrap">
+        <div class="fire-glow"></div>
+        <div class="streak-icon">🔥</div>
+      </div>
+      <div class="streak-info">
+        <div class="streak-number" id="streakNum">7</div>
+        <div class="streak-label">DAY STREAK</div>
+      </div>
+      <div class="streak-ring">
+        <svg class="ring-svg" viewBox="0 0 120 120">
+          <circle class="ring-bg" cx="60" cy="60" r="52" fill="none" stroke-width="7"/>
+          <circle class="ring-fill" id="streakRing" cx="60" cy="60" r="52" fill="none" stroke-width="7"
+            stroke-dasharray="326.7" stroke-dashoffset="326.7" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="streak-msg" id="streakMsg">🎉 Keep going! 3 days to Mega Reward!</div>
+    </section>
+
+    <!-- MONTH PROGRESS -->
+    <div class="month-progress-wrap">
+      <div class="month-label">
+        <span>MONTHLY JOURNEY</span>
+        <span id="monthDay">Day 7 / 30</span>
+      </div>
+      <div class="month-bar-track">
+        <div class="month-bar-fill" id="monthBarFill"></div>
+        <div class="month-bar-milestones">
+          <div class="milestone" style="left:33.3%"><div class="ms-dot"></div><div class="ms-tip">🎁</div></div>
+          <div class="milestone" style="left:66.6%"><div class="ms-dot"></div><div class="ms-tip">💎</div></div>
+          <div class="milestone" style="left:100%"><div class="ms-dot gold"></div><div class="ms-tip">👑</div></div>
         </div>
       </div>
     </div>
-    <div class="footer-nav">
-      <button class="nav-btn" onclick="window.location.href='index.html'">Home</button>
-      <button class="nav-btn" onclick="window.location.href='tournament.html'">Tournament</button>
-      <button class="nav-btn act">Rewards</button>
-      <button class="nav-btn" onclick="window.location.href='lucky-spin.html'">Spin</button>
+
+    <!-- WEEKLY TRACK -->
+    <div class="section-header">
+      <div class="sh-line"></div>
+      <span class="sh-text">✦ THIS WEEK ✦</span>
+      <div class="sh-line"></div>
     </div>
+
+    <div class="weekly-track" id="weeklyTrack"></div>
+
+    <!-- TODAY'S BIG REWARD -->
+    <div class="today-section">
+      <div class="today-label">TODAY'S REWARD</div>
+      <div class="today-card" id="todayCard">
+        <div class="today-card-bg"></div>
+        <div class="today-card-rays" id="todayRays"></div>
+        <div class="today-card-icon" id="todayIcon">💰</div>
+        <div class="today-card-name" id="todayName">Gold Coins</div>
+        <div class="today-card-value" id="todayValue">+2,500</div>
+        <div class="today-card-rarity" id="todayRarity">RARE</div>
+        <button class="claim-btn" id="claimBtn" onclick="claimReward()">
+          <span class="claim-btn-inner">
+            <span id="claimBtnText">✦ CLAIM NOW ✦</span>
+          </span>
+          <div class="claim-btn-glow"></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- BONUS MISSIONS -->
+    <div class="section-header" style="margin-top:20px">
+      <div class="sh-line"></div>
+      <span class="sh-text">✦ BONUS MISSIONS ✦</span>
+      <div class="sh-line"></div>
+    </div>
+
+    <div class="missions-list" id="missionsList"></div>
+
+    <!-- LOYALTY TIER -->
+    <div class="loyalty-card">
+      <div class="loyalty-bg"></div>
+      <div class="loyalty-header">
+        <div class="loyalty-badge">GOLD TIER</div>
+        <div class="loyalty-xp" id="loyaltyXP">1,240 / 2,000 XP</div>
+      </div>
+      <div class="loyalty-bar-track">
+        <div class="loyalty-bar-fill" id="loyaltyBarFill"></div>
+        <div class="loyalty-tier-icons">
+          <span title="Silver">🥈</span>
+          <span title="Gold" class="active-tier">🥇</span>
+          <span title="Platinum">💎</span>
+          <span title="Diamond">👑</span>
+        </div>
+      </div>
+      <div class="loyalty-perks">
+        <div class="perk"><span>⚡</span>2× Coins</div>
+        <div class="perk"><span>🎁</span>Weekly Chest</div>
+        <div class="perk"><span>🔓</span>VIP</div>
+      </div>
+    </div>
+
+    <!-- CALENDAR -->
+    <div class="section-header" style="margin-top:20px">
+      <div class="sh-line"></div>
+      <span class="sh-text">✦ REWARD CALENDAR ✦</span>
+      <div class="sh-line"></div>
+    </div>
+
+    <div class="calendar-grid" id="calendarGrid"></div>
+
+    <!-- FOOTER NOTICE -->
+    <div class="footer-notice">
+      <span>⏰</span>
+      Next reset in &nbsp;<b id="countdown">23:47:12</b>
+    </div>
+
+  </div><!-- /shell -->
+</div><!-- /phone -->
+
+<!-- CLAIM MODAL -->
+<div class="modal-overlay" id="claimModal">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-rays" id="modalRays"></div>
+    <div class="modal-burst" id="modalBurst"></div>
+    <div class="modal-icon-wrap">
+      <div class="modal-ring-outer"></div>
+      <div class="modal-ring-inner"></div>
+      <div class="modal-icon" id="modalIcon">💰</div>
+    </div>
+    <div class="modal-headline">REWARD CLAIMED!</div>
+    <div class="modal-sub">Day <span id="modalDay">7</span> Streak Bonus</div>
+    <div class="modal-reward-name" id="modalName">Gold Coins</div>
+    <div class="modal-reward-val" id="modalVal">+2,500</div>
+    <div class="modal-extras">
+      <div class="modal-extra"><span>⚡</span> Streak Bonus: +250</div>
+      <div class="modal-extra"><span>🥇</span> Gold Tier Bonus: ×2</div>
+    </div>
+    <button class="modal-ok" onclick="closeModal()">AWESOME! →</button>
   </div>
-  <div class="toast" id="toast"></div>
-  <script>
-    let toastTimer = null;
-    const toast = document.getElementById('toast');
-    function showToast(message){ toast.textContent = message; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 1800); }
-  </script>
-  <script src="js/global-nav.js"></script></body>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="js/daily-reward.js"></script>
+<script src="js/global-nav.js"></script>
+</body>
 </html>
