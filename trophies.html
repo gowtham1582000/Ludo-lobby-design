@@ -1,273 +1,289 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=390, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=390, initial-scale=1.0" />
   <title>Daya Pass Arena - Trophy Vault</title>
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/trophies.css"/>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/trophies.css" />
 </head>
+
 <body>
 
-<div class="phone">
+  <div class="phone">
 
-  <!-- BG - matches index.html neon grid -->
-  <div class="bg"></div>
+    <!-- BG - matches index.html neon grid -->
+    <div class="bg"></div>
 
-  <!-- HEADER -->
-  <header class="app-header">
-    <div class="hd-left">
-      <button class="back-btn" onclick="history.back()">&#8249;</button>
-      <div class="hd-brand">
-        <span class="hd-logo">&#9876;</span>
-        <div>
-          <span class="hd-name">DAYA PASS</span>
-          <span class="hd-sub">TROPHY VAULT</span>
-        </div>
-      </div>
-    </div>
-    <div class="hd-center">
-      <div class="season-pill">
-        <span class="sp-dot"></span>
-        SEASON 7
-      </div>
-    </div>
-    <div class="hd-right">
-      <div class="trophy-total">
-        <span class="tt-icon">&#127942;</span>
-        <div>
-          <span class="tt-val" id="totalTrophies">2,840</span>
-          <span class="tt-lbl">TROPHIES</span>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- MAIN SCROLL AREA -->
-  <main class="page-main">
-
-    <!-- HERO -->
-    <section class="hero-section">
-      <div class="player-identity-card">
-        <div class="pic-bg-glow"></div>
-        <div class="pic-top">
-          <div class="player-avatar-wrap">
-            <div class="paw-ring r1"></div>
-            <div class="paw-ring r2"></div>
-            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=dayax" class="player-avatar" alt="avatar"/>
-            <div class="paw-badge">LV 14</div>
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="hd-left">
+        <button class="back-btn" onclick="history.back()">&#8249;</button>
+        <div class="hd-brand">
+          <span class="hd-logo">&#9876;</span>
+          <div>
+            <span class="hd-name">DAYA PASS</span>
+            <span class="hd-sub">TROPHY VAULT</span>
           </div>
-          <div class="player-meta">
-            <h2 class="player-name">DAYA_X</h2>
-            <div class="player-id"># 48-201 &#183; RANKED</div>
-            <div class="current-league-badge">
-              <span class="clb-icon">&#128142;</span>
-              <span class="clb-name">DIAMOND I</span>
+        </div>
+      </div>
+      <div class="hd-center">
+        <div class="season-pill">
+          <span class="sp-dot"></span>
+          SEASON 7
+        </div>
+      </div>
+      <div class="hd-right">
+        <div class="trophy-total">
+          <span class="tt-icon">&#127942;</span>
+          <div>
+            <span class="tt-val" id="totalTrophies">2,840</span>
+            <span class="tt-lbl">TROPHIES</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN SCROLL AREA -->
+    <main class="page-main">
+
+      <!-- HERO -->
+      <section class="hero-section">
+        <div class="player-identity-card">
+          <div class="pic-bg-glow"></div>
+          <div class="pic-top">
+            <div class="player-avatar-wrap">
+              <div class="paw-ring r1"></div>
+              <div class="paw-ring r2"></div>
+              <img src="https://api.dicebear.com/7.x/bottts/svg?seed=dayax" class="player-avatar" alt="avatar" />
+              <div class="paw-badge">LV 14</div>
+            </div>
+            <div class="player-meta">
+              <h2 class="player-name">DAYA_X</h2>
+              <div class="player-id"># 48-201 &#183; RANKED</div>
+              <div class="current-league-badge">
+                <span class="clb-icon">&#128142;</span>
+                <span class="clb-name">DIAMOND I</span>
+              </div>
+            </div>
+          </div>
+          <div class="pic-stats">
+            <div class="ps-item"><span class="psi-val">284</span><span class="psi-lbl">WINS</span></div>
+            <div class="ps-div"></div>
+            <div class="ps-item"><span class="psi-val">68%</span><span class="psi-lbl">WIN RATE</span></div>
+            <div class="ps-div"></div>
+            <div class="ps-item"><span class="psi-val">&#128293;7</span><span class="psi-lbl">STREAK</span></div>
+            <div class="ps-div"></div>
+            <div class="ps-item"><span class="psi-val">42</span><span class="psi-lbl">RANK</span></div>
+          </div>
+        </div>
+
+        <div class="trophy-showcase">
+          <div class="ts-glow"></div>
+          <div class="trophy-3d-scene" id="trophy3dScene">
+            <div class="trophy-3d" id="mainTrophy">
+              <div class="t3-cup">
+                <div class="t3-cup-shine"></div>
+                <div class="t3-star">&#9733;</div>
+              </div>
+              <div class="t3-handles">
+                <div class="t3-handle t3-handle-l"></div>
+                <div class="t3-handle t3-handle-r"></div>
+              </div>
+              <div class="t3-stem"></div>
+              <div class="t3-base">
+                <div class="t3-base-text">CHAMPION</div>
+              </div>
+            </div>
+            <div class="trophy-orbit-ring or1"></div>
+            <div class="trophy-orbit-ring or2"></div>
+            <div class="trophy-orbiter ob1">&#127775;</div>
+            <div class="trophy-orbiter ob2">&#128142;</div>
+            <div class="trophy-orbiter ob3">&#9889;</div>
+          </div>
+          <div class="trophy-label">
+            <div class="tl-title">CHAMPION</div>
+            <div class="tl-sub">Top 1% players</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB NAV -->
+      <div class="tab-nav-wrap">
+        <div class="tab-nav" id="tabNav">
+          <button class="tab-btn active" data-tab="trophies">&#127942; TROPHIES</button>
+          <button class="tab-btn" data-tab="leaderboard">&#128202; BOARD</button>
+          <button class="tab-btn" data-tab="league">&#127941; LEAGUE</button>
+          <button class="tab-btn" data-tab="achievements">&#11088; ACHIEVE</button>
+        </div>
+      </div>
+
+      <!-- LEAGUE TAB -->
+      <div class="tab-pane" id="tab-league">
+        <div class="league-path-section">
+          <div class="lp-header">
+            <h3 class="lp-title">LEAGUE JOURNEY</h3>
+            <div class="lp-season">Season 7 &#183; Ends in <span class="countdown-inline" id="seasonCountdown">14d
+                6h</span></div>
+          </div>
+          <div class="league-path" id="leaguePath"></div>
+        </div>
+        <div class="league-detail-card">
+          <div class="ldc-glow"></div>
+          <div class="ldc-left">
+            <div class="ldc-emblem-wrap">
+              <div class="ldc-emblem-ring"></div>
+              <div class="ldc-emblem" id="currentLeagueEmblem">&#128142;</div>
+            </div>
+            <div class="ldc-info">
+              <div class="ldc-name" id="currentLeagueName">DIAMOND I</div>
+              <div class="ldc-sub">Top 2% Worldwide</div>
+            </div>
+          </div>
+          <div class="ldc-right">
+            <div class="ldc-progress-labels">
+              <span>2,200 pts</span>
+              <span id="currentPts">2,840 pts</span>
+              <span>3,000 pts</span>
+            </div>
+            <div class="ldc-progress-bar">
+              <div class="ldc-fill" id="leagueFill" style="width:0%"></div>
+              <div class="ldc-marker" id="leagueMarker" style="left:0%">
+                <div class="ldc-marker-inner">YOU</div>
+              </div>
+            </div>
+            <div class="ldc-progress-sub"><span class="pts-needed" id="ptsNeeded">160 pts to Diamond II &#8250;</span>
             </div>
           </div>
         </div>
-        <div class="pic-stats">
-          <div class="ps-item"><span class="psi-val">284</span><span class="psi-lbl">WINS</span></div>
-          <div class="ps-div"></div>
-          <div class="ps-item"><span class="psi-val">68%</span><span class="psi-lbl">WIN RATE</span></div>
-          <div class="ps-div"></div>
-          <div class="ps-item"><span class="psi-val">&#128293;7</span><span class="psi-lbl">STREAK</span></div>
-          <div class="ps-div"></div>
-          <div class="ps-item"><span class="psi-val">42</span><span class="psi-lbl">RANK</span></div>
+        <div class="seasonal-rewards-section">
+          <h3 class="sr-title">SEASON REWARDS</h3>
+          <div class="sr-grid" id="srGrid"></div>
         </div>
       </div>
 
-      <div class="trophy-showcase">
-        <div class="ts-glow"></div>
-        <div class="trophy-3d-scene" id="trophy3dScene">
-          <div class="trophy-3d" id="mainTrophy">
-            <div class="t3-cup">
-              <div class="t3-cup-shine"></div>
-              <div class="t3-star">&#9733;</div>
-            </div>
-            <div class="t3-handles">
-              <div class="t3-handle t3-handle-l"></div>
-              <div class="t3-handle t3-handle-r"></div>
-            </div>
-            <div class="t3-stem"></div>
-            <div class="t3-base"><div class="t3-base-text">CHAMPION</div></div>
-          </div>
-          <div class="trophy-orbit-ring or1"></div>
-          <div class="trophy-orbit-ring or2"></div>
-          <div class="trophy-orbiter ob1">&#127775;</div>
-          <div class="trophy-orbiter ob2">&#128142;</div>
-          <div class="trophy-orbiter ob3">&#9889;</div>
+      <!-- TROPHIES TAB -->
+      <div class="tab-pane active" id="tab-trophies">
+        <div class="trophy-counter-bar">
+          <div class="tcb-item"><span class="tcb-icon">&#127942;</span><span class="tcb-num"
+              id="goldTrophies">12</span><span class="tcb-lbl">Gold</span></div>
+          <div class="tcb-item"><span class="tcb-icon">&#129352;</span><span class="tcb-num"
+              id="silverTrophies">28</span><span class="tcb-lbl">Silver</span></div>
+          <div class="tcb-item"><span class="tcb-icon">&#129353;</span><span class="tcb-num"
+              id="bronzeTrophies">45</span><span class="tcb-lbl">Bronze</span></div>
+          <div class="tcb-item"><span class="tcb-icon">&#128142;</span><span class="tcb-num"
+              id="diamondTrophies">3</span><span class="tcb-lbl">Diamond</span></div>
         </div>
-        <div class="trophy-label">
-          <div class="tl-title">CHAMPION</div>
-          <div class="tl-sub">Top 1% players</div>
+        <div class="trophy-filter-row">
+          <button class="tf-btn active" data-filter="all">ALL</button>
+          <button class="tf-btn" data-filter="gold">GOLD</button>
+          <button class="tf-btn" data-filter="silver">SILVER</button>
+          <button class="tf-btn" data-filter="bronze">BRONZE</button>
+          <button class="tf-btn" data-filter="diamond">DIAMOND</button>
         </div>
+        <div class="trophies-grid" id="trophiesGrid"></div>
       </div>
-    </section>
 
-    <!-- TAB NAV -->
-    <div class="tab-nav-wrap">
-      <div class="tab-nav" id="tabNav">
-        <button class="tab-btn active" data-tab="league">&#127941; LEAGUE</button>
-        <button class="tab-btn" data-tab="trophies">&#127942; TROPHIES</button>
-        <button class="tab-btn" data-tab="medals">&#127894; MEDALS</button>
-        <button class="tab-btn" data-tab="leaderboard">&#128202; BOARD</button>
-        <button class="tab-btn" data-tab="streak">&#128293; STREAK</button>
-        <button class="tab-btn" data-tab="achievements">&#11088; ACHIEVE</button>
+      <!-- MEDALS TAB -->
+      <div class="tab-pane" id="tab-medals">
+        <div class="medals-showcase" id="medalsShowcase"></div>
       </div>
-    </div>
 
-    <!-- LEAGUE TAB -->
-    <div class="tab-pane active" id="tab-league">
-      <div class="league-path-section">
-        <div class="lp-header">
-          <h3 class="lp-title">LEAGUE JOURNEY</h3>
-          <div class="lp-season">Season 7 &#183; Ends in <span class="countdown-inline" id="seasonCountdown">14d 6h</span></div>
+      <!-- LEADERBOARD TAB -->
+      <div class="tab-pane" id="tab-leaderboard">
+        <div class="lb-filter-row">
+          <button class="lb-filter active" data-lbf="global">&#127758; GLOBAL</button>
+          <button class="lb-filter" data-lbf="friends">&#128101; FRIENDS</button>
+          <button class="lb-filter" data-lbf="local">&#128205; LOCAL</button>
+          <button class="lb-filter" data-lbf="weekly">&#128197; WEEKLY</button>
         </div>
-        <div class="league-path" id="leaguePath"></div>
+        <div class="podium-wrap" id="podiumWrap"></div>
+        <div class="lb-list" id="lbList"></div>
+        <div class="lb-your-rank" id="lbYourRank"></div>
       </div>
-      <div class="league-detail-card">
-        <div class="ldc-glow"></div>
-        <div class="ldc-left">
-          <div class="ldc-emblem-wrap">
-            <div class="ldc-emblem-ring"></div>
-            <div class="ldc-emblem" id="currentLeagueEmblem">&#128142;</div>
+
+      <!-- STREAK TAB -->
+      <div class="tab-pane" id="tab-streak">
+        <div class="streak-hero">
+          <div class="sh-ring-wrap">
+            <div class="sh-ring r1"></div>
+            <div class="sh-ring r2"></div>
+            <div class="sh-ring r3"></div>
+            <div class="sh-fire">&#128293;</div>
+            <div class="sh-number" id="streakHeroNum">7</div>
+            <div class="sh-label">DAY STREAK</div>
           </div>
-          <div class="ldc-info">
-            <div class="ldc-name" id="currentLeagueName">DIAMOND I</div>
-            <div class="ldc-sub">Top 2% Worldwide</div>
-          </div>
-        </div>
-        <div class="ldc-right">
-          <div class="ldc-progress-labels">
-            <span>2,200 pts</span>
-            <span id="currentPts">2,840 pts</span>
-            <span>3,000 pts</span>
-          </div>
-          <div class="ldc-progress-bar">
-            <div class="ldc-fill" id="leagueFill" style="width:0%"></div>
-            <div class="ldc-marker" id="leagueMarker" style="left:0%">
-              <div class="ldc-marker-inner">YOU</div>
+          <div class="sh-right">
+            <div class="sh-stat-grid">
+              <div class="sh-stat"><span class="sh-stat-val" id="bestStreak">21</span><span class="sh-stat-lbl">Best
+                  Streak</span></div>
+              <div class="sh-stat"><span class="sh-stat-val" id="totalDays">84</span><span class="sh-stat-lbl">Days
+                  Played</span></div>
+              <div class="sh-stat"><span class="sh-stat-val">+50%</span><span class="sh-stat-lbl">Cur Bonus</span></div>
+              <div class="sh-stat"><span class="sh-stat-val" id="nextMilestone">14</span><span class="sh-stat-lbl">Next
+                  Goal</span></div>
             </div>
           </div>
-          <div class="ldc-progress-sub"><span class="pts-needed" id="ptsNeeded">160 pts to Diamond II &#8250;</span></div>
         </div>
+        <h3 class="sc-title">THIS MONTH</h3>
+        <div class="streak-calendar" id="streakCalendar"></div>
+        <h3 class="sc-title" style="margin-top:16px">MILESTONES</h3>
+        <div class="streak-milestones" id="streakMilestones"></div>
+        <h3 class="sc-title" style="margin-top:16px">MULTIPLIER TRACK</h3>
+        <div class="mult-bars" id="multBars"></div>
       </div>
-      <div class="seasonal-rewards-section">
-        <h3 class="sr-title">SEASON REWARDS</h3>
-        <div class="sr-grid" id="srGrid"></div>
-      </div>
-    </div>
 
-    <!-- TROPHIES TAB -->
-    <div class="tab-pane" id="tab-trophies">
-      <div class="trophy-counter-bar">
-        <div class="tcb-item"><span class="tcb-icon">&#127942;</span><span class="tcb-num" id="goldTrophies">12</span><span class="tcb-lbl">Gold</span></div>
-        <div class="tcb-item"><span class="tcb-icon">&#129352;</span><span class="tcb-num" id="silverTrophies">28</span><span class="tcb-lbl">Silver</span></div>
-        <div class="tcb-item"><span class="tcb-icon">&#129353;</span><span class="tcb-num" id="bronzeTrophies">45</span><span class="tcb-lbl">Bronze</span></div>
-        <div class="tcb-item"><span class="tcb-icon">&#128142;</span><span class="tcb-num" id="diamondTrophies">3</span><span class="tcb-lbl">Diamond</span></div>
-      </div>
-      <div class="trophy-filter-row">
-        <button class="tf-btn active" data-filter="all">ALL</button>
-        <button class="tf-btn" data-filter="gold">GOLD</button>
-        <button class="tf-btn" data-filter="silver">SILVER</button>
-        <button class="tf-btn" data-filter="bronze">BRONZE</button>
-        <button class="tf-btn" data-filter="diamond">DIAMOND</button>
-      </div>
-      <div class="trophies-grid" id="trophiesGrid"></div>
-    </div>
-
-    <!-- MEDALS TAB -->
-    <div class="tab-pane" id="tab-medals">
-      <div class="medals-showcase" id="medalsShowcase"></div>
-    </div>
-
-    <!-- LEADERBOARD TAB -->
-    <div class="tab-pane" id="tab-leaderboard">
-      <div class="lb-filter-row">
-        <button class="lb-filter active" data-lbf="global">&#127758; GLOBAL</button>
-        <button class="lb-filter" data-lbf="friends">&#128101; FRIENDS</button>
-        <button class="lb-filter" data-lbf="local">&#128205; LOCAL</button>
-        <button class="lb-filter" data-lbf="weekly">&#128197; WEEKLY</button>
-      </div>
-      <div class="podium-wrap" id="podiumWrap"></div>
-      <div class="lb-list" id="lbList"></div>
-      <div class="lb-your-rank" id="lbYourRank"></div>
-    </div>
-
-    <!-- STREAK TAB -->
-    <div class="tab-pane" id="tab-streak">
-      <div class="streak-hero">
-        <div class="sh-ring-wrap">
-          <div class="sh-ring r1"></div>
-          <div class="sh-ring r2"></div>
-          <div class="sh-ring r3"></div>
-          <div class="sh-fire">&#128293;</div>
-          <div class="sh-number" id="streakHeroNum">7</div>
-          <div class="sh-label">DAY STREAK</div>
-        </div>
-        <div class="sh-right">
-          <div class="sh-stat-grid">
-            <div class="sh-stat"><span class="sh-stat-val" id="bestStreak">21</span><span class="sh-stat-lbl">Best Streak</span></div>
-            <div class="sh-stat"><span class="sh-stat-val" id="totalDays">84</span><span class="sh-stat-lbl">Days Played</span></div>
-            <div class="sh-stat"><span class="sh-stat-val">+50%</span><span class="sh-stat-lbl">Cur Bonus</span></div>
-            <div class="sh-stat"><span class="sh-stat-val" id="nextMilestone">14</span><span class="sh-stat-lbl">Next Goal</span></div>
+      <!-- ACHIEVEMENTS TAB -->
+      <div class="tab-pane" id="tab-achievements">
+        <div class="ach-overview">
+          <div class="ach-ov-ring">
+            <svg viewBox="0 0 100 100" class="ach-ring-svg">
+              <defs>
+                <linearGradient id="achGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FFB800" />
+                  <stop offset="50%" stop-color="#FF9900" />
+                  <stop offset="100%" stop-color="#00D4FF" />
+                </linearGradient>
+              </defs>
+              <circle cx="50" cy="50" r="35" class="ach-ring-bg" />
+              <circle cx="50" cy="50" r="35" class="ach-ring-fill" id="achRingFill" />
+            </svg>
+            <div class="ach-ov-inner">
+              <span class="ach-ov-pct" id="achPct">62%</span>
+              <span class="ach-ov-lbl">DONE</span>
+            </div>
+          </div>
+          <div class="ach-ov-stats">
+            <div class="ach-ov-stat"><span class="aost-val" id="achUnlocked">47</span><span
+                class="aost-lbl">Unlocked</span></div>
+            <div class="ach-ov-stat"><span class="aost-val" id="achTotal">76</span><span class="aost-lbl">Total</span>
+            </div>
+            <div class="ach-ov-stat"><span class="aost-val">1,240</span><span class="aost-lbl">XP Earned</span></div>
           </div>
         </div>
+        <div class="ach-categories" id="achCategories"></div>
       </div>
-      <h3 class="sc-title">THIS MONTH</h3>
-      <div class="streak-calendar" id="streakCalendar"></div>
-      <h3 class="sc-title" style="margin-top:16px">MILESTONES</h3>
-      <div class="streak-milestones" id="streakMilestones"></div>
-      <h3 class="sc-title" style="margin-top:16px">MULTIPLIER TRACK</h3>
-      <div class="mult-bars" id="multBars"></div>
+
+    </main>
+
+  </div><!-- /phone -->
+
+  <!-- MODAL -->
+  <div class="modal-veil" id="modalVeil">
+    <div class="trophy-modal" id="trophyModal">
+      <button class="tm-close" id="tmClose">&#10005;</button>
+      <div class="tm-content" id="tmContent"></div>
     </div>
-
-    <!-- ACHIEVEMENTS TAB -->
-    <div class="tab-pane" id="tab-achievements">
-      <div class="ach-overview">
-        <div class="ach-ov-ring">
-          <svg viewBox="0 0 100 100" class="ach-ring-svg">
-            <defs>
-              <linearGradient id="achGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#FFB800"/>
-                <stop offset="50%" stop-color="#FF9900"/>
-                <stop offset="100%" stop-color="#00D4FF"/>
-              </linearGradient>
-            </defs>
-            <circle cx="50" cy="50" r="35" class="ach-ring-bg"/>
-            <circle cx="50" cy="50" r="35" class="ach-ring-fill" id="achRingFill"/>
-          </svg>
-          <div class="ach-ov-inner">
-            <span class="ach-ov-pct" id="achPct">62%</span>
-            <span class="ach-ov-lbl">DONE</span>
-          </div>
-        </div>
-        <div class="ach-ov-stats">
-          <div class="ach-ov-stat"><span class="aost-val" id="achUnlocked">47</span><span class="aost-lbl">Unlocked</span></div>
-          <div class="ach-ov-stat"><span class="aost-val" id="achTotal">76</span><span class="aost-lbl">Total</span></div>
-          <div class="ach-ov-stat"><span class="aost-val">1,240</span><span class="aost-lbl">XP Earned</span></div>
-        </div>
-      </div>
-      <div class="ach-categories" id="achCategories"></div>
-    </div>
-
-  </main>
-
-</div><!-- /phone -->
-
-<!-- MODAL -->
-<div class="modal-veil" id="modalVeil">
-  <div class="trophy-modal" id="trophyModal">
-    <button class="tm-close" id="tmClose">&#10005;</button>
-    <div class="tm-content" id="tmContent"></div>
   </div>
-</div>
 
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
 
-<script src="js/trophies.js"></script>
-<script src="js/global-nav.js"></script>
+  <script src="js/trophies.js"></script>
+  <script src="js/global-nav.js"></script>
 </body>
+
 </html>

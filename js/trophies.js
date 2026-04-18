@@ -466,4 +466,4 @@ scene.addEventListener('mouseleave', () => { trophy3d.style.animation = ''; trop
 })();
 
 /* ── INIT ── */
-initLeague();
+initTrophies();
