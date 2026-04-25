@@ -908,6 +908,7 @@
     function syncRoomMapFromLobby() { const raw = localStorage.getItem('ludoFriendRoomMap') || localStorage.getItem('ludoMap'); if (!raw) { roomMapBoard.innerHTML = buildBoard('classic'); mapLayoutBoard.innerHTML = buildBoard('classic'); return } try { const p = JSON.parse(raw); if (p.v === 'neon') setRoomMap('Neon City', 'High-energy night map with bright cyber lanes.', document.querySelectorAll('.map-pill')[1], 'neon'); else if (p.v === 'volcano') setRoomMap('Volcano Pit', 'Aggressive lava zone for tense comeback games.', document.querySelectorAll('.map-pill')[2], 'volcano'); else setRoomMap('Classic Arena', 'Balanced board for private squad battles.', document.querySelectorAll('.map-pill')[0], 'classic') } catch { roomMapBoard.innerHTML = buildBoard('classic'); mapLayoutBoard.innerHTML = buildBoard('classic') } }
     syncRoomMapFromLobby(); setRoomMode('2v2', document.querySelector('#modeToggles .toggle-pill[data-mode="2v2"]'));
   </script>
+  <script src="js/audio-manager.js"></script>
   <script src="js/global-nav.js"></script>
 </body>
 
