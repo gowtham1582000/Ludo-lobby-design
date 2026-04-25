@@ -13,25 +13,32 @@
 
   <!-- TOP BAR -->
   <div class="topbar">
+
+    <!-- LEFT: back button only -->
     <div class="topbar-left">
       <div class="back-btn" onclick="history.back()">
         <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
       </div>
-      <div class="topbar-title-wrap">
-        <span class="page-title">Notifications</span>
-        <span class="unread-pill" id="unreadPill">6 NEW</span>
-      </div>
     </div>
+
+    <!-- CENTER: title + pill stacked -->
+    <div class="topbar-center">
+      <span class="page-title">NOTIFICATIONS</span>
+      <span class="unread-pill" id="unreadPill">6 NEW</span>
+    </div>
+
+    <!-- RIGHT: action buttons -->
     <div class="topbar-actions">
-      <button class="action-btn" onclick="markAllRead()">
+      <button class="action-btn" onclick="markAllRead()" title="Mark all as read">
         <svg fill="none" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        Mark All
+        <span>Mark All</span>
       </button>
-      <button class="action-btn danger" onclick="clearAll()">
+      <button class="action-btn danger" onclick="clearAll()" title="Clear all">
         <svg fill="none" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-        Clear
+        <span>Clear</span>
       </button>
     </div>
+
   </div>
 
   <!-- FILTER TABS -->

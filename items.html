@@ -1,153 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Items – Daya Pass Arena</title>
-  <link rel="stylesheet" href="css/items.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=390, initial-scale=1.0"/>
+  <title>DAYA_X — Items Vault</title>
+  <link rel="stylesheet" href="css/items.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Barlow+Condensed:wght@300;400;500;600;700;800&family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet"/>
 </head>
 <body>
-  <div class="phone">
-    <div class="bg-orb bg-orb-left"></div>
-    <div class="bg-orb bg-orb-right"></div>
-    <div class="shell">
 
-  <!-- TOP BAR -->
-  <div class="top-bar">
-    <div class="currency"><span class="coin-icon">🪙</span><span id="coins">24,850</span></div>
-    <div class="top-title">ROYAL ARENA</div>
-    <div class="currency"><span class="gem-icon">💎</span><span id="gems">480</span></div>
+<!-- ══════════ PHONE SHELL ══════════ -->
+<div class="phone">
+
+  <!-- ══════════ WORLD BACKGROUND ══════════ -->
+  <div class="world">
+    <div class="world-lava"></div>
+    <div class="world-frost"></div>
+    <div class="world-grid"></div>
+    <canvas id="orbs"></canvas>
+    <div class="world-vignette"></div>
+    <div id="embers"></div>
+    <div id="frost-flakes"></div>
   </div>
 
-  <!-- PAGE HEADER -->
-  <div class="page-header">
-    <a href="index.html" class="back-btn" aria-label="Go back to home">←</a>
-    <div class="season-badge">● SEASON 7</div>
-    <h1 class="page-title">ITEMS</h1>
-    <div class="live-badge">47.6K LIVE</div>
-  </div>
-
-  <section class="collection-hero">
-    <div class="collection-copy">
-      <div class="collection-kicker">LOADOUT CONTROL</div>
-      <h2>Build a sharper arena style for every match.</h2>
-      <p>Swap dice, pawns, and boards on the fly. Your equipped picks update instantly.</p>
+  <!-- ══════════ HEADER ══════════ -->
+  <header class="hdr">
+    <div class="hdr-l">
+      <button class="back-btn" onclick="history.back()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="brand">
+        <div class="brand-sigil">⚔️</div>
+        <div class="brand-words">
+          <span class="brand-name">DAYA_X</span>
+          <span class="brand-sub">ITEMS VAULT</span>
+        </div>
+      </div>
     </div>
-    <div class="collection-stats">
-      <div class="collection-stat">
-        <span class="stat-value" id="ownedCount">0</span>
-        <span class="stat-label">Owned</span>
+
+    <div class="hdr-r">
+      <div class="coin-chip"><span>🪙</span><b id="goldVal">24,650</b></div>
+      <div class="gem-chip"><span>💎</span><b id="gemVal">480</b></div>
+    </div>
+  </header>
+
+  <!-- ══════════ SCROLL AREA ══════════ -->
+  <div class="scroll-area">
+    <main class="main">
+
+      <!-- ── SEARCH BAR ── -->
+      <div class="search-bar">
+        <svg class="search-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input class="search-inp" id="searchInput" placeholder="Search vault..." type="text" oninput="onSearch(this.value)"/>
+        <button class="search-x" id="searchX" onclick="clearSearch()">✕</button>
       </div>
-      <div class="collection-stat">
-        <span class="stat-value" id="equippedCount">3</span>
-        <span class="stat-label">Equipped</span>
+
+  <!-- ── FEATURED SHOWCASE ── -->
+  <section class="showcase" id="showcase">
+
+    <!-- 3-D stage -->
+    <div class="stage">
+      <div class="stage-aura" id="stageAura"></div>
+      <div class="stage-ring r1"></div>
+      <div class="stage-ring r2"></div>
+      <div class="stage-ring r3"></div>
+      <div class="stage-platform">
+        <div class="platform-top"></div>
+        <div class="platform-face"></div>
       </div>
-      <div class="collection-stat wide">
-        <span class="stat-value" id="rareCount">0</span>
-        <span class="stat-label">Rare+</span>
+      <div class="feat-item" id="featItem">
+        <div class="feat-glow" id="featGlow"></div>
+        <div class="feat-icon" id="featIcon">🗺️</div>
+        <div class="feat-sparks" id="featSparks"></div>
+      </div>
+      <div class="holoring" id="holoRing"></div>
+    </div>
+
+    <!-- Info panel -->
+    <div class="feat-info" id="featInfo">
+      <div class="rarity-tag" id="rarityTag">LEGENDARY</div>
+      <h1 class="feat-name" id="featName">VOLCANO PIT BOARD</h1>
+      <div class="feat-type" id="featType">🗺️ &nbsp;Board Skin</div>
+      <p class="feat-desc" id="featDesc">Forged in the deepest calderas of the Arena. This board radiates molten heat with every dice roll — watch lava flows react to your moves in real-time.</p>
+
+      <div class="feat-stats">
+        <div class="fstat"><span class="fstat-val" id="fRarity">Legendary</span><span class="fstat-lbl">RARITY</span></div>
+        <div class="fstat"><span class="fstat-val" id="fType">Board</span><span class="fstat-lbl">TYPE</span></div>
+        <div class="fstat"><span class="fstat-val" id="fDate">Jan 20</span><span class="fstat-lbl">OBTAINED</span></div>
+        <div class="fstat"><span class="fstat-val" id="fPower">∞</span><span class="fstat-lbl">POWER</span></div>
+      </div>
+
+      <div class="feat-btns">
+        <button class="equip-btn" id="equipBtn" onclick="equipFeatured()">
+          <span class="equip-shimmer"></span>
+          <span id="equipTxt">⚡ EQUIP NOW</span>
+        </button>
+        <button class="detail-btn" onclick="openModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          INFO
+        </button>
       </div>
     </div>
   </section>
 
-  <!-- TAB BAR -->
-  <div class="tab-bar">
-    <button class="tab active" data-tab="inventory">🎒 Inventory</button>
-    <button class="tab" data-tab="loadout">⚔️ Loadout</button>
-    <button class="tab" data-tab="dice">🎲 Dice</button>
-    <button class="tab" data-tab="pawns">♟️ Pawns</button>
-  </div>
+  <!-- ── INVENTORY ── -->
+  <section class="inventory">
 
-  <!-- MAIN CONTENT -->
-  <main class="content-area">
-
-    <!-- ── INVENTORY TAB ── -->
-    <section class="tab-panel active" id="panel-inventory">
-      <div class="panel-intro">
-        <p>All items you own. Tap an item to equip it in your loadout.</p>
-      </div>
-
-      <div class="inv-section">
-        <div class="inv-section-label">🎲 DICE SKINS</div>
-        <div class="item-grid" id="inv-dice-grid"></div>
-      </div>
-
-      <div class="inv-section">
-        <div class="inv-section-label">♟️ PAWN SKINS</div>
-        <div class="item-grid" id="inv-pawn-grid"></div>
-      </div>
-
-      <div class="inv-section">
-        <div class="inv-section-label">🎴 BOARDS</div>
-        <div class="item-grid" id="inv-board-grid"></div>
-      </div>
-    </section>
-
-    <!-- ── LOADOUT TAB ── -->
-    <section class="tab-panel" id="panel-loadout">
-      <div class="panel-intro"><p>Equip your active dice, pawn and board for all game modes.</p></div>
-      <div class="loadout-grid">
-        <div class="loadout-slot" id="slot-dice">
-          <div class="slot-label">ACTIVE DICE</div>
-          <div class="slot-preview" id="preview-dice">
-            <div class="slot-icon">🎲</div>
-            <div class="slot-name">Classic Cube</div>
-          </div>
-          <button class="slot-change-btn" data-type="dice">Change</button>
-        </div>
-        <div class="loadout-slot" id="slot-pawn">
-          <div class="slot-label">ACTIVE PAWN</div>
-          <div class="slot-preview" id="preview-pawn">
-            <div class="slot-icon">♟️</div>
-            <div class="slot-name">Default Pawn</div>
-          </div>
-          <button class="slot-change-btn" data-type="pawn">Change</button>
-        </div>
-        <div class="loadout-slot" id="slot-board">
-          <div class="slot-label">ACTIVE BOARD</div>
-          <div class="slot-preview" id="preview-board">
-            <div class="slot-icon">🗺️</div>
-            <div class="slot-name">Ice Kingdom</div>
-          </div>
-          <button class="slot-change-btn" data-type="board">Change</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── DICE TAB ── -->
-    <section class="tab-panel" id="panel-dice">
-      <div class="panel-intro"><p>Browse and equip your dice skins.</p></div>
-      <div class="item-grid" id="dice-equip-grid"></div>
-    </section>
-
-    <!-- ── PAWNS TAB ── -->
-    <section class="tab-panel" id="panel-pawns">
-      <div class="panel-intro"><p>Browse and equip your pawn skins.</p></div>
-      <div class="item-grid" id="pawn-equip-grid"></div>
-    </section>
-
-  </main>
-
+    <!-- Stat pills -->
+    <div class="stat-row">
+      <div class="stat-pill"><span class="sp-val" id="spTotal">28</span><span class="sp-lbl">TOTAL</span></div>
+      <div class="stat-pill warm"><span class="sp-val">5</span><span class="sp-lbl">EQUIPPED</span></div>
+      <div class="stat-pill cool"><span class="sp-val">3</span><span class="sp-lbl">LEGENDARY</span></div>
+      <div class="stat-pill glow"><span class="sp-val">12</span><span class="sp-lbl">NEW</span></div>
     </div>
 
-  <!-- SHOP FAB -->
-  <button class="shop-fab" id="shopBtn" title="Go to Shop">
-    <span class="shop-fab-icon">🛒</span>
-    <span class="shop-fab-label">SHOP</span>
-  </button>
-
-  <!-- EQUIP MODAL -->
-  <div class="modal-overlay" id="equipModal">
-    <div class="modal-card">
-      <button class="modal-close" id="modalClose">✕</button>
-      <div class="modal-item-preview" id="modalPreview"></div>
-      <div class="modal-item-name" id="modalName"></div>
-      <div class="modal-item-rarity" id="modalRarity"></div>
-      <div class="modal-item-desc" id="modalDesc"></div>
-      <button class="modal-equip-btn" id="modalEquipBtn">⚔️ EQUIP</button>
+    <!-- Category tabs -->
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-cat="all">ALL <em>28</em></button>
+      <button class="tab" data-cat="boards">🗺️ BOARDS <em>6</em></button>
+      <button class="tab" data-cat="dice">🎲 DICE <em>8</em></button>
+      <button class="tab" data-cat="avatars">🎭 AVATARS <em>7</em></button>
+      <button class="tab" data-cat="effects">✨ EFFECTS <em>4</em></button>
+      <button class="tab" data-cat="titles">👑 TITLES <em>3</em></button>
     </div>
-  </div>
 
+    <!-- Controls row -->
+    <div class="ctrl-row">
+      <select class="sort-sel" id="sortSel" onchange="sortItems()">
+        <option value="rarity">★ Rarity</option>
+        <option value="newest">🕐 Newest</option>
+        <option value="name">🔤 A→Z</option>
+        <option value="equipped">⚡ Equipped</option>
+      </select>
+      <div class="view-btns">
+        <button class="vbtn active" id="vgrid" onclick="setView('grid')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="2" width="9" height="9" rx="2"/><rect x="13" y="2" width="9" height="9" rx="2"/><rect x="2" y="13" width="9" height="9" rx="2"/><rect x="13" y="13" width="9" height="9" rx="2"/></svg>
+        </button>
+        <button class="vbtn" id="vlist" onclick="setView('list')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="3" width="20" height="4" rx="1"/><rect x="2" y="10" width="20" height="4" rx="1"/><rect x="2" y="17" width="20" height="4" rx="1"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <div class="items-grid" id="itemsGrid"></div>
+
+    <!-- Empty -->
+    <div class="empty" id="empty">
+      <div class="empty-icon">🔍</div>
+      <div class="empty-title">NOTHING FOUND</div>
+      <div class="empty-sub">Try another search or category</div>
+    </div>
+
+  </section>
+</main>
+  </div><!-- /scroll-area -->
+
+  <!-- ══════════ DETAIL MODAL ══════════ -->
+  <div class="modal-veil" id="modalVeil" onclick="closeModal(event)">
+    <div class="modal-box" id="modalBox">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-content" id="modalContent"></div>
+    </div>
+  </div> 
+
+  <!-- ══════════ TOAST ══════════ -->
+  <div class="toast" id="toast"></div>
+
+</div><!-- /phone -->
   <script src="js/items.js"></script>
-  <script src="js/global-nav.js"></script></body>
+  <script src="js/global-nav.js"></script>
+</body>
 </html>

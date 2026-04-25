@@ -1,5 +1,5 @@
 /* ============================================================
-   js/notifications.js — Daya Pass Arena · Notifications Page
+   notifications.js — Daya Pass Arena · Notifications Page
    ============================================================ */
 
 /* ── STATE ── */
