@@ -80,7 +80,7 @@
     dailyReward: 'sound12',
     claim: 'sound13',
     spin: 'sound14',
-    bigStart: 'sound15',
+    bigStart: 'sound8',
     onlineMode: 'sound16',
     friendsMode: 'sound17',
     computerMode: 'sound18',
@@ -116,12 +116,23 @@
     rewardClaim: 'sound11'
   };
 
-  const fallbackButtonSounds = Array.from({ length: 35 }, (_, index) => 'sound' + (index + 1));
+  const buttonSoundPools = {
+    default: ['sound1', 'sound2', 'sound3', 'sound4', 'sound5', 'sound7', 'sound10', 'sound29', 'sound31', 'sound32', 'sound33', 'sound34'],
+    nav: ['sound2', 'sound3', 'sound4', 'sound10', 'sound30', 'sound33', 'sound34'],
+    choice: ['sound1', 'sound2', 'sound5', 'sound7', 'sound29', 'sound30', 'sound33', 'sound34'],
+    mode: ['sound16', 'sound17', 'sound18', 'sound19', 'sound20', 'sound21', 'sound22'],
+    map: ['sound23', 'sound24', 'sound25', 'sound26', 'sound27'],
+    confirm: ['sound7', 'sound8', 'sound11', 'sound13', 'sound31', 'sound32']
+  };
+  const fallbackButtonSounds = buttonSoundPools.default;
+  const ACTIVATION_CLICK_GUARD = 900;
 
   const state = loadState();
   const channels = {};
   const lastPlayed = {};
   const cursors = {};
+  const activationTimes = new WeakMap();
+  let lastTouchActivation = 0;
   let unlocked = false;
   let uiBound = false;
   let currentMusic = null;
@@ -230,7 +241,7 @@
 
   function createAudio(src, sound) {
     const audio = new Audio();
-    audio.preload = sound.preload === false ? 'metadata' : 'auto';
+    audio.preload = 'auto';
     audio.src = src;
     audio.loop = !!sound.loop;
     audio.volume = getVolume(sound);
@@ -302,11 +313,17 @@
     audio.volume = getVolume(sound, options && options.volume);
     audio.loop = options && options.loop != null ? !!options.loop : !!sound.loop;
 
-    try {
+    if (!audio.paused) {
       audio.pause();
-      audio.currentTime = 0;
+    }
+    try {
+      if (audio.fastSeek) {
+        audio.fastSeek(0);
+      } else {
+        audio.currentTime = 0;
+      }
     } catch (error) {
-      // Some browsers reject currentTime before metadata is available.
+      // Some browsers reject seek before metadata is available.
     }
 
     const promise = audio.play();
@@ -386,35 +403,12 @@
   function unlock() {
     if (unlocked) return;
     unlocked = true;
-
-    Object.keys(channels).forEach((key) => {
-      const audio = channels[key][0];
-      if (!audio) return;
-
-      const previousMuted = audio.muted;
-      audio.muted = true;
-      const promise = audio.play();
-      if (promise && typeof promise.then === 'function') {
-        promise
-          .then(() => {
-            audio.pause();
-            audio.currentTime = 0;
-            audio.muted = previousMuted;
-          })
-          .catch(() => {
-            audio.muted = previousMuted;
-          });
-      } else {
-        audio.pause();
-        audio.currentTime = 0;
-        audio.muted = previousMuted;
-      }
-    });
   }
 
   function closestInteractive(target) {
-    if (!target || target.nodeType !== 1) return null;
-    return target.closest(interactiveSelector);
+    const element = target && target.nodeType === 1 ? target : target && target.parentElement;
+    if (!element) return null;
+    return element.closest(interactiveSelector);
   }
 
   function isDisabled(element) {
@@ -516,6 +510,30 @@
     return '';
   }
 
+  function fallbackSoundForElement(element, text) {
+    if (element.matches('.map-card, .map-btn, .map-pill, .hero-arrow')) {
+      return soundFromPool(text, buttonSoundPools.map);
+    }
+
+    if (element.matches('.mode-picker-option, .mode-battle-btn, .queue-pill, .toggle-pill')) {
+      return soundFromPool(text, buttonSoundPools.mode);
+    }
+
+    if (element.matches('.nav-btn, .nav-it, .global-nav-btn, .nav-battle, .back-btn, .back-home, .icon-btn, .ico-btn')) {
+      return soundFromPool(text, buttonSoundPools.nav);
+    }
+
+    if (element.matches('.select-chip, .bet-chip, .filter-tab, .filter-chip, .tab, .tab-btn, .scope-tab, .ltab, .stab, .tf-btn, .lb-filter')) {
+      return soundFromPool(text, buttonSoundPools.choice);
+    }
+
+    if (element.matches('.claim-btn, .modal-ok, .modal-confirm, .set-primary, .play-now, .join-btn, .join-btn2, .buy-btn, .bundle-buy')) {
+      return soundFromPool(text, buttonSoundPools.confirm);
+    }
+
+    return soundFromPool(text, fallbackButtonSounds);
+  }
+
   function soundForElement(element) {
     const explicit = element.closest('[data-audio]');
     if (explicit && explicit.dataset.audio === 'none') return null;
@@ -609,43 +627,98 @@
     }
 
     if (element.matches('.select-chip, .bet-chip')) {
-      return 'select';
+      return soundFromPool(text, buttonSoundPools.choice);
     }
 
     if (element.matches('.filter-tab, .filter-chip')) {
-      return 'clickAlt';
+      return soundFromPool(text, buttonSoundPools.choice);
     }
 
     if (element.matches('.tab, .tab-btn, .scope-tab, .ltab, .stab, .tf-btn, .lb-filter')) {
-      return 'menu';
+      return soundFromPool(text, buttonSoundPools.nav);
     }
 
     if (element.matches('.lang-opt, .av-opt')) {
-      return 'profile';
+      return soundFromPool(text, buttonSoundPools.choice);
     }
 
     if (hasAny(text, ['copy', 'share', 'invite', 'add friend', 'requests', 'more', 'details', 'open'])) {
-      return 'open';
+      return soundFromPool(text, buttonSoundPools.nav);
     }
 
     if (hasAny(text, ['save', 'apply', 'confirm', 'ok', 'refresh', 'shuffle', 'randomize', 'boost', 'advance'])) {
-      return 'success';
+      return soundFromPool(text, buttonSoundPools.confirm);
     }
 
     if (hasAny(text, ['settings', 'theme', 'volume', 'music', 'sound effects', 'vibration', 'timer', 'animations'])) {
-      return 'settings';
+      return soundFromPool(text, buttonSoundPools.choice);
     }
 
-    return soundFromPool(text, fallbackButtonSounds);
+    return fallbackSoundForElement(element, text);
+  }
+
+  function rememberActivation(element) {
+    activationTimes.set(element, performance.now());
+  }
+
+  function wasRecentlyActivated(element) {
+    const last = activationTimes.get(element) || 0;
+    return !!last && performance.now() - last < ACTIVATION_CLICK_GUARD;
+  }
+
+  function playElementSound(element, options) {
+    const sound = soundForElement(element);
+    if (!sound) return false;
+    play(sound, options);
+    return true;
+  }
+
+  function isPrimaryPress(event) {
+    if ((event.type === 'pointerdown' || event.type === 'mousedown') && event.button != null && event.button !== 0) {
+      return false;
+    }
+
+    if (event.type === 'mousedown' && performance.now() - lastTouchActivation < ACTIVATION_CLICK_GUARD) {
+      return false;
+    }
+
+    if (event.type === 'touchstart') {
+      lastTouchActivation = performance.now();
+    }
+
+    return true;
+  }
+
+  function onPress(event) {
+    if (!isPrimaryPress(event)) return;
+
+    const element = closestInteractive(event.target);
+    if (!element || isDisabled(element)) return;
+
+    if (playElementSound(element, { cooldown: 0 })) {
+      rememberActivation(element);
+    }
+  }
+
+  function onKeyDown(event) {
+    const key = event.key || event.code;
+    if (event.repeat || (key !== 'Enter' && key !== ' ' && key !== 'Spacebar')) return;
+
+    const element = closestInteractive(event.target);
+    if (!element || isDisabled(element)) return;
+
+    if (playElementSound(element, { cooldown: 0 })) {
+      rememberActivation(element);
+    }
   }
 
   function onClick(event) {
     const element = closestInteractive(event.target);
     if (!element || isDisabled(element)) return;
 
-    const sound = soundForElement(element);
-    if (!sound) return;
-    play(sound);
+    if (!wasRecentlyActivated(element) && playElementSound(element, { cooldown: 0 })) {
+      rememberActivation(element);
+    }
 
     if (element.id === 'tSfx' || element.id === 'tMusic') {
       setTimeout(syncInlineSettingsToggles, 0);
@@ -662,10 +735,17 @@
     play('hover');
   }
 
-  function bindUnlockEvents() {
-    ['pointerdown', 'touchstart', 'keydown'].forEach((eventName) => {
-      document.addEventListener(eventName, unlock, { capture: true, once: true, passive: true });
-    });
+  function bindActivationEvents() {
+    const pressOptions = { capture: true, passive: true };
+
+    if (window.PointerEvent) {
+      document.addEventListener('pointerdown', onPress, pressOptions);
+    } else {
+      document.addEventListener('touchstart', onPress, pressOptions);
+      document.addEventListener('mousedown', onPress, pressOptions);
+    }
+
+    document.addEventListener('keydown', onKeyDown, true);
   }
 
   function bindUI() {
@@ -673,7 +753,7 @@
     uiBound = true;
     document.addEventListener('click', onClick, true);
     document.addEventListener('mouseenter', onHover, true);
-    bindUnlockEvents();
+    bindActivationEvents();
     bindVolumeControls();
     syncInlineSettingsToggles();
   }
@@ -730,6 +810,7 @@
     sounds: soundBank,
     aliases: soundAliases,
     buttonSoundPool: fallbackButtonSounds.slice(),
+    buttonSoundPools: Object.assign({}, buttonSoundPools),
     init,
     play,
     stop,
